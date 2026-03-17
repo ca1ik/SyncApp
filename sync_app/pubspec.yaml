@@ -1,0 +1,51 @@
+name: sync_app
+description: "Sync: Neuro-Linguistic Crisis Management — çiftler için gerçek zamanlı duygu senkronizasyon uygulaması."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # --- State Management ---
+  flutter_bloc: ^8.1.6
+  get: ^4.6.6
+  provider: ^6.1.2
+  equatable: ^2.0.5
+
+  # --- Networking / AI Client ---
+  dio: ^5.7.0
+  pretty_dio_logger: ^1.4.0
+
+  # --- Local Storage ---
+  shared_preferences: ^2.3.3
+
+  # --- UI / Theming ---
+  flutter_animate: ^4.5.0
+  fl_chart: ^0.69.0
+  google_fonts: ^6.2.1
+  gap: ^3.0.1
+
+  # --- Utility ---
+  json_annotation: ^4.9.0
+  get_it: ^8.0.2
+  intl: ^0.19.0
+  logger: ^2.4.0
+  uuid: ^4.5.1
+  flutter_local_notifications: ^18.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  mockito: ^5.4.4
+  bloc_test: ^9.1.7
+  build_runner: ^2.4.13
+
+flutter:
+  uses-material-design: true

@@ -27,6 +27,36 @@ class AppThemeProvider extends ChangeNotifier {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         );
+      case SyncThemeVariant.rosePetal:
+        return const LinearGradient(
+          colors: [Color(0xFFFFD6E0), Color(0xFFE06B8F)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        );
+      case SyncThemeVariant.lavenderDream:
+        return const LinearGradient(
+          colors: [Color(0xFFD8D0F0), Color(0xFF8B7EC8)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        );
+      case SyncThemeVariant.cherryBlossom:
+        return const LinearGradient(
+          colors: [Color(0xFFFFE0EA), Color(0xFFD4869C)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        );
+      case SyncThemeVariant.goldenHour:
+        return const LinearGradient(
+          colors: [Color(0xFFFFF0C8), Color(0xFFD4A843)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        );
+      case SyncThemeVariant.arcticAurora:
+        return const LinearGradient(
+          colors: [Color(0xFF1A3048), Color(0xFF5AA5C8)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        );
     }
   }
 

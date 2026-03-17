@@ -115,11 +115,17 @@ class MainActivity : FlutterActivity() {
             putExtra("partner_signal", signal)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
+        val pendingIntent = android.app.PendingIntent.getActivity(
+            applicationContext,
+            0,
+            intent,
+            android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE,
+        )
         SyncNotificationHelper.showPartnerSignalNotification(
             context = applicationContext,
             title   = title,
             body    = body,
-            intent  = intent,
+            contentIntent = pendingIntent,
         )
     }
 

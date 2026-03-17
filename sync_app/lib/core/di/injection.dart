@@ -5,6 +5,8 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/repositories/auth_repository.dart';
+import '../../data/repositories/gamification_repository.dart';
+import '../../data/repositories/games_repository.dart';
 import '../../data/repositories/mood_repository.dart';
 import '../../data/services/ai_api_client.dart';
 import '../../data/services/notification_service.dart';
@@ -51,6 +53,12 @@ Future<void> configureDependencies() async {
   );
   getIt.registerLazySingleton<NativeBridgeService>(
     () => NativeBridgeService(logger: getIt()),
+  );
+  getIt.registerLazySingleton<GamificationRepository>(
+    () => GamificationRepository(prefs: getIt()),
+  );
+  getIt.registerLazySingleton<GamesRepository>(
+    () => GamesRepository(prefs: getIt()),
   );
 
   getIt.registerFactory<AuthBloc>(

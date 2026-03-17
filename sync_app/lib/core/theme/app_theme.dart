@@ -10,6 +10,11 @@ enum SyncThemeVariant {
   oceanBreeze, // Mavi-yeşil sakinleştirici
   midnightSoft, // Koyu, göz yorucu olmayan
   morningDew, // Açık yeşil-sarı
+  rosePetal, // Romantik pembe-gül
+  lavenderDream, // Lavanta huzuru
+  cherryBlossom, // Kiraz çiçeği
+  goldenHour, // Altın saat sıcaklığı
+  arcticAurora, // Kuzey ışıkları
 }
 
 class AppTheme {
@@ -100,6 +105,56 @@ class AppTheme {
           onBackground: const Color(0xFF1E3D24),
           brightness: Brightness.light,
         );
+      case SyncThemeVariant.rosePetal:
+        return _buildMaterial(
+          primary: const Color(0xFFE06B8F),
+          secondary: const Color(0xFFF2A3B8),
+          background: const Color(0xFFFFF0F3),
+          surface: const Color(0xFFFFE0E8),
+          onPrimary: Colors.white,
+          onBackground: const Color(0xFF3D1522),
+          brightness: Brightness.light,
+        );
+      case SyncThemeVariant.lavenderDream:
+        return _buildMaterial(
+          primary: const Color(0xFF8B7EC8),
+          secondary: const Color(0xFFB5A8E0),
+          background: const Color(0xFFF5F2FF),
+          surface: const Color(0xFFEAE4F8),
+          onPrimary: Colors.white,
+          onBackground: const Color(0xFF2A1F4A),
+          brightness: Brightness.light,
+        );
+      case SyncThemeVariant.cherryBlossom:
+        return _buildMaterial(
+          primary: const Color(0xFFD4869C),
+          secondary: const Color(0xFFF0B6C8),
+          background: const Color(0xFFFFF5F8),
+          surface: const Color(0xFFFFE8EF),
+          onPrimary: Colors.white,
+          onBackground: const Color(0xFF3A1A28),
+          brightness: Brightness.light,
+        );
+      case SyncThemeVariant.goldenHour:
+        return _buildMaterial(
+          primary: const Color(0xFFD4A843),
+          secondary: const Color(0xFFECC872),
+          background: const Color(0xFFFFFBF0),
+          surface: const Color(0xFFFFF3D6),
+          onPrimary: Colors.white,
+          onBackground: const Color(0xFF3D2E10),
+          brightness: Brightness.light,
+        );
+      case SyncThemeVariant.arcticAurora:
+        return _buildMaterial(
+          primary: const Color(0xFF5AA5C8),
+          secondary: const Color(0xFF7DD4C8),
+          background: const Color(0xFF0C1A28),
+          surface: const Color(0xFF142838),
+          onPrimary: Colors.white,
+          onBackground: const Color(0xFFE0F0F8),
+          brightness: Brightness.dark,
+        );
     }
   }
 
@@ -111,48 +166,52 @@ class AppTheme {
     required Color onPrimary,
     required Color onBackground,
     required Brightness brightness,
-  }) => ThemeData(
-    useMaterial3: true,
-    brightness: brightness,
-    colorScheme: ColorScheme(
-      brightness: brightness,
-      primary: primary,
-      onPrimary: onPrimary,
-      secondary: secondary,
-      onSecondary: onPrimary,
-      error: const Color(0xFFCF6679),
-      onError: Colors.white,
-      surface: surface,
-      onSurface: onBackground,
-    ),
-    scaffoldBackgroundColor: background,
-    textTheme: GoogleFonts.nunitoSansTextTheme(
-      brightness == Brightness.dark
-          ? ThemeData.dark().textTheme
-          : ThemeData.light().textTheme,
-    ).apply(bodyColor: onBackground, displayColor: onBackground),
-    inputDecorationTheme: InputDecorationTheme(
-      filled: true,
-      fillColor: surface,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide.none,
-      ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-    ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: primary,
-        foregroundColor: onPrimary,
-        elevation: 0,
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      ),
-    ),
-    cardTheme: CardThemeData(
-      color: surface,
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-    ),
-  );
+  }) =>
+      ThemeData(
+        useMaterial3: true,
+        brightness: brightness,
+        colorScheme: ColorScheme(
+          brightness: brightness,
+          primary: primary,
+          onPrimary: onPrimary,
+          secondary: secondary,
+          onSecondary: onPrimary,
+          error: const Color(0xFFCF6679),
+          onError: Colors.white,
+          surface: surface,
+          onSurface: onBackground,
+        ),
+        scaffoldBackgroundColor: background,
+        textTheme: GoogleFonts.nunitoSansTextTheme(
+          brightness == Brightness.dark
+              ? ThemeData.dark().textTheme
+              : ThemeData.light().textTheme,
+        ).apply(bodyColor: onBackground, displayColor: onBackground),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: surface,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide.none,
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: primary,
+            foregroundColor: onPrimary,
+            elevation: 0,
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          ),
+        ),
+        cardTheme: CardThemeData(
+          color: surface,
+          elevation: 0,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        ),
+      );
 }

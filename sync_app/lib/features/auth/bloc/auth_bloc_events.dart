@@ -40,6 +40,10 @@ class AuthSignOutRequested extends AuthEvent {
   const AuthSignOutRequested();
 }
 
+class AuthGuestLoginRequested extends AuthEvent {
+  const AuthGuestLoginRequested();
+}
+
 class AuthPartnerLinkRequested extends AuthEvent {
   const AuthPartnerLinkRequested(this.partnerEmail);
 

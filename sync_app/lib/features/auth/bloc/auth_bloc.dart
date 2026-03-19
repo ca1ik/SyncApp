@@ -44,6 +44,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthSignInRequested>(_onSignInRequested);
     on<AuthRegisterRequested>(_onRegisterRequested);
     on<AuthSignOutRequested>(_onSignOutRequested);
+    on<AuthGuestLoginRequested>(_onGuestLoginRequested);
     on<AuthPartnerLinkRequested>(_onPartnerLinkRequested);
     on<_AuthSessionChanged>(_onSessionChanged);
 
@@ -114,6 +115,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     await _authRepository.signOut();
     emit(state.copyWith(status: AuthStatus.unauthenticated, user: null));
+  }
+
+  Future<void> _onGuestLoginRequested(
+    AuthGuestLoginRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(state.copyWith(status: AuthStatus.loading, clearMessage: true));
+    final user = await _authRepository.signInAsGuest();
+    emit(state.copyWith(status: AuthStatus.authenticated, user: user));
   }
 
   Future<void> _onPartnerLinkRequested(

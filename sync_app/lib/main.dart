@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'core/constants/app_constants.dart';
 import 'core/di/injection.dart';
 import 'core/router/app_router.dart';
+import 'core/services/locale_service.dart';
 import 'core/theme/theme_provider.dart';
 import 'data/repositories/auth_repository.dart';
 import 'data/services/notification_service.dart';
@@ -19,6 +20,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await configureDependencies();
   await getIt<NotificationService>().initialize();
+  await LocaleService.instance.load();
 
   final themeProvider = AppThemeProvider();
   await themeProvider.loadSavedTheme();
@@ -60,25 +62,29 @@ class MyApp extends StatelessWidget {
 
     return ChangeNotifierProvider<AppThemeProvider>.value(
       value: provider,
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<AuthBloc>(create: (_) => getIt<AuthBloc>()),
-          BlocProvider<SubscriptionCubit>(
-              create: (_) => getIt<SubscriptionCubit>()),
-          BlocProvider<PartnerMoodCubit>(
-              create: (_) => getIt<PartnerMoodCubit>()),
-          BlocProvider<SyncEngineBloc>(create: (_) => getIt<SyncEngineBloc>()),
-        ],
-        child: Consumer<AppThemeProvider>(
-          builder: (context, theme, _) {
-            return GetMaterialApp(
-              title: 'Sync',
-              debugShowCheckedModeBanner: false,
-              theme: theme.themeData,
-              initialRoute: initialRoute,
-              getPages: AppRouter.pages,
-            );
-          },
+      child: ListenableBuilder(
+        listenable: LocaleService.instance,
+        builder: (context, _) => MultiBlocProvider(
+          providers: [
+            BlocProvider<AuthBloc>(create: (_) => getIt<AuthBloc>()),
+            BlocProvider<SubscriptionCubit>(
+                create: (_) => getIt<SubscriptionCubit>()),
+            BlocProvider<PartnerMoodCubit>(
+                create: (_) => getIt<PartnerMoodCubit>()),
+            BlocProvider<SyncEngineBloc>(
+                create: (_) => getIt<SyncEngineBloc>()),
+          ],
+          child: Consumer<AppThemeProvider>(
+            builder: (context, theme, _) {
+              return GetMaterialApp(
+                title: 'Sync',
+                debugShowCheckedModeBanner: false,
+                theme: theme.themeData,
+                initialRoute: initialRoute,
+                getPages: AppRouter.pages,
+              );
+            },
+          ),
         ),
       ),
     );

@@ -394,7 +394,6 @@ class _TypingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final color = isCoach ? const Color(0xFFE06B8F) : const Color(0xFF8B7EC8);
     return Align(
       alignment: Alignment.centerLeft,

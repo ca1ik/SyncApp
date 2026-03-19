@@ -65,9 +65,10 @@ class _LoginPageState extends State<LoginPage> {
           );
         }
         if (state.status == AuthStatus.authenticated) {
-          final route = state.user?.partnerUid == null
-              ? AppRoutes.partnerLink
-              : AppRoutes.home;
+          final isGuest = state.user?.uid == 'guest';
+          final route = (isGuest || state.user?.partnerUid != null)
+              ? AppRoutes.home
+              : AppRoutes.partnerLink;
           Get.offAllNamed(route);
         }
       },
@@ -180,6 +181,22 @@ class _LoginPageState extends State<LoginPage> {
                                       'Zaten hesabin var mi? Giris yap')
                                   : l.tr('Need a new account? Sign up',
                                       'Yeni hesap mi gerekiyor? Kayit ol'),
+                            ),
+                          ),
+                          const Gap(8),
+                          const Divider(),
+                          const Gap(8),
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton.icon(
+                              onPressed: () {
+                                context
+                                    .read<AuthBloc>()
+                                    .add(const AuthGuestLoginRequested());
+                              },
+                              icon: const Icon(Icons.person_outline),
+                              label: Text(l.tr('Continue as Guest',
+                                  'Misafir olarak devam et')),
                             ),
                           ),
                         ],

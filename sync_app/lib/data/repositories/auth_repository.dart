@@ -109,6 +109,21 @@ class AuthRepository {
     return user;
   }
 
+  /// Sign in as guest (local anonymous session).
+  Future<UserModel> signInAsGuest() async {
+    final now = DateTime.now();
+    final guest = UserModel(
+      uid: 'guest',
+      email: 'guest@local',
+      displayName: l.tr('Guest', 'Misafir'),
+      createdAt: now,
+      lastActiveAt: now,
+    );
+    await _setCurrentUser(guest);
+    _logger.i('Guest session started');
+    return guest;
+  }
+
   /// Çıkış yap.
   Future<void> signOut() async {
     _logger.i('Çıkış yapıldı: ${_currentUser?.email}');

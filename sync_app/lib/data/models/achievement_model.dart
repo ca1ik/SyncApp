@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../core/services/locale_service.dart';
+
 enum AchievementType {
   firstMood,
   streak3,
@@ -21,66 +23,79 @@ extension AchievementTypeX on AchievementType {
   String get title {
     switch (this) {
       case AchievementType.firstMood:
-        return 'Ilk Adim';
+        return l.tr('First Step', 'Ilk Adim');
       case AchievementType.streak3:
-        return '3 Gun Serisi';
+        return l.tr('3-Day Streak', '3 Gun Serisi');
       case AchievementType.streak7:
-        return 'Haftalik Kahraman';
+        return l.tr('Weekly Hero', 'Haftalik Kahraman');
       case AchievementType.streak14:
-        return 'Azimli Cift';
+        return l.tr('Dedicated Couple', 'Azimli Cift');
       case AchievementType.streak30:
-        return 'Aylik Sampiyon';
+        return l.tr('Monthly Champion', 'Aylik Sampiyon');
       case AchievementType.partnerLinked:
-        return 'Baglantiyi Kurduk';
+        return l.tr('Connected!', 'Baglantiyi Kurduk');
       case AchievementType.first10Moods:
-        return '10 Mood Girisi';
+        return l.tr('10 Mood Entries', '10 Mood Girisi');
       case AchievementType.first50Moods:
-        return '50 Mood Ustasi';
+        return l.tr('50 Mood Master', '50 Mood Ustasi');
       case AchievementType.firstReport:
-        return 'Ilk Analiz';
+        return l.tr('First Analysis', 'Ilk Analiz');
       case AchievementType.moodVariety:
-        return 'Duygu Paleti';
+        return l.tr('Emotion Palette', 'Duygu Paleti');
       case AchievementType.nightOwl:
-        return 'Gece Kusu';
+        return l.tr('Night Owl', 'Gece Kusu');
       case AchievementType.earlyBird:
-        return 'Erken Kalkan';
+        return l.tr('Early Bird', 'Erken Kalkan');
       case AchievementType.weekendWarrior:
-        return 'Hafta Sonu Savascisi';
+        return l.tr('Weekend Warrior', 'Hafta Sonu Savascisi');
       case AchievementType.consistentCouple:
-        return 'Uyumlu Cift';
+        return l.tr('Harmonious Couple', 'Uyumlu Cift');
     }
   }
 
   String get description {
     switch (this) {
       case AchievementType.firstMood:
-        return 'Ilk mood girisini yaptin!';
+        return l.tr(
+            'You made your first mood entry!', 'Ilk mood girisini yaptin!');
       case AchievementType.streak3:
-        return '3 gun ust uste mood girisi!';
+        return l.tr('3 consecutive days of mood entries!',
+            '3 gun ust uste mood girisi!');
       case AchievementType.streak7:
-        return '7 gun boyunca kesintisiz!';
+        return l.tr(
+            '7 days without interruption!', '7 gun boyunca kesintisiz!');
       case AchievementType.streak14:
-        return '2 hafta boyunca her gun giris yaptin!';
+        return l.tr('You entered daily for 2 weeks!',
+            '2 hafta boyunca her gun giris yaptin!');
       case AchievementType.streak30:
-        return '30 gun boyunca asla vazgecmedin!';
+        return l.tr('You never gave up for 30 days!',
+            '30 gun boyunca asla vazgecmedin!');
       case AchievementType.partnerLinked:
-        return 'Partnerini basariyla bagladin!';
+        return l.tr('You successfully linked your partner!',
+            'Partnerini basariyla bagladin!');
       case AchievementType.first10Moods:
-        return '10 mood girisi tamamlandi!';
+        return l.tr('10 mood entries completed!', '10 mood girisi tamamlandi!');
       case AchievementType.first50Moods:
-        return '50 mood girisine ulastin!';
+        return l.tr(
+            'You reached 50 mood entries!', '50 mood girisine ulastin!');
       case AchievementType.firstReport:
-        return 'Ilk tetikleyici raporunu olusturdun!';
+        return l.tr('You generated your first trigger report!',
+            'Ilk tetikleyici raporunu olusturdun!');
       case AchievementType.moodVariety:
-        return '5 farkli sinyal turunu kullandin!';
+        return l.tr('You used 5 different signal types!',
+            '5 farkli sinyal turunu kullandin!');
       case AchievementType.nightOwl:
-        return 'Gece yarisi sonrasi mood girisi yaptin!';
+        return l.tr('You made a mood entry after midnight!',
+            'Gece yarisi sonrasi mood girisi yaptin!');
       case AchievementType.earlyBird:
-        return 'Sabah 7 den once mood girisi yaptin!';
+        return l.tr('You made a mood entry before 7 AM!',
+            'Sabah 7 den once mood girisi yaptin!');
       case AchievementType.weekendWarrior:
-        return 'Hafta sonu da mood girisini ihmal etmedin!';
+        return l.tr('You didn\'t skip mood entries on weekends!',
+            'Hafta sonu da mood girisini ihmal etmedin!');
       case AchievementType.consistentCouple:
-        return 'Ikisi de ayni gun mood girisini yapti!';
+        return l.tr('Both of you made mood entries on the same day!',
+            'Ikisi de ayni gun mood girisini yapti!');
     }
   }
 

@@ -14,6 +14,7 @@ import '../../../../data/repositories/gamification_repository.dart';
 import '../../../auth/bloc/auth_bloc.dart';
 import '../../../subscription/cubit/subscription_cubit.dart';
 import '../../../sync_engine/bloc/sync_engine_bloc.dart';
+import '../../../../core/services/locale_service.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -26,7 +27,7 @@ class DashboardPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Analiz'),
+        title: Text(l.tr('Analysis', 'Analiz')),
         centerTitle: true,
       ),
       body: BlocBuilder<SyncEngineBloc, SyncEngineState>(
@@ -50,10 +51,10 @@ class DashboardPage extends StatelessWidget {
                       builder: (context, authState) {
                         return _MiniStat(
                           icon: Icons.person_outlined,
-                          label: 'Hesap',
+                          label: l.tr('Account', 'Hesap'),
                           value: authState.user?.displayName ??
                               authState.user?.email ??
-                              'Misafir',
+                              l.tr('Guest', 'Misafir'),
                           theme: theme,
                         );
                       },
@@ -67,8 +68,10 @@ class DashboardPage extends StatelessWidget {
                           icon: state.isPro
                               ? Icons.workspace_premium
                               : Icons.star_outline,
-                          label: 'Plan',
-                          value: state.isPro ? 'PRO' : 'Standart',
+                          label: l.tr('Plan', 'Plan'),
+                          value: state.isPro
+                              ? 'PRO'
+                              : l.tr('Standard', 'Standart'),
                           theme: theme,
                           accent: state.isPro,
                         );
@@ -82,7 +85,7 @@ class DashboardPage extends StatelessWidget {
               // ── Mood Distribution Chart ──
               if (syncState.history.isNotEmpty) ...[
                 Text(
-                  'Sinyal Dagilimi',
+                  l.tr('Signal Distribution', 'Sinyal Dagilimi'),
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
@@ -106,7 +109,7 @@ class DashboardPage extends StatelessWidget {
               // ── Energy/Tolerance Trend (PRO) ──
               if (isPro && syncState.history.length >= 3) ...[
                 Text(
-                  'Enerji & Tolerans Trendi',
+                  l.tr('Energy & Tolerance Trend', 'Enerji & Tolerans Trendi'),
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
@@ -127,9 +130,11 @@ class DashboardPage extends StatelessWidget {
                 const Gap(16),
               ] else if (!isPro) ...[
                 _ProFeatureTeaser(
-                  title: 'Enerji & Tolerans Trendi',
-                  description:
-                      'PRO ile enerji ve tolerans seviyelerinizin zamanla nasil degistigini gorun.',
+                  title: l.tr(
+                      'Energy & Tolerance Trend', 'Enerji & Tolerans Trendi'),
+                  description: l.tr(
+                      'See how your energy and tolerance levels change over time with PRO.',
+                      'PRO ile enerji ve tolerans seviyelerinizin zamanla nasil degistigini gorun.'),
                   theme: theme,
                 ).animate().fadeIn(delay: 300.ms),
                 const Gap(16),
@@ -139,7 +144,7 @@ class DashboardPage extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'Gecmis',
+                    l.tr('History', 'Gecmis'),
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w700,
                     ),
@@ -151,16 +156,17 @@ class DashboardPage extends StatelessWidget {
                     TextButton.icon(
                       onPressed: () => Get.toNamed(AppRoutes.subscription),
                       icon: const Icon(Icons.lock_outline, size: 14),
-                      label: const Text('Tumunu gor'),
+                      label: Text(l.tr('See all', 'Tumunu gor')),
                     ),
                 ],
               ),
               const Gap(8),
               if (syncState.history.isEmpty)
                 Card(
-                  child: const Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Text('Henuz mood kaydi bulunmuyor.'),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Text(l.tr('No mood entries yet.',
+                        'Henuz mood kaydi bulunmuyor.')),
                   ),
                 )
               else ...[
@@ -196,7 +202,7 @@ class DashboardPage extends StatelessWidget {
                               ),
                             ),
                             subtitle: Text(
-                              'Enerji ${entry.value.energyLevel} • Tolerans ${entry.value.toleranceLevel}',
+                              '${l.tr('Energy', 'Enerji')} ${entry.value.energyLevel} • ${l.tr('Tolerance', 'Tolerans')} ${entry.value.toleranceLevel}',
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurface
                                     .withValues(alpha: 0.5),
@@ -256,7 +262,7 @@ class _RelationshipScoreCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Iliski Skoru',
+                      l.tr('Relationship Score', 'Iliski Skoru'),
                       style: theme.textTheme.titleSmall?.copyWith(
                         color: Colors.white.withValues(alpha: 0.8),
                       ),
@@ -313,11 +319,16 @@ class _RelationshipScoreCard extends StatelessWidget {
   }
 
   String _getScoreLabel(int score) {
-    if (score >= 80) return 'Harika uyum! Boyle devam edin 💪';
+    if (score >= 80)
+      return l.tr(
+          'Great harmony! Keep it up 💪', 'Harika uyum! Boyle devam edin 💪');
     if (score >= 60)
-      return 'Iyi gidiyorsunuz, kucuk adimlar buyuk fark yaratir.';
-    if (score >= 40) return 'Birbirinize vakit ayirin, konusun.';
-    return 'Dikkatli olun, destek alin.';
+      return l.tr('Going well, small steps make a big difference.',
+          'Iyi gidiyorsunuz, kucuk adimlar buyuk fark yaratir.');
+    if (score >= 40)
+      return l.tr(
+          'Spend time together, talk.', 'Birbirinize vakit ayirin, konusun.');
+    return l.tr('Be careful, seek support.', 'Dikkatli olun, destek alin.');
   }
 
   String _getScoreEmoji(int score) {

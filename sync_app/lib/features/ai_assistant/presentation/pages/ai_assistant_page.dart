@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 
 import '../../../../data/services/ai_assistant_service.dart';
+import '../../../../core/services/locale_service.dart';
 
 class AiAssistantPage extends StatefulWidget {
   const AiAssistantPage({super.key});
@@ -29,8 +30,12 @@ class _AiAssistantPageState extends State<AiAssistantPage>
   void _addWelcome() {
     _messages.add(AiChatMessage(
       text: _activeType == AiAssistantType.relationshipCoach
-          ? 'Merhaba! 💕 Ben iliski kocunuzum. Iliskileriniz, iletisim, guven, romantizm ve daha fazlasi hakkinda size yardimci olabilirim.\n\nNasil yardimci olabilirim?'
-          : 'Merhaba! 🔮 Ben burc asistanınızım. Burclar, gezegen gecisleri, uyum analizi ve astrolojik yorumlar konusunda size yol gosterebilirim.\n\nBurcunuz ne?',
+          ? l.tr(
+              'Hello! 💕 I am your relationship coach. I can help you with your relationships, communication, trust, romance and more.\n\nHow can I help you?',
+              'Merhaba! 💕 Ben iliski kocunuzum. Iliskileriniz, iletisim, guven, romantizm ve daha fazlasi hakkinda size yardimci olabilirim.\n\nNasil yardimci olabilirim?')
+          : l.tr(
+              'Hello! 🔮 I am your astrology assistant. I can guide you on zodiac signs, planetary transits, compatibility analysis and astrological interpretations.\n\nWhat is your sign?',
+              'Merhaba! 🔮 Ben burc asistanınızım. Burclar, gezegen gecisleri, uyum analizi ve astrolojik yorumlar konusunda size yol gosterebilirim.\n\nBurcunuz ne?'),
       isUser: false,
       timestamp: DateTime.now(),
     ));
@@ -133,7 +138,7 @@ class _AiAssistantPageState extends State<AiAssistantPage>
               children: [
                 _ModeTab(
                   emoji: '💕',
-                  label: 'Iliski Kocu',
+                  label: l.tr('Rel. Coach', 'Iliski Kocu'),
                   isActive: isCoach,
                   color: const Color(0xFFE06B8F),
                   onTap: () =>
@@ -142,7 +147,7 @@ class _AiAssistantPageState extends State<AiAssistantPage>
                 const Gap(4),
                 _ModeTab(
                   emoji: '🔮',
-                  label: 'Burc Asistani',
+                  label: l.tr('Astro Assistant', 'Burc Asistani'),
                   isActive: !isCoach,
                   color: const Color(0xFF8B7EC8),
                   onTap: () =>
@@ -217,8 +222,10 @@ class _AiAssistantPageState extends State<AiAssistantPage>
                     minLines: 1,
                     decoration: InputDecoration(
                       hintText: isCoach
-                          ? 'Iliskinizle ilgili sorun...'
-                          : 'Burcunuzla ilgili sorun...',
+                          ? l.tr('Ask about your relationship...',
+                              'Iliskinizle ilgili sorun...')
+                          : l.tr('Ask about your zodiac...',
+                              'Burcunuzla ilgili sorun...'),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(24),
                         borderSide: BorderSide.none,
@@ -358,7 +365,9 @@ class _ChatBubble extends StatelessWidget {
                         style: const TextStyle(fontSize: 12)),
                     const Gap(4),
                     Text(
-                      isCoach ? 'Iliski Kocu' : 'Burc Asistani',
+                      isCoach
+                          ? l.tr('Rel. Coach', 'Iliski Kocu')
+                          : l.tr('Astro Assistant', 'Burc Asistani'),
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: aiColor,
                         fontWeight: FontWeight.w700,
@@ -472,17 +481,22 @@ class _QuickSuggestions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final suggestions = type == AiAssistantType.relationshipCoach
-        ? const [
-            'Partnerimle iletisim sorunumuz var',
-            'Kiskanclik nasil yonetilir?',
-            'Iliskide guven nasil insa edilir?',
-            'Romantizmi nasil canli tutariz?',
+        ? [
+            l.tr('We have communication issues with my partner',
+                'Partnerimle iletisim sorunumuz var'),
+            l.tr('How to manage jealousy?', 'Kiskanclik nasil yonetilir?'),
+            l.tr('How to build trust in a relationship?',
+                'Iliskide guven nasil insa edilir?'),
+            l.tr('How to keep romance alive?',
+                'Romantizmi nasil canli tutariz?'),
           ]
-        : const [
-            'Koc burcu nasil biri?',
-            'Bugun burcum ne diyor?',
-            'Boga ve Akrep uyumlu mu?',
-            'Merkur retrogradi ne etkiler?',
+        : [
+            l.tr('What is an Aries like?', 'Koc burcu nasil biri?'),
+            l.tr('What does my sign say today?', 'Bugun burcum ne diyor?'),
+            l.tr('Are Taurus and Scorpio compatible?',
+                'Boga ve Akrep uyumlu mu?'),
+            l.tr('What does Mercury retrograde affect?',
+                'Merkur retrogradi ne etkiler?'),
           ];
 
     return Container(

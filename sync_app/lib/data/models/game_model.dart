@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../core/services/locale_service.dart';
+
 enum CoupleGameType {
   countTrap, // Sayı Tuzağı
   truthOrDare, // Doğruluk mu Cesaret mi
@@ -17,25 +19,25 @@ extension CoupleGameTypeX on CoupleGameType {
   String get title {
     switch (this) {
       case CoupleGameType.countTrap:
-        return 'Sayi Tuzagi';
+        return l.tr('Number Trap', 'Sayi Tuzagi');
       case CoupleGameType.truthOrDare:
-        return 'Dogruluk mu Cesaret mi';
+        return l.tr('Truth or Dare', 'Dogruluk mu Cesaret mi');
       case CoupleGameType.wouldYouRather:
-        return 'Hangisini Tercih Edersin';
+        return l.tr('Would You Rather', 'Hangisini Tercih Edersin');
       case CoupleGameType.knowMeQuiz:
-        return 'Beni Ne Kadar Taniyorsun';
+        return l.tr('How Well Do You Know Me', 'Beni Ne Kadar Taniyorsun');
       case CoupleGameType.tripMeter:
-        return 'Trip Olcer';
+        return l.tr('Trip Meter', 'Trip Olcer');
       case CoupleGameType.finishSentence:
-        return 'Cumle Tamamla';
+        return l.tr('Finish the Sentence', 'Cumle Tamamla');
       case CoupleGameType.emojiGuess:
-        return 'Emoji Tahmin';
+        return l.tr('Emoji Guess', 'Emoji Tahmin');
       case CoupleGameType.loveMap:
-        return 'Ask Haritasi';
+        return l.tr('Love Map', 'Ask Haritasi');
       case CoupleGameType.secretMessage:
-        return 'Gizli Mesaj';
+        return l.tr('Secret Message', 'Gizli Mesaj');
       case CoupleGameType.compatibilityTest:
-        return 'Uyum Testi';
+        return l.tr('Compatibility Test', 'Uyum Testi');
     }
   }
 
@@ -67,25 +69,36 @@ extension CoupleGameTypeX on CoupleGameType {
   String get description {
     switch (this) {
       case CoupleGameType.countTrap:
-        return '1-10 arasi karsilikli sayin, tuzak sayiyi soyleyeni yakalayin!';
+        return l.tr(
+            'Count together 1-10, catch the one who says the trap number!',
+            '1-10 arasi karsilikli sayin, tuzak sayiyi soyleyeni yakalayin!');
       case CoupleGameType.truthOrDare:
-        return 'Cesaret mi dogruluk mu? Ciftlere ozel sorular!';
+        return l.tr('Truth or dare? Special questions for couples!',
+            'Cesaret mi dogruluk mu? Ciftlere ozel sorular!');
       case CoupleGameType.wouldYouRather:
-        return 'Zor secimler yapin, birbirinizi daha iyi taniyin!';
+        return l.tr('Make tough choices, get to know each other better!',
+            'Zor secimler yapin, birbirinizi daha iyi taniyin!');
       case CoupleGameType.knowMeQuiz:
-        return 'Partneriniz hakkinda ne kadar biliyorsunuz?';
+        return l.tr('How much do you know about your partner?',
+            'Partneriniz hakkinda ne kadar biliyorsunuz?');
       case CoupleGameType.tripMeter:
-        return 'Sinir zorlama oyunu — kim daha sabirli?';
+        return l.tr('Boundary-testing game — who is more patient?',
+            'Sinir zorlama oyunu — kim daha sabirli?');
       case CoupleGameType.finishSentence:
-        return 'Cumleyi tamamlayin, uyumunuzu test edin!';
+        return l.tr('Complete the sentence, test your harmony!',
+            'Cumleyi tamamlayin, uyumunuzu test edin!');
       case CoupleGameType.emojiGuess:
-        return 'Emojilerle anlatın, partner tahmin etsin!';
+        return l.tr('Express with emojis, partner guesses!',
+            'Emojilerle anlatın, partner tahmin etsin!');
       case CoupleGameType.loveMap:
-        return 'Iliski anılarınızı haritalayin!';
+        return l.tr('Map your relationship memories!',
+            'Iliski anılarınızı haritalayin!');
       case CoupleGameType.secretMessage:
-        return 'Sifrelı ask mektuplari gonderin!';
+        return l.tr(
+            'Send encrypted love letters!', 'Sifrelı ask mektuplari gonderin!');
       case CoupleGameType.compatibilityTest:
-        return 'Ayni sorulari cevaplayin, uyum yuzdenizi gorun!';
+        return l.tr('Answer the same questions, see your compatibility!',
+            'Ayni sorulari cevaplayin, uyum yuzdenizi gorun!');
     }
   }
 
@@ -160,13 +173,13 @@ class CouplePoints extends Equatable {
   double get levelProgress => (totalPoints % nextLevelPoints) / nextLevelPoints;
 
   String get bondTitle {
-    if (bondLevel >= 20) return 'Ruh Ikizi';
-    if (bondLevel >= 15) return 'Ayrilmaz Cift';
-    if (bondLevel >= 10) return 'Tutkulu Asiklar';
-    if (bondLevel >= 7) return 'Guvenilir Partner';
-    if (bondLevel >= 5) return 'Yakin Cift';
-    if (bondLevel >= 3) return 'Gelisen Iliski';
-    return 'Yeni Baslangic';
+    if (bondLevel >= 20) return l.tr('Soul Mates', 'Ruh Ikizi');
+    if (bondLevel >= 15) return l.tr('Inseparable Couple', 'Ayrilmaz Cift');
+    if (bondLevel >= 10) return l.tr('Passionate Lovers', 'Tutkulu Asiklar');
+    if (bondLevel >= 7) return l.tr('Trusted Partner', 'Guvenilir Partner');
+    if (bondLevel >= 5) return l.tr('Close Couple', 'Yakin Cift');
+    if (bondLevel >= 3) return l.tr('Growing Relationship', 'Gelisen Iliski');
+    return l.tr('New Beginning', 'Yeni Baslangic');
   }
 
   Map<String, dynamic> toJson() => {

@@ -5,6 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../core/services/locale_service.dart';
 import '../models/user_model.dart';
 
 /// Yerel auth repository — SharedPreferences ile kullanıcı oturumu yönetimi.
@@ -51,7 +52,8 @@ class AuthRepository {
 
     // E-posta kontrolü
     if (usersDb.containsKey(email)) {
-      throw AuthException('Bu e-posta adresi zaten kayıtlı.');
+      throw AuthException(l.tr('This email is already registered.',
+          'Bu e-posta adresi zaten kayıtlı.'));
     }
 
     final now = DateTime.now();
@@ -84,11 +86,11 @@ class AuthRepository {
     final userData = usersDb[email];
 
     if (userData == null) {
-      throw AuthException('Kullanıcı bulunamadı.');
+      throw AuthException(l.tr('User not found.', 'Kullanıcı bulunamadı.'));
     }
 
     if (userData['password'] != password) {
-      throw AuthException('Şifre hatalı.');
+      throw AuthException(l.tr('Incorrect password.', 'Şifre hatalı.'));
     }
 
     final user = UserModel.fromJson(userData).copyWith(
@@ -118,20 +120,23 @@ class AuthRepository {
   /// Partner e-posta ile bağla.
   Future<UserModel> linkPartnerByEmail(String partnerEmail) async {
     if (_currentUser == null) {
-      throw AuthException('Oturum açmanız gerekiyor.');
+      throw AuthException(
+          l.tr('You need to sign in.', 'Oturum açmanız gerekiyor.'));
     }
 
     final usersDb = _getUsersDb();
     final partnerData = usersDb[partnerEmail];
 
     if (partnerData == null) {
-      throw AuthException('Partner bulunamadı — kayıtlı olması gerekiyor.');
+      throw AuthException(l.tr('Partner not found — must be registered.',
+          'Partner bulunamadı — kayıtlı olması gerekiyor.'));
     }
 
     final partner = UserModel.fromJson(partnerData);
 
     if (partner.uid == _currentUser!.uid) {
-      throw AuthException('Kendinizi partner olarak ekleyemezsiniz.');
+      throw AuthException(l.tr('You cannot add yourself as a partner.',
+          'Kendinizi partner olarak ekleyemezsiniz.'));
     }
 
     final coupleId = const Uuid().v4();

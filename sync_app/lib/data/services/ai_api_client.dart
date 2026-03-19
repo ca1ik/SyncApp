@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 
 import '../models/mood_log_model.dart';
 import '../models/trigger_report_model.dart';
+import '../../core/services/locale_service.dart';
 
 /// Basit AI istemcisi.
 /// Uzak API bağlanana kadar yerel fallback içgörüler üretir.
@@ -77,18 +78,28 @@ class AiApiClient {
 
   String _localAdvice(MoodLogModel currentMood, MoodLogModel? partnerMood) {
     if (currentMood.signal == MoodSignal.needSilence) {
-      return 'Şu an kısa ve yumuşak cümleler daha iyi çalışır. Alan tanıyın, baskı kurmayın.';
+      return l.tr(
+          'Short and gentle sentences work better right now. Give space, don\'t pressure.',
+          'Şu an kısa ve yumuşak cümleler daha iyi çalışır. Alan tanıyın, baskı kurmayın.');
     }
     if (currentMood.signal == MoodSignal.needHug) {
-      return 'Fiziksel temas güven verici olabilir. Önce izin isteyen kısa bir mesaj deneyin.';
+      return l.tr(
+          'Physical touch can be reassuring. Try a short message asking permission first.',
+          'Fiziksel temas güven verici olabilir. Önce izin isteyen kısa bir mesaj deneyin.');
     }
     if (currentMood.signal == MoodSignal.exhausted) {
-      return 'Yorgunluk yükselmiş görünüyor. Problem çözmek yerine yük azaltmaya odaklanın.';
+      return l.tr(
+          'Fatigue seems elevated. Focus on reducing the load rather than solving problems.',
+          'Yorgunluk yükselmiş görünüyor. Problem çözmek yerine yük azaltmaya odaklanın.');
     }
     if (partnerMood?.signal == MoodSignal.anxious) {
-      return 'İkinizde de gerginlik varsa açıklama değil düzenleme yapın: ses tonunu düşürün, tek konu seçin.';
+      return l.tr(
+          'If both of you feel tense, regulate instead of explaining: lower your tone, pick one topic.',
+          'İkinizde de gerginlik varsa açıklama değil düzenleme yapın: ses tonunu düşürün, tek konu seçin.');
     }
-    return 'Önce duyguyu adlandırın, sonra ihtiyacı söyleyin. Kısa ve net cümleler en güvenli seçenek.';
+    return l.tr(
+        'Name the emotion first, then state the need. Short and clear sentences are the safest choice.',
+        'Önce duyguyu adlandırın, sonra ihtiyacı söyleyin. Kısa ve net cümleler en güvenli seçenek.');
   }
 
   TriggerReportModel _localTriggerReport({
@@ -113,7 +124,8 @@ class AiApiClient {
       final timestamp = sample.timestamp ?? DateTime.now();
       patterns.add(
         TriggerPattern(
-          description: '${signal.label} sinyali sık tekrar ediyor',
+          description: l.tr('${signal.label} signal repeats frequently',
+              '${signal.label} sinyali sık tekrar ediyor'),
           dayOfWeek: timestamp.weekday,
           hour: timestamp.hour,
           frequency: logs.length / max(sorted.length, 1),
@@ -135,13 +147,17 @@ class AiApiClient {
     return TriggerReportModel(
       id: const Uuid().v4(),
       coupleId: coupleId,
-      summaryText:
-          'Yerel analiz, enerji ve tolerans düşüşlerinin belirli sinyallerle kümelendiğini gösteriyor.',
+      summaryText: l.tr(
+          'Local analysis shows that energy and tolerance drops cluster with certain signals.',
+          'Yerel analiz, enerji ve tolerans düşüşlerinin belirli sinyallerle kümelendiğini gösteriyor.'),
       patterns: patterns,
-      recommendations: const [
-        'Enerji seviyesi düşük günlerde yeni zor konular açmayın.',
-        'İlk 3 dakikada çözüm değil düzenleme hedefleyin.',
-        'Sinyal geldiğinde partnerin ihtiyacını tekrar ederek yanıt verin.',
+      recommendations: [
+        l.tr('Avoid bringing up difficult topics on low-energy days.',
+            'Enerji seviyesi düşük günlerde yeni zor konular açmayın.'),
+        l.tr('In the first 3 minutes, aim to regulate rather than solve.',
+            'İlk 3 dakikada çözüm değil düzenleme hedefleyin.'),
+        l.tr('When a signal comes, respond by repeating your partner\'s need.',
+            'Sinyal geldiğinde partnerin ihtiyacını tekrar ederek yanıt verin.'),
       ],
       generatedAt: DateTime.now(),
       periodStart: sorted.isEmpty

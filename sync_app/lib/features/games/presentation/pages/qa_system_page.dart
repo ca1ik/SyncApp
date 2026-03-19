@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../data/models/game_model.dart';
 import '../../../../data/repositories/games_repository.dart';
+import '../../../../core/services/locale_service.dart';
 
 class QASystemPage extends StatefulWidget {
   const QASystemPage({super.key});
@@ -114,13 +115,13 @@ class _QASystemPageState extends State<QASystemPage>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Soru - Cevap 💬'),
+        title: Text(l.tr('Q&A 💬', 'Soru - Cevap 💬')),
         bottom: TabBar(
           controller: _tabCtrl,
           tabs: [
-            Tab(text: 'Sor (${unanswered.length})'),
-            Tab(text: 'Cevapla (${answered.length})'),
-            Tab(text: 'Gecmis (${completed.length})'),
+            Tab(text: '${l.tr('Ask', 'Sor')} (${unanswered.length})'),
+            Tab(text: '${l.tr('Answer', 'Cevapla')} (${answered.length})'),
+            Tab(text: '${l.tr('History', 'Gecmis')} (${completed.length})'),
           ],
         ),
       ),
@@ -156,17 +157,21 @@ class _AskTab extends StatelessWidget {
   final VoidCallback onAsk;
   final List<CoupleQuestion> unanswered;
 
-  static const _suggestions = [
-    'En sevdigin anımız hangisi?',
-    'Bende en cok neyi seviyorsun?',
-    'Ilk bulusmamizda ne hissettin?',
-    'Gelecekte birlikte ne yapmak istiyorsun?',
-    'Beni en cok ne zaman ozledin?',
-    'Hayalindeki tatil nerede?',
-    'En komik animiz ne?',
-    'Bana sorulamayan bir soru var mi?',
-    'Evlilikte en onemli sey ne?',
-    'Benim icin ne degisir?',
+  static final _suggestions = [
+    l.tr('Which is our favorite moment?', 'En sevdigin anımız hangisi?'),
+    l.tr('What do you love most about me?', 'Bende en cok neyi seviyorsun?'),
+    l.tr('How did you feel on our first date?',
+        'Ilk bulusmamizda ne hissettin?'),
+    l.tr('What do you want to do together in the future?',
+        'Gelecekte birlikte ne yapmak istiyorsun?'),
+    l.tr('When did you miss me the most?', 'Beni en cok ne zaman ozledin?'),
+    l.tr('Where is your dream vacation?', 'Hayalindeki tatil nerede?'),
+    l.tr('What is our funniest moment?', 'En komik animiz ne?'),
+    l.tr("Is there a question you can't ask me?",
+        'Bana sorulamayan bir soru var mi?'),
+    l.tr('What is the most important thing in marriage?',
+        'Evlilikte en onemli sey ne?'),
+    l.tr('What would change for me?', 'Benim icin ne degisir?'),
   ];
 
   @override
@@ -181,15 +186,16 @@ class _AskTab extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Partnerine Soru Sor',
+                Text(l.tr('Ask Your Partner a Question', 'Partnerine Soru Sor'),
                     style: theme.textTheme.titleMedium
                         ?.copyWith(fontWeight: FontWeight.w800)),
                 const Gap(12),
                 TextField(
                   controller: questionCtrl,
                   maxLines: 2,
-                  decoration: const InputDecoration(
-                    hintText: 'Soruyu buraya yaz...',
+                  decoration: InputDecoration(
+                    hintText: l.tr(
+                        'Write your question here...', 'Soruyu buraya yaz...'),
                     prefixIcon: Icon(Icons.help_outline),
                   ),
                 ),
@@ -200,7 +206,7 @@ class _AskTab extends StatelessWidget {
                   child: ElevatedButton.icon(
                     onPressed: onAsk,
                     icon: const Icon(Icons.send),
-                    label: const Text('Soruyu Gonder'),
+                    label: Text(l.tr('Send Question', 'Soruyu Gonder')),
                   ),
                 ),
               ],
@@ -208,7 +214,7 @@ class _AskTab extends StatelessWidget {
           ),
         ).animate().fadeIn(duration: 300.ms),
         const Gap(16),
-        Text('Ilham Al 💡',
+        Text(l.tr('Get Inspired 💡', 'Ilham Al 💡'),
             style: theme.textTheme.titleSmall
                 ?.copyWith(fontWeight: FontWeight.w700)),
         const Gap(8),
@@ -224,7 +230,8 @@ class _AskTab extends StatelessWidget {
         ),
         if (unanswered.isNotEmpty) ...[
           const Gap(20),
-          Text('Bekleyen Sorular (${unanswered.length})',
+          Text(
+              '${l.tr('Pending Questions', 'Bekleyen Sorular')} (${unanswered.length})',
               style: theme.textTheme.titleSmall
                   ?.copyWith(fontWeight: FontWeight.w700)),
           const Gap(8),
@@ -264,7 +271,7 @@ class _AnswerTab extends StatelessWidget {
           children: [
             const Text('✅', style: TextStyle(fontSize: 48)),
             const Gap(12),
-            Text('Tum sorular cevaplanmis!',
+            Text(l.tr('All questions answered!', 'Tum sorular cevaplanmis!'),
                 style: theme.textTheme.titleMedium),
           ],
         ),
@@ -339,8 +346,8 @@ class _AnswerCardState extends State<_AnswerCard> {
               TextField(
                 controller: _ansCtrl,
                 maxLines: 2,
-                decoration: const InputDecoration(
-                  hintText: 'Cevabini yaz...',
+                decoration: InputDecoration(
+                  hintText: l.tr('Write your answer...', 'Cevabini yaz...'),
                   prefixIcon: Icon(Icons.edit),
                 ),
               ),
@@ -353,7 +360,7 @@ class _AnswerCardState extends State<_AnswerCard> {
                       widget.onAnswer(_ansCtrl.text.trim());
                     }
                   },
-                  child: const Text('Cevapla'),
+                  child: Text(l.tr('Answer', 'Cevapla')),
                 ),
               ),
             ] else ...[
@@ -368,7 +375,7 @@ class _AnswerCardState extends State<_AnswerCard> {
               ),
               const Gap(12),
               if (q.rating == null) ...[
-                Text('Cevabi puanla (1-10):',
+                Text(l.tr('Rate answer (1-10):', 'Cevabi puanla (1-10):'),
                     style: theme.textTheme.labelLarge),
                 const Gap(8),
                 Wrap(
@@ -389,8 +396,8 @@ class _AnswerCardState extends State<_AnswerCard> {
                       child: ElevatedButton.icon(
                         onPressed: () => widget.onMarkCorrect(true),
                         icon: const Icon(Icons.check, color: Colors.white),
-                        label: const Text('Dogru',
-                            style: TextStyle(color: Colors.white)),
+                        label: Text(l.tr('Correct', 'Dogru'),
+                            style: const TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green),
                       ),
@@ -400,7 +407,7 @@ class _AnswerCardState extends State<_AnswerCard> {
                       child: OutlinedButton.icon(
                         onPressed: () => widget.onMarkCorrect(false),
                         icon: const Icon(Icons.close),
-                        label: const Text('Yanlis'),
+                        label: Text(l.tr('Wrong', 'Yanlis')),
                       ),
                     ),
                   ],
@@ -429,9 +436,10 @@ class _HistoryTab extends StatelessWidget {
           children: [
             const Text('📝', style: TextStyle(fontSize: 48)),
             const Gap(12),
-            Text('Henuz gecmis yok', style: theme.textTheme.titleMedium),
+            Text(l.tr('No history yet', 'Henuz gecmis yok'),
+                style: theme.textTheme.titleMedium),
             const Gap(4),
-            Text('Soru sorup cevaplayin!',
+            Text(l.tr('Ask and answer questions!', 'Soru sorup cevaplayin!'),
                 style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.5))),
           ],
@@ -512,8 +520,10 @@ class _HistoryTab extends StatelessWidget {
 
 String _timeAgo(DateTime dt) {
   final diff = DateTime.now().difference(dt);
-  if (diff.inMinutes < 1) return 'Az once';
-  if (diff.inMinutes < 60) return '${diff.inMinutes} dk once';
-  if (diff.inHours < 24) return '${diff.inHours} saat once';
-  return '${diff.inDays} gun once';
+  if (diff.inMinutes < 1) return l.tr('Just now', 'Az once');
+  if (diff.inMinutes < 60)
+    return '${diff.inMinutes} ${l.tr('min ago', 'dk once')}';
+  if (diff.inHours < 24)
+    return '${diff.inHours} ${l.tr('hours ago', 'saat once')}';
+  return '${diff.inDays} ${l.tr('days ago', 'gun once')}';
 }

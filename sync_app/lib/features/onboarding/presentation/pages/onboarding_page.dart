@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/services/locale_service.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -18,48 +19,54 @@ class _OnboardingPageState extends State<OnboardingPage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  static const _pages = [
-    _OnboardingData(
-      emoji: '💕',
-      title: 'Sync',
-      subtitle: 'Ciftler icin duygusal koordinasyon',
-      body:
-          'Kriz anlarinda hizli, sade ve gercek zamanli duygusal baglanti kurun.',
-      gradient: [Color(0xFFE88A6A), Color(0xFFF2B19A)],
-    ),
-    _OnboardingData(
-      emoji: '🤝',
-      title: 'Tek Dokunusla Kopru',
-      subtitle: 'One-Touch Bridge',
-      body:
-          'Uzun aciklamalar yerine tek dokunusla neye ihtiyaciniz oldugunu paylasin. 8 farkli duygusal sinyal.',
-      gradient: [Color(0xFF4DA8A0), Color(0xFF80C9C3)],
-    ),
-    _OnboardingData(
-      emoji: '💡',
-      title: 'Mikro Tavsiyeler',
-      subtitle: 'Anlik yonlendirme',
-      body:
-          'Zor anlarda ne yapmaniz gerektigini kisa ve uygulanabilir onerilerle gorun.',
-      gradient: [Color(0xFF9B7EDE), Color(0xFFBBA2F0)],
-    ),
-    _OnboardingData(
-      emoji: '🧘',
-      title: 'Nefes & Sakinlik',
-      subtitle: 'Birlikte rahatlayin',
-      body:
-          'Nefes egzersizleri ve sakinlestirici tekniklerle gerginligi aninda azaltin.',
-      gradient: [Color(0xFF7DBD8C), Color(0xFFA8D9B0)],
-    ),
-    _OnboardingData(
-      emoji: '📊',
-      title: 'Tahmin Et & Engelle',
-      subtitle: 'Predict & Prevent',
-      body:
-          'Mood paternlerini gorup tetikleyici saatleri erken fark edin. Basarimlarla motive olun.',
-      gradient: [Color(0xFFE88A6A), Color(0xFF9B7EDE)],
-    ),
-  ];
+  List<_OnboardingData> get _pages => [
+        _OnboardingData(
+          emoji: '💕',
+          title: 'Sync',
+          subtitle: l.tr('Emotional coordination for couples',
+              'Ciftler icin duygusal koordinasyon'),
+          body: l.tr(
+              'Build fast, simple and real-time emotional connections during crisis moments.',
+              'Kriz anlarinda hizli, sade ve gercek zamanli duygusal baglanti kurun.'),
+          gradient: [Color(0xFFE88A6A), Color(0xFFF2B19A)],
+        ),
+        _OnboardingData(
+          emoji: '🤝',
+          title: l.tr('One-Touch Bridge', 'Tek Dokunusla Kopru'),
+          subtitle: l.tr('Share with a single tap', 'One-Touch Bridge'),
+          body: l.tr(
+              'Share what you need with a single touch instead of long explanations. 8 different emotional signals.',
+              'Uzun aciklamalar yerine tek dokunusla neye ihtiyaciniz oldugunu paylasin. 8 farkli duygusal sinyal.'),
+          gradient: [Color(0xFF4DA8A0), Color(0xFF80C9C3)],
+        ),
+        _OnboardingData(
+          emoji: '💡',
+          title: l.tr('Micro Advice', 'Mikro Tavsiyeler'),
+          subtitle: l.tr('Instant guidance', 'Anlik yonlendirme'),
+          body: l.tr(
+              'See short and actionable suggestions for what to do in difficult moments.',
+              'Zor anlarda ne yapmaniz gerektigini kisa ve uygulanabilir onerilerle gorun.'),
+          gradient: [Color(0xFF9B7EDE), Color(0xFFBBA2F0)],
+        ),
+        _OnboardingData(
+          emoji: '🧘',
+          title: l.tr('Breath & Calm', 'Nefes & Sakinlik'),
+          subtitle: l.tr('Relax together', 'Birlikte rahatlayin'),
+          body: l.tr(
+              'Instantly reduce tension with breathing exercises and calming techniques.',
+              'Nefes egzersizleri ve sakinlestirici tekniklerle gerginligi aninda azaltin.'),
+          gradient: [Color(0xFF7DBD8C), Color(0xFFA8D9B0)],
+        ),
+        _OnboardingData(
+          emoji: '📊',
+          title: l.tr('Predict & Prevent', 'Tahmin Et & Engelle'),
+          subtitle: 'Predict & Prevent',
+          body: l.tr(
+              'See mood patterns and detect trigger times early. Stay motivated with achievements.',
+              'Mood paternlerini gorup tetikleyici saatleri erken fark edin. Basarimlarla motive olun.'),
+          gradient: [Color(0xFFE88A6A), Color(0xFF9B7EDE)],
+        ),
+      ];
 
   Future<void> _completeOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
@@ -103,7 +110,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   child: TextButton(
                     onPressed: _completeOnboarding,
                     child: Text(
-                      'Atla',
+                      l.tr('Skip', 'Atla'),
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: Colors.white.withValues(alpha: 0.7),
                       ),
@@ -214,7 +221,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             ),
                           ),
                           child: Text(
-                            isLastPage ? 'Baslayalim' : 'Devam',
+                            isLastPage
+                                ? l.tr('Let\'s Start', 'Baslayalim')
+                                : l.tr('Continue', 'Devam'),
                             style: const TextStyle(
                               fontWeight: FontWeight.w800,
                               fontSize: 16,

@@ -8,6 +8,7 @@ import 'package:gap/gap.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../data/models/game_model.dart';
 import '../../../../data/repositories/games_repository.dart';
+import '../../../../core/services/locale_service.dart';
 
 class GamePlayPage extends StatefulWidget {
   const GamePlayPage({super.key, required this.gameType});
@@ -176,7 +177,7 @@ class _GameOverScreen extends StatelessWidget {
                     .scale(duration: 600.ms, curve: Curves.elasticOut),
                 const Gap(16),
                 Text(
-                  'Oyun Bitti!',
+                  l.tr('Game Over!', 'Oyun Bitti!'),
                   style: theme.textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.w900,
                   ),
@@ -197,15 +198,17 @@ class _GameOverScreen extends StatelessWidget {
                           color: theme.colorScheme.primary,
                         ),
                       ),
-                      Text('puan kazandiniz!',
+                      Text(l.tr('points earned!', 'puan kazandiniz!'),
                           style: theme.textTheme.titleMedium),
                       const Gap(12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          _ScoreChip(label: '👩 Ben', score: p1),
+                          _ScoreChip(label: l.tr('👩 Me', '👩 Ben'), score: p1),
                           const Gap(16),
-                          _ScoreChip(label: '👨 Partner', score: p2),
+                          _ScoreChip(
+                              label: l.tr('👨 Partner', '👨 Partner'),
+                              score: p2),
                         ],
                       ),
                     ],
@@ -217,7 +220,7 @@ class _GameOverScreen extends StatelessWidget {
                   height: 52,
                   child: ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Oyunlara Don'),
+                    child: Text(l.tr('Back to Games', 'Oyunlara Don')),
                   ),
                 ).animate().fadeIn(delay: 600.ms),
               ],
@@ -345,7 +348,7 @@ class _CountTrapGameState extends State<_CountTrapGame> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Sayi Tuzagi 🔢')),
+      appBar: AppBar(title: Text(l.tr('Number Trap 🔢', 'Sayi Tuzagi 🔢'))),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -361,13 +364,16 @@ class _CountTrapGameState extends State<_CountTrapGame> {
       children: [
         const Text('🔢', style: TextStyle(fontSize: 56)),
         const Gap(16),
-        Text('Tuzagi Kur!',
+        Text(l.tr('Set the Trap!', 'Tuzagi Kur!'),
             style: theme.textTheme.headlineSmall
                 ?.copyWith(fontWeight: FontWeight.w800)),
         const Gap(8),
         Text(
-          '1-10 arasi bir sayi sec ve yerine soylenmesi gereken kelimeyi yaz.\n'
-          'Karsilikli sayacaksiniz, o sayiya gelen kisi kelimeyi 3 saniye icinde soylemeli!',
+          l.tr(
+              'Pick a number between 1-10 and write the word to be said instead.\n'
+                  'You will count alternately, the person reaching that number must say the word within 3 seconds!',
+              '1-10 arasi bir sayi sec ve yerine soylenmesi gereken kelimeyi yaz.\n'
+                  'Karsilikli sayacaksiniz, o sayiya gelen kisi kelimeyi 3 saniye icinde soylemeli!'),
           textAlign: TextAlign.center,
           style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
@@ -376,16 +382,17 @@ class _CountTrapGameState extends State<_CountTrapGame> {
         TextField(
           controller: _numberController,
           keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            labelText: 'Tuzak sayi (1-10)',
+          decoration: InputDecoration(
+            labelText: l.tr('Trap number (1-10)', 'Tuzak sayi (1-10)'),
             prefixIcon: Icon(Icons.pin),
           ),
         ),
         const Gap(12),
         TextField(
           controller: _wordController,
-          decoration: const InputDecoration(
-            labelText: 'Tuzak kelime (ör: anne, pizza)',
+          decoration: InputDecoration(
+            labelText: l.tr('Trap word (e.g. mom, pizza)',
+                'Tuzak kelime (ör: anne, pizza)'),
             prefixIcon: Icon(Icons.text_fields),
           ),
         ),
@@ -395,7 +402,7 @@ class _CountTrapGameState extends State<_CountTrapGame> {
           height: 52,
           child: ElevatedButton(
             onPressed: _startGame,
-            child: const Text('Oyunu Baslat!'),
+            child: Text(l.tr('Start Game!', 'Oyunu Baslat!')),
           ),
         ),
       ],
@@ -411,7 +418,9 @@ class _CountTrapGameState extends State<_CountTrapGame> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          _isPlayer1Turn ? '👩 Senin Siran' : '👨 Partner Sirasi',
+          _isPlayer1Turn
+              ? l.tr('👩 Your Turn', '👩 Senin Siran')
+              : l.tr('👨 Partner\'s Turn', '👨 Partner Sirasi'),
           style:
               theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
         ),
@@ -472,7 +481,8 @@ class _CountTrapGameState extends State<_CountTrapGame> {
         if (!isTrap) ...[
           const Gap(32),
           Text(
-            'Dokun ve "$_currentNumber" de!',
+            l.tr('Tap and say "$_currentNumber"!',
+                'Dokun ve "$_currentNumber" de!'),
             style: theme.textTheme.bodyLarge?.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
             ),
@@ -553,7 +563,8 @@ class _TruthOrDareGameState extends State<_TruthOrDareGame> {
 
     return Scaffold(
       appBar: AppBar(
-          title: Text('Dogruluk mu Cesaret mi — Tur ${widget.round + 1}')),
+          title: Text(
+              '${l.tr('Truth or Dare', 'Dogruluk mu Cesaret mi')} — ${l.tr('Round', 'Tur')} ${widget.round + 1}')),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -579,7 +590,7 @@ class _TruthOrDareGameState extends State<_TruthOrDareGame> {
                     Expanded(
                       child: _BigButton(
                         emoji: '🔥',
-                        label: 'Cesaret',
+                        label: l.tr('Dare', 'Cesaret'),
                         color: Colors.red,
                         onTap: () => _pick(false),
                       ),
@@ -592,7 +603,10 @@ class _TruthOrDareGameState extends State<_TruthOrDareGame> {
                     padding: const EdgeInsets.all(24),
                     child: Column(
                       children: [
-                        Text(_isTruth! ? '🤔 Dogruluk' : '🔥 Cesaret',
+                        Text(
+                            _isTruth!
+                                ? l.tr('🤔 Truth', '🤔 Dogruluk')
+                                : l.tr('🔥 Dare', '🔥 Cesaret'),
                             style: theme.textTheme.titleMedium
                                 ?.copyWith(fontWeight: FontWeight.w700)),
                         const Gap(12),
@@ -613,7 +627,7 @@ class _TruthOrDareGameState extends State<_TruthOrDareGame> {
                           setState(() => _currentQ = null);
                           widget.onNext();
                         },
-                        child: const Text('Sonraki Tur'),
+                        child: Text(l.tr('Next Round', 'Sonraki Tur')),
                       ),
                     ),
                     const Gap(12),
@@ -625,8 +639,9 @@ class _TruthOrDareGameState extends State<_TruthOrDareGame> {
                                 setState(() => _currentQ = null);
                                 widget.onNext();
                               },
-                        child:
-                            Text(widget.round >= 9 ? 'Bitir' : 'Tamamlandi ✅'),
+                        child: Text(widget.round >= 9
+                            ? l.tr('Finish', 'Bitir')
+                            : l.tr('Completed ✅', 'Tamamlandi ✅')),
                       ),
                     ),
                   ],
@@ -681,7 +696,9 @@ class _WouldYouRatherGameState extends State<_WouldYouRatherGame> {
     final option2 = parts.length > 1 ? parts[1].replaceAll('?', '') : '...';
 
     return Scaffold(
-      appBar: AppBar(title: Text('Tercih — Tur ${widget.round + 1}/10')),
+      appBar: AppBar(
+          title: Text(
+              '${l.tr('Preference', 'Tercih')} — ${l.tr('Round', 'Tur')} ${widget.round + 1}/10')),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -714,8 +731,9 @@ class _WouldYouRatherGameState extends State<_WouldYouRatherGame> {
                 height: 52,
                 child: ElevatedButton(
                   onPressed: widget.round >= 9 ? widget.onEnd : _next,
-                  child: Text(
-                      widget.round >= 9 ? 'Sonuclari Gor' : 'Sonraki Soru'),
+                  child: Text(widget.round >= 9
+                      ? l.tr('See Results', 'Sonuclari Gor')
+                      : l.tr('Next Question', 'Sonraki Soru')),
                 ),
               ),
             ],
@@ -777,7 +795,9 @@ class _KnowMeQuizGameState extends State<_KnowMeQuizGame> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text('Beni Tani — Tur ${widget.round + 1}/10')),
+      appBar: AppBar(
+          title: Text(
+              '${l.tr('Know Me', 'Beni Tani')} — ${l.tr('Round', 'Tur')} ${widget.round + 1}/10')),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -793,13 +813,14 @@ class _KnowMeQuizGameState extends State<_KnowMeQuizGame> {
               const Gap(24),
               TextField(
                 controller: _answerCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Partnerin cevabi...',
+                decoration: InputDecoration(
+                  labelText:
+                      l.tr('Partner\'s answer...', 'Partnerin cevabi...'),
                   prefixIcon: Icon(Icons.question_answer),
                 ),
               ),
               const Gap(24),
-              Text('Soran kisi karar versin:',
+              Text(l.tr('The asker decides:', 'Soran kisi karar versin:'),
                   style: theme.textTheme.bodyMedium),
               const Gap(12),
               Row(
@@ -808,7 +829,7 @@ class _KnowMeQuizGameState extends State<_KnowMeQuizGame> {
                     child: ElevatedButton.icon(
                       onPressed: () => _nextQ(true),
                       icon: const Icon(Icons.check_circle, color: Colors.white),
-                      label: const Text('Dogru ✅'),
+                      label: Text(l.tr('Correct ✅', 'Dogru ✅')),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green),
                     ),
@@ -818,7 +839,7 @@ class _KnowMeQuizGameState extends State<_KnowMeQuizGame> {
                     child: OutlinedButton.icon(
                       onPressed: () => _nextQ(false),
                       icon: const Icon(Icons.cancel),
-                      label: const Text('Yanlis ❌'),
+                      label: Text(l.tr('Wrong ❌', 'Yanlis ❌')),
                     ),
                   ),
                 ],
@@ -883,7 +904,9 @@ class _TripMeterGameState extends State<_TripMeterGame> {
     final scenarioLevel = _scenario['level'] as int;
 
     return Scaffold(
-      appBar: AppBar(title: Text('Trip Olcer — Senaryo ${widget.round + 1}/8')),
+      appBar: AppBar(
+          title: Text(
+              '${l.tr('Trip Meter', 'Trip Olcer')} — ${l.tr('Scenario', 'Senaryo')} ${widget.round + 1}/8')),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -905,7 +928,9 @@ class _TripMeterGameState extends State<_TripMeterGame> {
                 ),
               ),
               const Gap(24),
-              Text('Bu seni ne kadar trip attirir?',
+              Text(
+                  l.tr('How much would this trip you?',
+                      'Bu seni ne kadar trip attirir?'),
                   style: theme.textTheme.bodyLarge),
               const Gap(16),
               Row(
@@ -924,7 +949,8 @@ class _TripMeterGameState extends State<_TripMeterGame> {
                   const Text('😤', style: TextStyle(fontSize: 24)),
                 ],
               ),
-              Text('Trip Seviyesi: ${_tripLevel.round()}/10',
+              Text(
+                  '${l.tr('Trip Level', 'Trip Seviyesi')}: ${_tripLevel.round()}/10',
                   style: theme.textTheme.titleMedium
                       ?.copyWith(fontWeight: FontWeight.w800)),
               const Gap(24),
@@ -933,8 +959,9 @@ class _TripMeterGameState extends State<_TripMeterGame> {
                 height: 52,
                 child: ElevatedButton(
                   onPressed: _submit,
-                  child: Text(
-                      widget.round >= 7 ? 'Sonuclari Gor' : 'Sonraki Senaryo'),
+                  child: Text(widget.round >= 7
+                      ? l.tr('See Results', 'Sonuclari Gor')
+                      : l.tr('Next Scenario', 'Sonraki Senaryo')),
                 ),
               ),
             ],
@@ -1004,7 +1031,9 @@ class _FinishSentenceGameState extends State<_FinishSentenceGame> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text('Cumle Tamamla — ${widget.round + 1}/10')),
+      appBar: AppBar(
+          title: Text(
+              '${l.tr('Finish Sentence', 'Cumle Tamamla')} — ${widget.round + 1}/10')),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -1022,8 +1051,9 @@ class _FinishSentenceGameState extends State<_FinishSentenceGame> {
               TextField(
                 controller: _ctrl,
                 maxLines: 3,
-                decoration: const InputDecoration(
-                  labelText: 'Cumleyi tamamla...',
+                decoration: InputDecoration(
+                  labelText:
+                      l.tr('Complete the sentence...', 'Cumleyi tamamla...'),
                   prefixIcon: Icon(Icons.edit),
                 ),
               ),
@@ -1033,7 +1063,7 @@ class _FinishSentenceGameState extends State<_FinishSentenceGame> {
                 height: 52,
                 child: ElevatedButton(
                   onPressed: _submit,
-                  child: const Text('Gonder'),
+                  child: Text(l.tr('Send', 'Gonder')),
                 ),
               ),
             ],
@@ -1103,7 +1133,9 @@ class _EmojiGuessGameState extends State<_EmojiGuessGame> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text('Emoji Tahmin — ${widget.round + 1}/10')),
+      appBar: AppBar(
+          title: Text(
+              '${l.tr('Emoji Guess', 'Emoji Tahmin')} — ${widget.round + 1}/10')),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -1125,9 +1157,10 @@ class _EmojiGuessGameState extends State<_EmojiGuessGame> {
               if (!_showGuessPhase) ...[
                 TextField(
                   controller: _emojiCtrl,
-                  decoration: const InputDecoration(
-                    labelText: 'Emojilerle anlat...',
-                    hintText: '🎬🦁👑 gibi...',
+                  decoration: InputDecoration(
+                    labelText:
+                        l.tr('Express with emojis...', 'Emojilerle anlat...'),
+                    hintText: l.tr('🎬🦁👑 like this...', '🎬🦁👑 gibi...'),
                     prefixIcon: Icon(Icons.emoji_emotions),
                   ),
                   style: const TextStyle(fontSize: 28),
@@ -1137,7 +1170,8 @@ class _EmojiGuessGameState extends State<_EmojiGuessGame> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _emojiCtrl.text.isNotEmpty ? _showGuess : null,
-                    child: const Text('Partner Tahmin Etsin'),
+                    child:
+                        Text(l.tr('Let Partner Guess', 'Partner Tahmin Etsin')),
                   ),
                 ),
               ] else ...[
@@ -1146,8 +1180,8 @@ class _EmojiGuessGameState extends State<_EmojiGuessGame> {
                 const Gap(16),
                 TextField(
                   controller: _guessCtrl,
-                  decoration: const InputDecoration(
-                    labelText: 'Tahminini yaz...',
+                  decoration: InputDecoration(
+                    labelText: l.tr('Write your guess...', 'Tahminini yaz...'),
                     prefixIcon: Icon(Icons.lightbulb),
                   ),
                 ),
@@ -1159,15 +1193,15 @@ class _EmojiGuessGameState extends State<_EmojiGuessGame> {
                         onPressed: () => _next(true),
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green),
-                        child: const Text('Dogru! ✅',
-                            style: TextStyle(color: Colors.white)),
+                        child: Text(l.tr('Correct! ✅', 'Dogru! ✅'),
+                            style: const TextStyle(color: Colors.white)),
                       ),
                     ),
                     const Gap(12),
                     Expanded(
                       child: OutlinedButton(
                         onPressed: () => _next(false),
-                        child: const Text('Yanlis ❌'),
+                        child: Text(l.tr('Wrong ❌', 'Yanlis ❌')),
                       ),
                     ),
                   ],
@@ -1198,16 +1232,16 @@ class _LoveMapGameState extends State<_LoveMapGame> {
   final _dateCtrl = TextEditingController();
 
   static const _milestones = [
-    'Ilk tanisma',
-    'Ilk bulusma',
-    'Ilk opucuk',
-    'Ilk tartisma ve barisma',
-    'Ilk tatil',
-    'Birlikte yasama karari',
-    'Unutulmaz ani',
-    'En komik ani',
-    'En romantik ani',
-    'Gelecek hayali',
+    'First meeting',
+    'First date',
+    'First kiss',
+    'First argument and making up',
+    'First vacation',
+    'Decision to live together',
+    'Unforgettable moment',
+    'Funniest moment',
+    'Most romantic moment',
+    'Future dream',
   ];
 
   void _addMemory() {
@@ -1233,16 +1267,19 @@ class _LoveMapGameState extends State<_LoveMapGame> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Ask Haritasi 🗺️')),
+      appBar: AppBar(title: Text(l.tr('Love Map 🗺️', 'Ask Haritasi 🗺️'))),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(24),
           children: [
-            Text('Iliskinizin onemli anlarini kaydedin!',
+            Text(
+                l.tr('Record the important moments of your relationship!',
+                    'Iliskinizin onemli anlarini kaydedin!'),
                 style: theme.textTheme.titleMedium
                     ?.copyWith(fontWeight: FontWeight.w700)),
             const Gap(8),
-            Text('Onerilir:', style: theme.textTheme.bodySmall),
+            Text(l.tr('Suggested:', 'Onerilir:'),
+                style: theme.textTheme.bodySmall),
             const Gap(4),
             Wrap(
               spacing: 6,
@@ -1257,21 +1294,22 @@ class _LoveMapGameState extends State<_LoveMapGame> {
             const Gap(16),
             TextField(
               controller: _titleCtrl,
-              decoration: const InputDecoration(
-                  labelText: 'Ani basligi', prefixIcon: Icon(Icons.star)),
+              decoration: InputDecoration(
+                  labelText: l.tr('Memory title', 'Ani basligi'),
+                  prefixIcon: Icon(Icons.star)),
             ),
             const Gap(8),
             TextField(
               controller: _dateCtrl,
-              decoration: const InputDecoration(
-                  labelText: 'Tarih (opsiyonel)',
+              decoration: InputDecoration(
+                  labelText: l.tr('Date (optional)', 'Tarih (opsiyonel)'),
                   prefixIcon: Icon(Icons.calendar_today)),
             ),
             const Gap(12),
             ElevatedButton.icon(
               onPressed: _addMemory,
               icon: const Icon(Icons.add),
-              label: const Text('Ekle'),
+              label: Text(l.tr('Add', 'Ekle')),
             ),
             const Gap(20),
             ..._memories.asMap().entries.map((e) {
@@ -1293,7 +1331,7 @@ class _LoveMapGameState extends State<_LoveMapGame> {
                 height: 52,
                 child: ElevatedButton(
                   onPressed: widget.onEnd,
-                  child: const Text('Haritayi Tamamla!'),
+                  child: Text(l.tr('Complete the Map!', 'Haritayi Tamamla!')),
                 ),
               ),
           ],
@@ -1344,7 +1382,7 @@ class _SecretMessageGameState extends State<_SecretMessageGame> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Gizli Mesaj 🔐')),
+      appBar: AppBar(title: Text(l.tr('Secret Message 🔐', 'Gizli Mesaj 🔐'))),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -1353,7 +1391,9 @@ class _SecretMessageGameState extends State<_SecretMessageGame> {
             children: [
               const Text('🔐', style: TextStyle(fontSize: 48)),
               const Gap(16),
-              Text('Partnerine sifrelenmis bir ask mektubu gonder!',
+              Text(
+                  l.tr('Send an encrypted love letter to your partner!',
+                      'Partnerine sifrelenmis bir ask mektubu gonder!'),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.titleMedium
                       ?.copyWith(fontWeight: FontWeight.w700)),
@@ -1362,9 +1402,11 @@ class _SecretMessageGameState extends State<_SecretMessageGame> {
                 TextField(
                   controller: _msgCtrl,
                   maxLines: 4,
-                  decoration: const InputDecoration(
-                    labelText: 'Ask mektubunu yaz...',
-                    hintText: 'Seni cok seviyorum cunku...',
+                  decoration: InputDecoration(
+                    labelText: l.tr(
+                        'Write your love letter...', 'Ask mektubunu yaz...'),
+                    hintText: l.tr('I love you so much because...',
+                        'Seni cok seviyorum cunku...'),
                     prefixIcon: Icon(Icons.mail),
                   ),
                 ),
@@ -1373,7 +1415,7 @@ class _SecretMessageGameState extends State<_SecretMessageGame> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _send,
-                    child: const Text('Sifrele ve Gonder'),
+                    child: Text(l.tr('Encrypt and Send', 'Sifrele ve Gonder')),
                   ),
                 ),
               ] else ...[
@@ -1382,7 +1424,7 @@ class _SecretMessageGameState extends State<_SecretMessageGame> {
                     padding: const EdgeInsets.all(20),
                     child: Column(
                       children: [
-                        Text('Sifrelenmis Mesaj:',
+                        Text(l.tr('Encrypted Message:', 'Sifrelenmis Mesaj:'),
                             style: theme.textTheme.labelLarge),
                         const Gap(8),
                         Text(
@@ -1408,7 +1450,9 @@ class _SecretMessageGameState extends State<_SecretMessageGame> {
                         HapticFeedback.heavyImpact();
                       }
                     },
-                    child: Text(_revealed ? 'Tamamla 💕' : 'Coz! 🔓'),
+                    child: Text(_revealed
+                        ? l.tr('Complete 💕', 'Tamamla 💕')
+                        : l.tr('Decode! 🔓', 'Coz! 🔓')),
                   ),
                 ),
               ],
@@ -1487,7 +1531,8 @@ class _CompatibilityGameState extends State<_CompatibilityGame> {
 
     return Scaffold(
       appBar: AppBar(
-          title: Text('Uyum Testi — ${_qIndex + 1}/${_questions.length}')),
+          title: Text(
+              '${l.tr('Compatibility Test', 'Uyum Testi')} — ${_qIndex + 1}/${_questions.length}')),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -1495,12 +1540,16 @@ class _CompatibilityGameState extends State<_CompatibilityGame> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                _isP1Phase ? '👩 Senin Cevabın' : '👨 Partner Cevabı',
+                _isP1Phase
+                    ? l.tr('👩 Your Answer', '👩 Senin Cevabın')
+                    : l.tr('👨 Partner\'s Answer', '👨 Partner Cevabı'),
                 style: theme.textTheme.titleLarge
                     ?.copyWith(fontWeight: FontWeight.w700),
               ),
               if (!_isP1Phase)
-                Text('(Diger tarafa bakma!)',
+                Text(
+                    l.tr('(Don\'t look at the other side!)',
+                        '(Diger tarafa bakma!)'),
                     style:
                         theme.textTheme.bodySmall?.copyWith(color: Colors.red)),
               const Gap(24),

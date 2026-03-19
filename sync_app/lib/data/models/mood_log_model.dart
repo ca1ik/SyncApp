@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-/// Tek dokunuşta paylaşılabilen NLC sinyalleri.
+import '../../core/services/locale_service.dart';
+
+/// NLC signals that can be shared with a single tap.
 enum MoodSignal {
   needHug,
   needSilence,
@@ -16,21 +18,24 @@ extension MoodSignalExtension on MoodSignal {
   String get label {
     switch (this) {
       case MoodSignal.needHug:
-        return 'Sarılmaya ihtiyacım var 🤗';
+        return l.tr('I need a hug 🤗', 'Sarılmaya ihtiyacım var 🤗');
       case MoodSignal.needSilence:
-        return 'Sessizliğe ihtiyacım var 🤫';
+        return l.tr('I need silence 🤫', 'Sessizliğe ihtiyacım var 🤫');
       case MoodSignal.needSpace:
-        return 'Biraz yalnız kalmam lazım 🌙';
+        return l.tr(
+            'I need some alone time 🌙', 'Biraz yalnız kalmam lazım 🌙');
       case MoodSignal.needTalk:
-        return 'Konuşmaya hazırım 💬';
+        return l.tr('I\'m ready to talk 💬', 'Konuşmaya hazırım 💬');
       case MoodSignal.exhausted:
-        return 'Çok yoruldum, anlayış bekliyorum 🔋';
+        return l.tr('I\'m exhausted, need understanding 🔋',
+            'Çok yoruldum, anlayış bekliyorum 🔋');
       case MoodSignal.happy:
-        return 'Harika hissediyorum! ✨';
+        return l.tr('Feeling great! ✨', 'Harika hissediyorum! ✨');
       case MoodSignal.anxious:
-        return 'Biraz kaygılıyım, destek lazım 🫂';
+        return l.tr('Feeling anxious, need support 🫂',
+            'Biraz kaygılıyım, destek lazım 🫂');
       case MoodSignal.neutral:
-        return 'Her şey normal 😊';
+        return l.tr('Everything is fine 😊', 'Her şey normal 😊');
     }
   }
 

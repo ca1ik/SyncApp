@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/di/injection.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/services/locale_service.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/theme/theme_provider.dart';
 import '../../../../data/repositories/gamification_repository.dart';
@@ -22,7 +23,7 @@ class SettingsPage extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Ayarlar')),
+      appBar: AppBar(title: Text(l.tr('Settings', 'Ayarlar'))),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -44,7 +45,7 @@ class SettingsPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Hosgeldin 👋',
+                            l.tr('Welcome 👋', 'Hosgeldin 👋'),
                             style: theme.textTheme.titleMedium?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w800,
@@ -52,7 +53,8 @@ class SettingsPage extends StatelessWidget {
                           ),
                           const Gap(4),
                           Text(
-                            'Tercih ve plan ayarlarin burada.',
+                            l.tr('Your preferences and plan settings are here.',
+                                'Tercih ve plan ayarlarin burada.'),
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: Colors.white.withValues(alpha: 0.8),
                             ),
@@ -92,7 +94,7 @@ class SettingsPage extends StatelessWidget {
           const Gap(24),
 
           // ── Quick actions ──
-          Text('Hizli Erisim',
+          Text(l.tr('Quick Access', 'Hizli Erisim'),
               style: theme.textTheme.titleMedium
                   ?.copyWith(fontWeight: FontWeight.w700)),
           const Gap(12),
@@ -101,7 +103,7 @@ class SettingsPage extends StatelessWidget {
               Expanded(
                 child: _QuickActionCard(
                   emoji: '🧘',
-                  label: 'Nefes',
+                  label: l.tr('Breathing', 'Nefes'),
                   onTap: () => Get.toNamed(AppRoutes.breathing),
                 ),
               ),
@@ -109,7 +111,7 @@ class SettingsPage extends StatelessWidget {
               Expanded(
                 child: _QuickActionCard(
                   emoji: '🏆',
-                  label: 'Basarimlar',
+                  label: l.tr('Achievements', 'Basarimlar'),
                   onTap: () => Get.toNamed(AppRoutes.achievements),
                 ),
               ),
@@ -129,7 +131,7 @@ class SettingsPage extends StatelessWidget {
           const Gap(24),
 
           // ── Theme selector ──
-          Text('Tema',
+          Text(l.tr('Theme', 'Tema'),
               style: theme.textTheme.titleMedium
                   ?.copyWith(fontWeight: FontWeight.w700)),
           const Gap(12),
@@ -151,8 +153,51 @@ class SettingsPage extends StatelessWidget {
               .slideY(begin: 0.1),
           const Gap(24),
 
+          // ── Language toggle ──
+          Text(l.tr('Language', 'Dil'),
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w700)),
+          const Gap(12),
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  const Text('🌐', style: TextStyle(fontSize: 24)),
+                  const Gap(12),
+                  Expanded(
+                    child: Text(
+                      l.tr('App Language', 'Uygulama Dili'),
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  SegmentedButton<String>(
+                    segments: const [
+                      ButtonSegment(value: 'en', label: Text('EN')),
+                      ButtonSegment(value: 'tr', label: Text('TR')),
+                    ],
+                    selected: {l.locale},
+                    onSelectionChanged: (selected) {
+                      l.setLocale(selected.first);
+                    },
+                    style: SegmentedButton.styleFrom(
+                      selectedBackgroundColor:
+                          theme.colorScheme.primary.withValues(alpha: 0.15),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ).animate().fadeIn(delay: 250.ms, duration: 400.ms),
+          const Gap(24),
+
           // ── Pro plan ──
-          Text('Plan',
+          Text(l.tr('Plan', 'Plan'),
               style: theme.textTheme.titleMedium
                   ?.copyWith(fontWeight: FontWeight.w700)),
           const Gap(12),
@@ -191,7 +236,9 @@ class SettingsPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  state.isPro ? 'PRO Aktif' : 'Ucretsiz Plan',
+                                  state.isPro
+                                      ? l.tr('PRO Active', 'PRO Aktif')
+                                      : l.tr('Free Plan', 'Ucretsiz Plan'),
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -199,8 +246,11 @@ class SettingsPage extends StatelessWidget {
                                 const Gap(2),
                                 Text(
                                   state.isPro
-                                      ? 'Tum ozellikler aktif'
-                                      : 'Gunluk ${SubscriptionState.freeDailyLimit} mood, sinirli ozellikler',
+                                      ? l.tr('All features active',
+                                          'Tum ozellikler aktif')
+                                      : l.tr(
+                                          'Daily ${SubscriptionState.freeDailyLimit} moods, limited features',
+                                          'Gunluk ${SubscriptionState.freeDailyLimit} mood, sinirli ozellikler'),
                                   style: theme.textTheme.bodySmall,
                                 ),
                               ],
@@ -220,7 +270,8 @@ class SettingsPage extends StatelessWidget {
                           child: FilledButton.tonal(
                             onPressed: () =>
                                 Get.toNamed(AppRoutes.subscription),
-                            child: const Text('PRO\'ya Yukselt'),
+                            child:
+                                Text(l.tr('Upgrade to PRO', 'PRO\'ya Yukselt')),
                           ),
                         ),
                       ],
@@ -235,7 +286,7 @@ class SettingsPage extends StatelessWidget {
           // ── App info ──
           _SettingTile(
             icon: Icons.info_outline,
-            label: 'Uygulama Hakkinda',
+            label: l.tr('About App', 'Uygulama Hakkinda'),
             trailing: Text('v1.0.0',
                 style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.5))),
@@ -243,7 +294,7 @@ class SettingsPage extends StatelessWidget {
           ),
           _SettingTile(
             icon: Icons.share_outlined,
-            label: 'Arkadasa Oner',
+            label: l.tr('Share with Friends', 'Arkadasa Oner'),
             onTap: () {},
           ),
           const Gap(16),
@@ -255,7 +306,7 @@ class SettingsPage extends StatelessWidget {
                 Get.offAllNamed(AppRoutes.login);
               },
               icon: const Icon(Icons.logout),
-              label: const Text('Cikis Yap'),
+              label: Text(l.tr('Log Out', 'Cikis Yap')),
               style: OutlinedButton.styleFrom(
                 foregroundColor: theme.colorScheme.error,
                 side: BorderSide(color: theme.colorScheme.error),

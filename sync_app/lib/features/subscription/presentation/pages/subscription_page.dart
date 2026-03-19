@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/theme/theme_provider.dart';
 import '../../cubit/subscription_cubit.dart';
+import '../../../../core/services/locale_service.dart';
 
 class SubscriptionPage extends StatelessWidget {
   const SubscriptionPage({super.key});
@@ -45,7 +46,8 @@ class SubscriptionPage extends StatelessWidget {
                         ),
                       ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.3),
                       Text(
-                        'Iliskinizi bir ust seviyeye tasiyin',
+                        l.tr('Take your relationship to the next level',
+                            'Iliskinizi bir ust seviyeye tasiyin'),
                         style: theme.textTheme.bodyLarge?.copyWith(
                           color: Colors.white.withValues(alpha: 0.9),
                         ),
@@ -65,41 +67,49 @@ class SubscriptionPage extends StatelessWidget {
                   const Gap(24),
                   _ProFeatureCard(
                     icon: '🔓',
-                    title: 'Sinirsiz Mood Girisi',
-                    description:
-                        'Gunluk limit olmadan istediginiz kadar mood kaydedin.',
+                    title:
+                        l.tr('Unlimited Mood Entries', 'Sinirsiz Mood Girisi'),
+                    description: l.tr(
+                        'Record mood as much as you want without daily limits.',
+                        'Gunluk limit olmadan istediginiz kadar mood kaydedin.'),
                     theme: theme,
                   ).animate().fadeIn(delay: 100.ms).slideX(begin: -0.1),
                   const Gap(12),
                   _ProFeatureCard(
                     icon: '📊',
-                    title: 'Gelismis Analiz & Raporlar',
-                    description:
-                        'Tetikleyici raporu, haftalik trend analizi ve cakisma riski skoru.',
+                    title: l.tr('Advanced Analysis & Reports',
+                        'Gelismis Analiz & Raporlar'),
+                    description: l.tr(
+                        'Trigger report, weekly trend analysis and conflict risk score.',
+                        'Tetikleyici raporu, haftalik trend analizi ve cakisma riski skoru.'),
                     theme: theme,
                   ).animate().fadeIn(delay: 200.ms).slideX(begin: -0.1),
                   const Gap(12),
                   _ProFeatureCard(
                     icon: '🧘',
-                    title: 'Sinirsiz Nefes Egzersizi',
-                    description:
-                        'Farkli nefes teknikleri ile sakinlesin, birlikte egzersiz yapin.',
+                    title: l.tr('Unlimited Breathing Exercises',
+                        'Sinirsiz Nefes Egzersizi'),
+                    description: l.tr(
+                        'Calm down with different breathing techniques, exercise together.',
+                        'Farkli nefes teknikleri ile sakinlesin, birlikte egzersiz yapin.'),
                     theme: theme,
                   ).animate().fadeIn(delay: 300.ms).slideX(begin: -0.1),
                   const Gap(12),
                   _ProFeatureCard(
                     icon: '💡',
-                    title: 'Derin Iclgorular',
-                    description:
-                        'Iliskinizdeki paternleri gorun, guclendiren ve zorlayan anlari kesfein.',
+                    title: l.tr('Deep Insights', 'Derin Iclgorular'),
+                    description: l.tr(
+                        'See patterns in your relationship, discover strengthening and challenging moments.',
+                        'Iliskinizdeki paternleri gorun, guclendiren ve zorlayan anlari kesfein.'),
                     theme: theme,
                   ).animate().fadeIn(delay: 400.ms).slideX(begin: -0.1),
                   const Gap(12),
                   _ProFeatureCard(
                     icon: '🏆',
-                    title: 'Ozel Basarimlar',
-                    description:
-                        'PRO Ozel basarimlarin kilidini acin ve ilerlemenizi takip edin.',
+                    title: l.tr('Special Achievements', 'Ozel Basarimlar'),
+                    description: l.tr(
+                        'Unlock PRO exclusive achievements and track your progress.',
+                        'PRO Ozel basarimlarin kilidini acin ve ilerlemenizi takip edin.'),
                     theme: theme,
                   ).animate().fadeIn(delay: 500.ms).slideX(begin: -0.1),
                   const Gap(32),
@@ -118,7 +128,7 @@ class SubscriptionPage extends StatelessWidget {
                               const Text('✅', style: TextStyle(fontSize: 32)),
                               const Gap(8),
                               Text(
-                                'PRO Aktif!',
+                                l.tr('PRO Active!', 'PRO Aktif!'),
                                 style: theme.textTheme.titleLarge?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w800,
@@ -126,7 +136,8 @@ class SubscriptionPage extends StatelessWidget {
                               ),
                               const Gap(4),
                               Text(
-                                'Tum ozelliklerden yararlaniyorsunuz.',
+                                l.tr('You are enjoying all features.',
+                                    'Tum ozelliklerden yararlaniyorsunuz.'),
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: Colors.white.withValues(alpha: 0.9),
                                 ),
@@ -154,7 +165,7 @@ class SubscriptionPage extends StatelessWidget {
                                 ),
                               ),
                               child: Text(
-                                'PRO\'ya Yukselt',
+                                l.tr('Upgrade to PRO', 'PRO\'ya Yukselt'),
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   color: theme.colorScheme.onPrimary,
                                   fontWeight: FontWeight.w800,
@@ -167,7 +178,8 @@ class SubscriptionPage extends StatelessWidget {
                               curve: Curves.elasticOut),
                           const Gap(12),
                           Text(
-                            'Istediginiz zaman iptal edebilirsiniz',
+                            l.tr('You can cancel anytime',
+                                'Istediginiz zaman iptal edebilirsiniz'),
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.onSurface
                                   .withValues(alpha: 0.5),
@@ -200,26 +212,34 @@ class _ComparisonTable extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              'Plan Karsilastirmasi',
+              l.tr('Plan Comparison', 'Plan Karsilastirmasi'),
               style: theme.textTheme.titleMedium
                   ?.copyWith(fontWeight: FontWeight.w700),
             ),
             const Gap(16),
-            _row('Gunluk mood girisi', '5 / gun', 'Sinirsiz'),
+            _row(l.tr('Daily mood entries', 'Gunluk mood girisi'),
+                l.tr('5 / day', '5 / gun'), l.tr('Unlimited', 'Sinirsiz')),
             const Divider(height: 16),
-            _row('Mood gecmisi', 'Son 10', 'Tumu'),
+            _row(l.tr('Mood history', 'Mood gecmisi'),
+                l.tr('Last 10', 'Son 10'), l.tr('All', 'Tumu')),
             const Divider(height: 16),
-            _row('Mikro tavsiyeler', '✅', '✅ Kisisel'),
+            _row(l.tr('Micro advice', 'Mikro tavsiyeler'), '✅',
+                l.tr('✅ Personal', '✅ Kisisel')),
             const Divider(height: 16),
-            _row('Tetik analizi', '❌', '✅'),
+            _row(l.tr('Trigger analysis', 'Tetik analizi'), '❌', '✅'),
             const Divider(height: 16),
-            _row('Nefes egzersizi', '1 teknik', 'Tum teknikler'),
+            _row(
+                l.tr('Breathing exercise', 'Nefes egzersizi'),
+                l.tr('1 technique', '1 teknik'),
+                l.tr('All techniques', 'Tum teknikler')),
             const Divider(height: 16),
-            _row('Derin icgorular', '❌', '✅'),
+            _row(l.tr('Deep insights', 'Derin icgorular'), '❌', '✅'),
             const Divider(height: 16),
-            _row('Ozel basarimlar', 'Temel', 'Tumu'),
+            _row(l.tr('Special achievements', 'Ozel basarimlar'),
+                l.tr('Basic', 'Temel'), l.tr('All', 'Tumu')),
             const Divider(height: 16),
-            _row('Iliski skoru', 'Temel', 'Detayli'),
+            _row(l.tr('Relationship score', 'Iliski skoru'),
+                l.tr('Basic', 'Temel'), l.tr('Detailed', 'Detayli')),
           ],
         ),
       ),

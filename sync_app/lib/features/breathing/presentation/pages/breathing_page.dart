@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
 import '../../../subscription/cubit/subscription_cubit.dart';
+import '../../../../core/services/locale_service.dart';
 
 enum BreathingTechnique {
   box,
@@ -19,26 +20,31 @@ extension BreathingTechniqueX on BreathingTechnique {
   String get title {
     switch (this) {
       case BreathingTechnique.box:
-        return 'Kutu Nefes';
+        return l.tr('Box Breathing', 'Kutu Nefes');
       case BreathingTechnique.calm478:
-        return '4-7-8 Sakinlestirici';
+        return l.tr('4-7-8 Calming', '4-7-8 Sakinlestirici');
       case BreathingTechnique.energize:
-        return 'Enerji Nefesi';
+        return l.tr('Energy Breath', 'Enerji Nefesi');
       case BreathingTechnique.coupleSync:
-        return 'Cift Senkron Nefes';
+        return l.tr('Couple Sync Breath', 'Cift Senkron Nefes');
     }
   }
 
   String get description {
     switch (this) {
       case BreathingTechnique.box:
-        return '4 adimli sakinlestirici teknik. Kriz anlarinda etkili.';
+        return l.tr('4-step calming technique. Effective during crisis.',
+            '4 adimli sakinlestirici teknik. Kriz anlarinda etkili.');
       case BreathingTechnique.calm478:
-        return 'Derin rahatlatici nefes. Uyku oncesi ve gerginlikte ideal.';
+        return l.tr(
+            'Deep relaxing breath. Ideal before sleep and during tension.',
+            'Derin rahatlatici nefes. Uyku oncesi ve gerginlikte ideal.');
       case BreathingTechnique.energize:
-        return 'Kisa ve canlandirici nefes dongusu.';
+        return l.tr('Short and energizing breath cycle.',
+            'Kisa ve canlandirici nefes dongusu.');
       case BreathingTechnique.coupleSync:
-        return 'Partnerinizle ayni anda nefes egzersizi yapin.';
+        return l.tr('Do breathing exercises together with your partner.',
+            'Partnerinizle ayni anda nefes egzersizi yapin.');
     }
   }
 
@@ -70,28 +76,28 @@ extension BreathingTechniqueX on BreathingTechnique {
     switch (this) {
       case BreathingTechnique.box:
         return [
-          _BreathPhase('Nefes al', 4),
-          _BreathPhase('Tut', 4),
-          _BreathPhase('Nefes ver', 4),
-          _BreathPhase('Tut', 4),
+          _BreathPhase(l.tr('Breathe in', 'Nefes al'), 4),
+          _BreathPhase(l.tr('Hold', 'Tut'), 4),
+          _BreathPhase(l.tr('Breathe out', 'Nefes ver'), 4),
+          _BreathPhase(l.tr('Hold', 'Tut'), 4),
         ];
       case BreathingTechnique.calm478:
         return [
-          _BreathPhase('Nefes al', 4),
-          _BreathPhase('Tut', 7),
-          _BreathPhase('Nefes ver', 8),
+          _BreathPhase(l.tr('Breathe in', 'Nefes al'), 4),
+          _BreathPhase(l.tr('Hold', 'Tut'), 7),
+          _BreathPhase(l.tr('Breathe out', 'Nefes ver'), 8),
         ];
       case BreathingTechnique.energize:
         return [
-          _BreathPhase('Hizli nefes al', 2),
-          _BreathPhase('Hizli nefes ver', 2),
+          _BreathPhase(l.tr('Quick breathe in', 'Hizli nefes al'), 2),
+          _BreathPhase(l.tr('Quick breathe out', 'Hizli nefes ver'), 2),
         ];
       case BreathingTechnique.coupleSync:
         return [
-          _BreathPhase('Birlikte nefes alin', 5),
-          _BreathPhase('Birlikte tutun', 3),
-          _BreathPhase('Birlikte nefes verin', 5),
-          _BreathPhase('Dinlenin', 2),
+          _BreathPhase(l.tr('Breathe in together', 'Birlikte nefes alin'), 5),
+          _BreathPhase(l.tr('Hold together', 'Birlikte tutun'), 3),
+          _BreathPhase(l.tr('Breathe out together', 'Birlikte nefes verin'), 5),
+          _BreathPhase(l.tr('Rest', 'Dinlenin'), 2),
         ];
     }
   }
@@ -244,7 +250,7 @@ class _BreathingPageState extends State<BreathingPage>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Nefes Egzersizi'),
+        title: Text(l.tr('Breathing Exercise', 'Nefes Egzersizi')),
         centerTitle: true,
       ),
       body: ListView(
@@ -264,14 +270,17 @@ class _BreathingPageState extends State<BreathingPage>
                 ).animate().scale(duration: 600.ms, curve: Curves.elasticOut),
                 const Gap(8),
                 Text(
-                  'Zor anlarda nefes alin',
+                  l.tr(
+                      'Breathe in difficult moments', 'Zor anlarda nefes alin'),
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 const Gap(4),
                 Text(
-                  'Dogru nefes teknigi stres seviyesini aninda dusurur.',
+                  l.tr(
+                      'The right breathing technique instantly lowers stress levels.',
+                      'Dogru nefes teknigi stres seviyesini aninda dusurur.'),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
@@ -292,8 +301,10 @@ class _BreathingPageState extends State<BreathingPage>
                 onTap: () {
                   if (locked) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Bu teknik PRO uyeler icindir. Yukselt!'),
+                      SnackBar(
+                        content: Text(l.tr(
+                            'This technique is for PRO members. Upgrade!',
+                            'Bu teknik PRO uyeler icindir. Yukselt!')),
                       ),
                     );
                     return;
@@ -328,7 +339,7 @@ class _BreathingPageState extends State<BreathingPage>
               ),
             ),
             Text(
-              'Tur ${_currentCycle + 1} / ${_activeTechnique!.totalCycles}',
+              '${l.tr('Round', 'Tur')} ${_currentCycle + 1} / ${_activeTechnique!.totalCycles}',
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),
@@ -407,7 +418,7 @@ class _BreathingPageState extends State<BreathingPage>
             TextButton.icon(
               onPressed: _stopExercise,
               icon: const Icon(Icons.close),
-              label: const Text('Bitir'),
+              label: Text(l.tr('End', 'Bitir')),
             ),
             const Gap(32),
           ],
@@ -435,14 +446,16 @@ class _BreathingPageState extends State<BreathingPage>
                     .shimmer(duration: 1500.ms),
                 const Gap(24),
                 Text(
-                  'Harika!',
+                  l.tr('Awesome!', 'Harika!'),
                   style: theme.textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.w900,
                   ),
                 ).animate().fadeIn(delay: 300.ms),
                 const Gap(8),
                 Text(
-                  'Nefes egzersiznizi tamamladiniz.\nKendinizi daha iyi hissedeceksiniz.',
+                  l.tr(
+                      'You completed your breathing exercise.\nYou will feel better.',
+                      'Nefes egzersiznizi tamamladiniz.\nKendinizi daha iyi hissedeceksiniz.'),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyLarge?.copyWith(
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
@@ -457,13 +470,13 @@ class _BreathingPageState extends State<BreathingPage>
                         _activeTechnique = null;
                       });
                     },
-                    child: const Text('Tekrar basla'),
+                    child: Text(l.tr('Start again', 'Tekrar basla')),
                   ),
                 ).animate().fadeIn(delay: 700.ms).slideY(begin: 0.3),
                 const Gap(12),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Kapat'),
+                  child: Text(l.tr('Close', 'Kapat')),
                 ),
               ],
             ),

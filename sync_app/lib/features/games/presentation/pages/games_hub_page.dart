@@ -8,6 +8,7 @@ import '../../../../core/router/app_router.dart';
 import '../../../../core/widgets/romantic_background.dart';
 import '../../../../data/models/game_model.dart';
 import '../../../../data/repositories/games_repository.dart';
+import '../../../../core/services/locale_service.dart';
 
 class GamesHubPage extends StatefulWidget {
   const GamesHubPage({super.key});
@@ -75,7 +76,7 @@ class _GamesHubPageState extends State<GamesHubPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Cift Oyunlari',
+                                      l.tr('Couple Games', 'Cift Oyunlari'),
                                       style: theme.textTheme.headlineSmall
                                           ?.copyWith(
                                         color: Colors.white,
@@ -100,7 +101,7 @@ class _GamesHubPageState extends State<GamesHubPage> {
                           Row(
                             children: [
                               Text(
-                                'Bag Seviyesi ${_points.bondLevel}',
+                                '${l.tr('Bond Level', 'Bag Seviyesi')} ${_points.bondLevel}',
                                 style: theme.textTheme.labelMedium?.copyWith(
                                   color: Colors.white.withValues(alpha: 0.9),
                                   fontWeight: FontWeight.w600,
@@ -143,7 +144,7 @@ class _GamesHubPageState extends State<GamesHubPage> {
                     ),
                   ),
                 ),
-                title: const Text('Oyunlar'),
+                title: Text(l.tr('Games', 'Oyunlar')),
               ),
             ),
             // Stats row
@@ -155,19 +156,19 @@ class _GamesHubPageState extends State<GamesHubPage> {
                     _StatChip(
                       emoji: '🎮',
                       value: '${_points.gamesPlayed}',
-                      label: 'Oyun',
+                      label: l.tr('Games', 'Oyun'),
                     ),
                     const Gap(8),
                     _StatChip(
                       emoji: '⭐',
                       value: '${_points.totalPoints}',
-                      label: 'Puan',
+                      label: l.tr('Points', 'Puan'),
                     ),
                     const Gap(8),
                     _StatChip(
                       emoji: '💕',
                       value: 'Lv.${_points.bondLevel}',
-                      label: 'Bag',
+                      label: l.tr('Bond', 'Bag'),
                     ),
                   ],
                 ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1),
@@ -218,14 +219,16 @@ class _GamesHubPageState extends State<GamesHubPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Soru-Cevap',
+                                  l.tr('Q&A', 'Soru-Cevap'),
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),
                                 const Gap(4),
                                 Text(
-                                  'Partnerine soru sor, puanla veya dogru/yanlis de!',
+                                  l.tr(
+                                      'Ask your partner a question, rate or say true/false!',
+                                      'Partnerine soru sor, puanla veya dogru/yanlis de!'),
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: theme.colorScheme.onSurface
                                         .withValues(alpha: 0.6),
@@ -370,8 +373,8 @@ class _GameCard extends StatelessWidget {
                     color: Colors.green.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Text(
-                    '🆓 Ucretsiz',
+                  child: Text(
+                    l.tr('🆓 Free', '🆓 Ucretsiz'),
                     style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
                   ),
                 ),

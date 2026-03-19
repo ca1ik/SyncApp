@@ -1,6 +1,8 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
 
+import '../../core/services/locale_service.dart';
+
 /// Yerel bildirim servisi — flutter_local_notifications kullanır.
 /// Firebase Messaging kullanılmıyor.
 class NotificationService {
@@ -44,20 +46,21 @@ class NotificationService {
     required String signalLabel,
     required String signalEmoji,
   }) async {
-    const androidDetails = AndroidNotificationDetails(
+    final androidDetails = AndroidNotificationDetails(
       'partner_mood_channel',
-      'Partner Duygu Sinyalleri',
-      channelDescription: 'Partner mood sinyali bildirimleri',
+      l.tr('Partner Emotion Signals', 'Partner Duygu Sinyalleri'),
+      channelDescription: l.tr('Partner mood signal notifications',
+          'Partner mood sinyali bildirimleri'),
       importance: Importance.high,
       priority: Priority.high,
       showWhen: true,
     );
 
-    const details = NotificationDetails(android: androidDetails);
+    final details = NotificationDetails(android: androidDetails);
 
     await _plugin.show(
       DateTime.now().millisecondsSinceEpoch ~/ 1000,
-      '$signalEmoji $partnerName sinyal gönderdi',
+      '$signalEmoji $partnerName ${l.tr('sent a signal', 'sinyal gönderdi')}',
       signalLabel,
       details,
     );
@@ -71,15 +74,16 @@ class NotificationService {
     required String body,
     String? payload,
   }) async {
-    const androidDetails = AndroidNotificationDetails(
+    final androidDetails = AndroidNotificationDetails(
       'sync_general_channel',
-      'Sync Bildirimler',
-      channelDescription: 'Genel uygulama bildirimleri',
+      l.tr('Sync Notifications', 'Sync Bildirimler'),
+      channelDescription:
+          l.tr('General app notifications', 'Genel uygulama bildirimleri'),
       importance: Importance.defaultImportance,
       priority: Priority.defaultPriority,
     );
 
-    const details = NotificationDetails(android: androidDetails);
+    final details = NotificationDetails(android: androidDetails);
 
     await _plugin.show(
       DateTime.now().millisecondsSinceEpoch ~/ 1000,
@@ -94,20 +98,21 @@ class NotificationService {
   Future<void> showMicroAdvice({
     required String advice,
   }) async {
-    const androidDetails = AndroidNotificationDetails(
+    final androidDetails = AndroidNotificationDetails(
       'micro_advice_channel',
-      'Mikro Tavsiyeler',
-      channelDescription: 'AI destekli mikro tavsiye bildirimleri',
+      l.tr('Micro Advice', 'Mikro Tavsiyeler'),
+      channelDescription: l.tr('AI-powered micro advice notifications',
+          'AI destekli mikro tavsiye bildirimleri'),
       importance: Importance.low,
       priority: Priority.low,
-      styleInformation: BigTextStyleInformation(''),
+      styleInformation: const BigTextStyleInformation(''),
     );
 
-    const details = NotificationDetails(android: androidDetails);
+    final details = NotificationDetails(android: androidDetails);
 
     await _plugin.show(
       DateTime.now().millisecondsSinceEpoch ~/ 1000,
-      '💡 Mikro Tavsiye',
+      l.tr('💡 Micro Advice', '💡 Mikro Tavsiye'),
       advice,
       details,
     );

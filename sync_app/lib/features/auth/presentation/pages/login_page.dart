@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/router/app_router.dart';
+import '../../../../core/services/locale_service.dart';
 import '../../bloc/auth_bloc.dart';
 
 class LoginPage extends StatefulWidget {
@@ -94,22 +95,26 @@ class _LoginPageState extends State<LoginPage> {
                           const Gap(8),
                           Text(
                             _isRegisterMode
-                                ? 'Yeni hesap olusturup partnerinizi baglayin.'
-                                : 'Mood paylasimi ve mikro tavsiyeler icin giris yapin.',
+                                ? l.tr(
+                                    'Create a new account and link your partner.',
+                                    'Yeni hesap olusturup partnerinizi baglayin.')
+                                : l.tr(
+                                    'Log in for mood sharing and micro advice.',
+                                    'Mood paylasimi ve mikro tavsiyeler icin giris yapin.'),
                           ),
                           const Gap(24),
                           if (_isRegisterMode) ...[
                             TextFormField(
                               controller: _nameController,
-                              decoration: const InputDecoration(
-                                labelText: 'Gorunen ad',
+                              decoration: InputDecoration(
+                                labelText: l.tr('Display name', 'Gorunen ad'),
                               ),
                               validator: (value) {
                                 if (!_isRegisterMode) {
                                   return null;
                                 }
                                 if (value == null || value.trim().isEmpty) {
-                                  return 'Ad gerekli';
+                                  return l.tr('Name is required', 'Ad gerekli');
                                 }
                                 return null;
                               },
@@ -118,11 +123,12 @@ class _LoginPageState extends State<LoginPage> {
                           ],
                           TextFormField(
                             controller: _emailController,
-                            decoration:
-                                const InputDecoration(labelText: 'E-posta'),
+                            decoration: InputDecoration(
+                                labelText: l.tr('Email', 'E-posta')),
                             validator: (value) {
                               if (value == null || !value.contains('@')) {
-                                return 'Gecerli bir e-posta girin';
+                                return l.tr('Enter a valid email',
+                                    'Gecerli bir e-posta girin');
                               }
                               return null;
                             },
@@ -130,12 +136,13 @@ class _LoginPageState extends State<LoginPage> {
                           const Gap(16),
                           TextFormField(
                             controller: _passwordController,
-                            decoration:
-                                const InputDecoration(labelText: 'Sifre'),
+                            decoration: InputDecoration(
+                                labelText: l.tr('Password', 'Sifre')),
                             obscureText: true,
                             validator: (value) {
                               if (value == null || value.length < 6) {
-                                return 'En az 6 karakter gerekli';
+                                return l.tr('At least 6 characters required',
+                                    'En az 6 karakter gerekli');
                               }
                               return null;
                             },
@@ -151,10 +158,10 @@ class _LoginPageState extends State<LoginPage> {
                                       : _submit,
                                   child: Text(
                                     state.status == AuthStatus.loading
-                                        ? 'Isleniyor...'
+                                        ? l.tr('Processing...', 'Isleniyor...')
                                         : (_isRegisterMode
-                                            ? 'Kayit ol'
-                                            : 'Giris yap'),
+                                            ? l.tr('Sign Up', 'Kayit ol')
+                                            : l.tr('Log In', 'Giris yap')),
                                   ),
                                 ),
                               );
@@ -169,8 +176,10 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             child: Text(
                               _isRegisterMode
-                                  ? 'Zaten hesabin var mi? Giris yap'
-                                  : 'Yeni hesap mi gerekiyor? Kayit ol',
+                                  ? l.tr('Already have an account? Log in',
+                                      'Zaten hesabin var mi? Giris yap')
+                                  : l.tr('Need a new account? Sign up',
+                                      'Yeni hesap mi gerekiyor? Kayit ol'),
                             ),
                           ),
                         ],

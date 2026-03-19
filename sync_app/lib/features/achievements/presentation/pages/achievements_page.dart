@@ -7,6 +7,7 @@ import '../../../../core/di/injection.dart';
 import '../../../../data/models/achievement_model.dart';
 import '../../../../data/repositories/gamification_repository.dart';
 import '../../../subscription/cubit/subscription_cubit.dart';
+import '../../../../core/services/locale_service.dart';
 
 class AchievementsPage extends StatelessWidget {
   const AchievementsPage({super.key});
@@ -18,7 +19,7 @@ class AchievementsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Basarimlar'),
+        title: Text(l.tr('Achievements', 'Basarimlar')),
         centerTitle: true,
       ),
       body: FutureBuilder<List<AchievementModel>>(
@@ -53,13 +54,13 @@ class AchievementsPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '🔥 Mevcut Seri',
+                                '🔥 ${l.tr('Current Streak', 'Mevcut Seri')}',
                                 style: theme.textTheme.titleSmall?.copyWith(
                                   color: Colors.white.withValues(alpha: 0.8),
                                 ),
                               ),
                               Text(
-                                '${streak.currentStreak} gun',
+                                '${streak.currentStreak} ${l.tr('days', 'gun')}',
                                 style: theme.textTheme.headlineMedium?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w900,
@@ -72,13 +73,13 @@ class AchievementsPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                'En Yuksek',
+                                l.tr('Highest', 'En Yuksek'),
                                 style: theme.textTheme.titleSmall?.copyWith(
                                   color: Colors.white.withValues(alpha: 0.8),
                                 ),
                               ),
                               Text(
-                                '${streak.longestStreak} gun',
+                                '${streak.longestStreak} ${l.tr('days', 'gun')}',
                                 style: theme.textTheme.titleLarge?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w800,
@@ -91,7 +92,7 @@ class AchievementsPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                'Toplam',
+                                l.tr('Total', 'Toplam'),
                                 style: theme.textTheme.titleSmall?.copyWith(
                                   color: Colors.white.withValues(alpha: 0.8),
                                 ),
@@ -110,7 +111,7 @@ class AchievementsPage extends StatelessWidget {
                     ).animate().fadeIn(duration: 400.ms).slideY(begin: -0.1),
                   const Gap(24),
                   Text(
-                    'Acilan basarimlar (${unlocked.length}/${AchievementType.values.length})',
+                    '${l.tr('Unlocked achievements', 'Acilan basarimlar')} (${unlocked.length}/${AchievementType.values.length})',
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w700,
                     ),
@@ -172,7 +173,10 @@ class AchievementsPage extends StatelessWidget {
                           subtitle: Text(
                             isUnlocked
                                 ? type.description
-                                : (isLocked ? 'PRO ozeligi' : 'Henuz acilmadi'),
+                                : (isLocked
+                                    ? l.tr('PRO feature', 'PRO ozeligi')
+                                    : l.tr(
+                                        'Not unlocked yet', 'Henuz acilmadi')),
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: isUnlocked
                                   ? theme.colorScheme.onSurface

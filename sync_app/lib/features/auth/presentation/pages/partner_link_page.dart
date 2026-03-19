@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/router/app_router.dart';
+import '../../../../core/services/locale_service.dart';
 import '../../bloc/auth_bloc.dart';
 
 class PartnerLinkPage extends StatefulWidget {
@@ -40,7 +41,7 @@ class _PartnerLinkPageState extends State<PartnerLinkPage> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(title: const Text('Partner bagla')),
+        appBar: AppBar(title: Text(l.tr('Link Partner', 'Partner bagla'))),
         body: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(24),
@@ -53,21 +54,23 @@ class _PartnerLinkPageState extends State<PartnerLinkPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Eslesmeyi tamamla',
+                        l.tr('Complete Matching', 'Eslesmeyi tamamla'),
                         style: theme.textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.w800,
                         ),
                       ),
                       const Gap(12),
                       Text(
-                        'Partnerinizin daha once kayit oldugu e-posta adresini girin. Sistem iki hesabi yerel olarak baglayacak.',
+                        l.tr(
+                            'Enter the email address your partner registered with. The system will link both accounts locally.',
+                            'Partnerinizin daha once kayit oldugu e-posta adresini girin. Sistem iki hesabi yerel olarak baglayacak.'),
                         style: theme.textTheme.bodyLarge,
                       ),
                       const Gap(24),
                       TextField(
                         controller: _emailController,
-                        decoration: const InputDecoration(
-                          labelText: 'Partner e-posta',
+                        decoration: InputDecoration(
+                          labelText: l.tr('Partner email', 'Partner e-posta'),
                         ),
                       ),
                       const Gap(20),
@@ -87,8 +90,8 @@ class _PartnerLinkPageState extends State<PartnerLinkPage> {
                                     },
                               child: Text(
                                 state.status == AuthStatus.loading
-                                    ? 'Baglaniyor...'
-                                    : 'Partneri bagla',
+                                    ? l.tr('Connecting...', 'Baglaniyor...')
+                                    : l.tr('Link Partner', 'Partneri bagla'),
                               ),
                             ),
                           );
@@ -97,7 +100,7 @@ class _PartnerLinkPageState extends State<PartnerLinkPage> {
                       const Gap(8),
                       TextButton(
                         onPressed: () => Get.offAllNamed(AppRoutes.home),
-                        child: const Text('Simdilik gec'),
+                        child: Text(l.tr('Skip for now', 'Simdilik gec')),
                       ),
                     ],
                   ),

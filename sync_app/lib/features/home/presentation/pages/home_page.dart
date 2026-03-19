@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/services/locale_service.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/services/native_bridge_service.dart';
@@ -19,18 +20,30 @@ import '../../../sync_engine/bloc/sync_engine_bloc.dart';
 import '../../../sync_engine/cubit/partner_mood_cubit.dart';
 
 // ── Daily affirmation quotes ──
-const List<String> _dailyQuotes = [
-  '"Birbirinizi anlamak, birbirinizi sevmekten daha onemlidir." — Mevlana',
-  '"Iyi bir iliski, birbirinizi dinlemeyle baslar."',
-  '"Gercek guc, zamnalamaktir — ne zaman konusacagini, ne zaman susacagini bilmek."',
-  '"Bugunku kucuk adim, yarinki buyuk farki yaratir."',
-  '"Birlikte nefes alin, birlikte buyuyun."',
-  '"Duygunuzu paylasmaniz, iliskinizin en buyuk gucudur."',
-  '"Her gun bir sinyal — her sinyal bir kopru."',
-  '"Empati, kelimelerin otesinde baslar."',
-  '"Partnerinizin ihtiyacini bilmek, sevginin modern halidir."',
-  '"Sakin kalmak cesaret, paylsmak guven ister."',
-];
+List<String> get _dailyQuotes => [
+      l.tr(
+          '"Understanding each other is more important than loving each other." — Rumi',
+          '"Birbirinizi anlamak, birbirinizi sevmekten daha onemlidir." — Mevlana'),
+      l.tr('"A good relationship starts with listening to each other."',
+          '"Iyi bir iliski, birbirinizi dinlemeyle baslar."'),
+      l.tr(
+          '"Real strength is timing — knowing when to speak, when to be silent."',
+          '"Gercek guc, zamnalamaktir — ne zaman konusacagini, ne zaman susacagini bilmek."'),
+      l.tr('"Today\'s small step creates tomorrow\'s big difference."',
+          '"Bugunku kucuk adim, yarinki buyuk farki yaratir."'),
+      l.tr('"Breathe together, grow together."',
+          '"Birlikte nefes alin, birlikte buyuyun."'),
+      l.tr('"Sharing your feelings is your relationship\'s greatest strength."',
+          '"Duygunuzu paylasmaniz, iliskinizin en buyuk gucudur."'),
+      l.tr('"Every day a signal — every signal a bridge."',
+          '"Her gun bir sinyal — her sinyal bir kopru."'),
+      l.tr('"Empathy begins beyond words."',
+          '"Empati, kelimelerin otesinde baslar."'),
+      l.tr('"Knowing your partner\'s needs is the modern form of love."',
+          '"Partnerinizin ihtiyacini bilmek, sevginin modern halidir."'),
+      l.tr('"Staying calm takes courage, sharing takes trust."',
+          '"Sakin kalmak cesaret, paylsmak guven ister."'),
+    ];
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -129,7 +142,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Basarim Acildi!',
+                        l.tr('Achievement Unlocked!', 'Basarim Acildi!'),
                         style: const TextStyle(fontWeight: FontWeight.w700),
                       ),
                       Text(a.type.title),
@@ -176,14 +189,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               const Text('👑', style: TextStyle(fontSize: 48)),
               const Gap(12),
               Text(
-                'Gunluk mood limitine ulastiniz',
+                l.tr('You reached the daily mood limit',
+                    'Gunluk mood limitine ulastiniz'),
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w800,
                 ),
               ),
               const Gap(8),
               Text(
-                'PRO ile sinirsiz mood girisi, gelismis analiz ve daha fazlasi!',
+                l.tr(
+                    'With PRO, unlimited mood entries, advanced analysis and more!',
+                    'PRO ile sinirsiz mood girisi, gelismis analiz ve daha fazlasi!'),
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
@@ -198,13 +214,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     Navigator.pop(ctx);
                     Get.toNamed(AppRoutes.subscription);
                   },
-                  child: const Text('PRO\'yu Kesfet'),
+                  child: Text(l.tr('Discover PRO', 'PRO\'yu Kesfet')),
                 ),
               ),
               const Gap(8),
               TextButton(
                 onPressed: () => Navigator.pop(ctx),
-                child: const Text('Yarin tekrar'),
+                child: Text(l.tr('Try again tomorrow', 'Yarin tekrar')),
               ),
               const Gap(8),
             ],
@@ -258,12 +274,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             builder: (context, state) {
                               final name = state.user?.displayName ??
                                   state.user?.email ??
-                                  'Kullanici';
+                                  l.tr('User', 'Kullanici');
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Merhaba, $name 👋',
+                                    l.tr(
+                                        'Hello, $name 👋', 'Merhaba, $name 👋'),
                                     style: theme.textTheme.titleLarge?.copyWith(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w800,
@@ -335,7 +352,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       children: [
                         _StatBubble(
                           emoji: '💕',
-                          label: 'Iliski',
+                          label: l.tr('Relationship', 'Iliski'),
                           value: '$_relationshipScore',
                         ),
                         const Gap(12),
@@ -343,7 +360,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           builder: (context, state) {
                             return _StatBubble(
                               emoji: '📝',
-                              label: 'Kalan',
+                              label: l.tr('Remaining', 'Kalan'),
                               value:
                                   state.isPro ? '∞' : '${state.remainingMoods}',
                             );
@@ -354,7 +371,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           builder: (context, state) {
                             return _StatBubble(
                               emoji: '📊',
-                              label: 'Kayit',
+                              label: l.tr('Entries', 'Kayit'),
                               value: '${state.history.length}',
                             );
                           },
@@ -373,7 +390,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Hizli Sinyal',
+                      l.tr('Quick Signal', 'Hizli Sinyal'),
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
@@ -461,7 +478,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 color: theme.colorScheme.primary, size: 20),
                             const Gap(6),
                             Text(
-                              'Enerji',
+                              l.tr('Energy', 'Enerji'),
                               style: theme.textTheme.labelLarge?.copyWith(
                                 fontWeight: FontWeight.w600,
                               ),
@@ -507,7 +524,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 color: theme.colorScheme.secondary, size: 20),
                             const Gap(6),
                             Text(
-                              'Tolerans',
+                              l.tr('Tolerance', 'Tolerans'),
                               style: theme.textTheme.labelLarge?.copyWith(
                                 fontWeight: FontWeight.w600,
                               ),
@@ -551,8 +568,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           controller: _noteController,
                           maxLines: 2,
                           decoration: InputDecoration(
-                            labelText: 'Kisa not (istege bagli)',
-                            hintText: 'Duygunu bir cumleyle acikla...',
+                            labelText: l.tr('Short note (optional)',
+                                'Kisa not (istege bagli)'),
+                            hintText: l.tr(
+                                'Describe your feeling in a sentence...',
+                                'Duygunu bir cumleyle acikla...'),
                             prefixIcon: const Icon(Icons.edit_note_rounded),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),
@@ -567,8 +587,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                               child: SwitchListTile.adaptive(
                                 contentPadding: EdgeInsets.zero,
                                 value: _shareWithPartner,
-                                title: const Text('Partner ile paylas'),
-                                subtitle: const Text('Sinyali gonder'),
+                                title: Text(l.tr('Share with partner',
+                                    'Partner ile paylas')),
+                                subtitle:
+                                    Text(l.tr('Send signal', 'Sinyali gonder')),
                                 onChanged: (v) =>
                                     setState(() => _shareWithPartner = v),
                               ),
@@ -598,7 +620,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                               color: Colors.green),
                                           const Gap(8),
                                           Text(
-                                            'Kaydedildi!',
+                                            l.tr('Saved!', 'Kaydedildi!'),
                                             style: theme.textTheme.titleMedium
                                                 ?.copyWith(
                                               color: Colors.green,
@@ -617,7 +639,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     onPressed: _submitMood,
                                     icon: const Icon(Icons.send_rounded),
                                     label: Text(
-                                      'Mood Kaydet ${_selectedSignal.emoji}',
+                                      l.tr('Save Mood ${_selectedSignal.emoji}',
+                                          'Mood Kaydet ${_selectedSignal.emoji}'),
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w700,
                                       ),
@@ -658,7 +681,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 ),
                                 const Gap(8),
                                 Text(
-                                  'Partner Durumu',
+                                  l.tr('Partner Status', 'Partner Durumu'),
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -670,7 +693,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                               _PartnerLinkPrompt(theme: theme)
                             else if (state.mood == null)
                               Text(
-                                'Paylasilan partner sinyali henuz yok.',
+                                l.tr('No shared partner signal yet.',
+                                    'Paylasilan partner sinyali henuz yok.'),
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: theme.colorScheme.onSurface
                                       .withValues(alpha: 0.5),
@@ -742,7 +766,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     style: TextStyle(fontSize: 20)),
                                 const Gap(8),
                                 Text(
-                                  'Mikro Tavsiye',
+                                  l.tr('Micro Advice', 'Mikro Tavsiye'),
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -752,7 +776,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             const Gap(12),
                             Text(
                               state.microAdvice ??
-                                  'Mood girisi yaptiginizda kisisel oneriler burada gorunecek.',
+                                  l.tr(
+                                      'Personal suggestions will appear here when you make mood entries.',
+                                      'Mood girisi yaptiginizda kisisel oneriler burada gorunecek.'),
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: theme.colorScheme.onSurface
                                     .withValues(alpha: 0.75),
@@ -798,7 +824,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                           icon: const Icon(
                                               Icons.analytics_outlined,
                                               size: 18),
-                                          label: const Text('Tetik raporu'),
+                                          label: Text(l.tr('Trigger report',
+                                              'Tetik raporu')),
                                         ),
                                       )
                                     else
@@ -808,8 +835,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                               AppRoutes.subscription),
                                           icon: const Icon(Icons.lock_outline,
                                               size: 18),
-                                          label:
-                                              const Text('PRO: Tetik raporu'),
+                                          label: Text(l.tr(
+                                              'PRO: Trigger report',
+                                              'PRO: Tetik raporu')),
                                         ),
                                       ),
                                   ],
@@ -833,7 +861,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Hizli Erisim',
+                      l.tr('Quick Access', 'Hizli Erisim'),
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
@@ -844,7 +872,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         Expanded(
                           child: _QuickAction(
                             icon: '🧘',
-                            label: 'Nefes',
+                            label: l.tr('Breathing', 'Nefes'),
                             theme: theme,
                             onTap: () => Get.toNamed(AppRoutes.breathing),
                           ),
@@ -853,7 +881,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         Expanded(
                           child: _QuickAction(
                             icon: '🎮',
-                            label: 'Oyunlar',
+                            label: l.tr('Games', 'Oyunlar'),
                             theme: theme,
                             onTap: () => Get.toNamed(AppRoutes.gamesHub),
                           ),
@@ -871,7 +899,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         Expanded(
                           child: _QuickAction(
                             icon: '🏆',
-                            label: 'Basarimlar',
+                            label: l.tr('Achievements', 'Basarimlar'),
                             theme: theme,
                             onTap: () => Get.toNamed(AppRoutes.achievements),
                           ),
@@ -884,7 +912,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         Expanded(
                           child: _QuickAction(
                             icon: '💬',
-                            label: 'Soru-Cevap',
+                            label: l.tr('Q&A', 'Soru-Cevap'),
                             theme: theme,
                             onTap: () => Get.toNamed(AppRoutes.qaSystem),
                           ),
@@ -902,7 +930,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         Expanded(
                           child: _QuickAction(
                             icon: '💕',
-                            label: 'Iliski Kocu',
+                            label: l.tr('Rel. Coach', 'Iliski Kocu'),
                             theme: theme,
                             onTap: () => Get.toNamed(AppRoutes.aiAssistant),
                           ),
@@ -911,7 +939,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         Expanded(
                           child: _QuickAction(
                             icon: '🔮',
-                            label: 'Burc',
+                            label: l.tr('Astrology', 'Burc'),
                             theme: theme,
                             onTap: () => Get.toNamed(AppRoutes.aiAssistant),
                           ),
@@ -941,26 +969,26 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               Get.toNamed(AppRoutes.settings);
           }
         },
-        destinations: const [
+        destinations: [
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home_rounded),
-            label: 'Ana Sayfa',
+            label: l.tr('Home', 'Ana Sayfa'),
           ),
           NavigationDestination(
             icon: Icon(Icons.insights_outlined),
             selectedIcon: Icon(Icons.insights_rounded),
-            label: 'Analiz',
+            label: l.tr('Analysis', 'Analiz'),
           ),
           NavigationDestination(
             icon: Icon(Icons.self_improvement_outlined),
             selectedIcon: Icon(Icons.self_improvement_rounded),
-            label: 'Nefes',
+            label: l.tr('Breathing', 'Nefes'),
           ),
           NavigationDestination(
             icon: Icon(Icons.tune_outlined),
             selectedIcon: Icon(Icons.tune_rounded),
-            label: 'Ayarlar',
+            label: l.tr('Settings', 'Ayarlar'),
           ),
         ],
       ),
@@ -1055,14 +1083,15 @@ class _PartnerLinkPrompt extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Partneri bagla',
+                  l.tr('Link partner', 'Partneri bagla'),
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 const Gap(2),
                 Text(
-                  'Birlikte kullanin, birlikte buyuyun.',
+                  l.tr('Use together, grow together.',
+                      'Birlikte kullanin, birlikte buyuyun.'),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),

@@ -1,3 +1,11 @@
+
+<div align="center">
+  <img width="440" height="1000" alt="screenshot" src="https://github.com/user-attachments/assets/87ae5c3e-a698-4c21-885e-2fcef15e1eca" />
+</div>
+
+
+
+
 <p align="center">
   <img src="https://img.shields.io/badge/Flutter-3.3+-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter"/>
   <img src="https://img.shields.io/badge/Dart-3.3+-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart"/>
@@ -8,105 +16,105 @@
 
 # 💕 Sync — Neuro-Linguistic Crisis Management
 
-> **Çiftler için gerçek zamanlı duygu senkronizasyon platformu.**
+> **A real-time emotion synchronization platform for couples.**
 >
-> Sync, partnerler arasındaki duygusal iletişimi güçlendirmek, kriz anlarında anlık destek sağlamak ve ilişki kalitesini yapay zeka destekli içgörülerle artırmak için tasarlanmış, kapsamlı bir Flutter uygulamasıdır.
+> Sync is a comprehensive Flutter application designed to strengthen emotional communication between partners, provide instant support during crisis moments, and improve relationship quality through AI-powered insights.
 
 ---
 
-## 📋 İçindekiler
+## 📋 Table of Contents
 
-- [Genel Bakış](#-genel-bakış)
-- [Temel Özellikler](#-temel-özellikler)
-- [Mimari & Teknoloji Yığını](#️-mimari--teknoloji-yığını)
-- [Uygulama Yapısı](#-uygulama-yapısı)
-- [Özellik Detayları](#-özellik-detayları)
-- [Veri Modelleri](#-veri-modelleri)
-- [Tema Sistemi](#-tema-sistemi)
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [Architecture & Tech Stack](#️-architecture--tech-stack)
+- [Project Structure](#-project-structure)
+- [Feature Details](#-feature-details)
+- [Data Models](#-data-models)
+- [Theme System](#-theme-system)
 - [Freemium Model](#-freemium-model-free-vs-pro)
-- [Kullanılan Paketler](#-kullanılan-paketler)
-- [Kurulum & Çalıştırma](#-kurulum--çalıştırma)
+- [Packages Used](#-packages-used)
+- [Setup & Running](#-setup--running)
 
 ---
 
-## 🌟 Genel Bakış
+## 🌟 Overview
 
-**Sync**, çiftlerin duygusal durumlarını tek dokunuşla paylaşmalarını sağlayan, ilişki kalitesini ölçümleyip yapay zeka ile analiz eden ve eğlenceli oyunlarla bağı güçlendiren bir mobil uygulamadır.
+**Sync** is a mobile application that lets couples share their emotional states with a single tap, measures and analyzes relationship quality with AI, and strengthens their bond through fun interactive games.
 
-### Temel Felsefe
+### Core Philosophy
 
-| Problem | Sync'in Çözümü |
-|---------|---------------|
-| Kriz anında duygularını ifade edememe | **8 duygusal sinyal** ile tek dokunuşta iletişim |
-| Partner ne hissediyor bilememe | **Gerçek zamanlı duygu akışı** ile anlık senkronizasyon |
-| İlişkide tekrar eden sorunlar | **Yapay zeka tetikleme raporları** ile örüntü tespiti |
-| Duygusal tükenmişlik | **Nefes egzersizleri** ile stres yönetimi |
-| İlişkide monotonluk | **10 farklı çift oyunu** ile eğlenceli bağ kurma |
-
----
-
-## 🚀 Temel Özellikler
-
-### 🎯 Duygu Senkronizasyon Motoru (Sync Engine)
-- **8 Duygusal Sinyal**: 🤗 Sarılma İhtiyacı · 🤫 Sessizlik İhtiyacı · 🌙 Alan İhtiyacı · 💬 Konuşma İhtiyacı · 🔋 Tükenmişlik · ✨ Mutluluk · 🫂 Kaygı · 😊 Nötr
-- **Enerji Seviyesi** (0–100): Fiziksel ve mental enerji ölçümü
-- **Tolerans Seviyesi** (0–100): Duygusal sabır eşiği
-- **Gerçek zamanlı stream** ile partner duygu güncellemeleri
-- **Gizlilik kontrolü**: Her duygu kaydı paylaşılıp paylaşılmayacağı seçilebilir
-
-### 🤖 Yapay Zeka Asistanı
-- **Mikro Tavsiye Motoru**: Duygu durumuna göre anlık, uygulanabilir öneriler
-- **Tetikleme Raporu**: Haftalık ilişki analizi, çatışma riski skoru (0.0–1.0), 3 öneri
-- **İlişki Koçu** 💕: İletişim, güven, çatışma çözümü, romantizm konularında danışmanlık
-- **Astroloji Asistanı** 🔮: Burç uyumu, gezegen geçişleri, doğum haritası yorumları
-- **Çevrimdışı Çalışma**: Tüm AI özellikleri yerel fallback ile internet olmadan da çalışır
-
-### 🧘 Nefes Egzersizleri
-- **Box Breathing** 📦: 4-4-4-4 saniye döngüsü — kriz anları için
-- **4-7-8 Sakinleştirici** 🌙: Uyku öncesi rahatlama
-- **Enerji Verici** ⚡: 2-2 hızlı nefes döngüsü
-- **Çift Senkron** 💞: 5-3-5-2 birlikte nefes egzersizi
-- Görsel nefes daireesi animasyonu, haptic feedback, faz geçiş titreşimi
-
-### 🎮 Oyun Merkezi (10 Çift Oyunu)
-| Oyun | Tür | Erişim |
-|------|-----|--------|
-| 🔢 Sayı Tuzağı | Tahmin oyunu | Free |
-| 🎭 Doğruluk mu Cesaret mi | Klasik parti oyunu | Free |
-| ⚖️ Ne Yapmayı Tercih Edersin | İkilem tartışması | Free |
-| 🧠 Beni Ne Kadar Tanıyorsun | Bilgi yarışması | PRO |
-| 😤 Sabır Ölçer | Sakinlik meydan okuması | PRO |
-| ✍️ Cümleyi Tamamla | Romantik tamamlama | PRO |
-| 🎯 Emoji Tahmin | Duygusal iletişim | PRO |
-| 🗺️ Aşk Haritası | İlişki anıları | PRO |
-| 🔐 Gizli Mesaj | Şifreli sevgi mektupları | PRO |
-| 💞 Uyumluluk Testi | Eşleşme yüzdesi hesabı | PRO |
-
-### 📊 Dashboard & Analitik
-- **İlişki Skoru**: 0–100 algoritması ile genel ilişki sağlığı
-- **Duygu Dağılım Grafiği**: Pasta grafik ile sinyal kullanım oranları
-- **Enerji & Tolerans Trendi**: Zaman serisi çizgi grafikleri (PRO)
-- **Ruh Hali Geçmişi**: Son 50 kayıt ile detaylı liste
-
-### 🏆 Başarım Sistemi
-**14 farklı başarım** ile gamification:
-- 🔥 Seri başarımları: 3, 7, 14, 30 gün ard arda kullanım
-- 📊 Kilometre taşları: İlk duygu, 10. duygu, 50. duygu
-- 🤝 Sosyal: Partner bağlantısı
-- 🧠 Analiz: İlk rapor, duygu çeşitliliği
-- 🌙 Örüntüler: Gece kuşu, erken kalkan, hafta sonu savaşçısı, tutarlı çift
-
-### ❓ Soru-Cevap Sistemi
-- **Sor**: Partnerine özel sorular yaz (10 öneri ile ilham al)
-- **Cevapla**: Gelen soruları yanıtla, puan kazan
-- **Geçmiş**: Tüm soru-cevap konuşmalarını görüntüle
-- Yıldız derecelendirmesi (1–5) ile çarpan puan sistemi
+| Problem | Sync's Solution |
+|---------|----------------|
+| Unable to express feelings during crisis | **8 emotional signals** — one-tap communication |
+| Not knowing how your partner feels | **Real-time mood streams** — instant synchronization |
+| Recurring relationship problems | **AI trigger reports** — pattern detection |
+| Emotional burnout | **Breathing exercises** — stress management |
+| Monotony in relationship | **10 couple games** — playful bonding |
 
 ---
 
-## 🏗️ Mimari & Teknoloji Yığını
+## 🚀 Key Features
 
-### Mimari Desen: Clean Architecture
+### 🎯 Mood Sync Engine
+- **8 Emotional Signals**: 🤗 Need Hug · 🤫 Need Silence · 🌙 Need Space · 💬 Need Talk · 🔋 Exhausted · ✨ Happy · 🫂 Anxious · 😊 Neutral
+- **Energy Level** (0–100): Physical and mental energy measurement
+- **Tolerance Level** (0–100): Emotional patience threshold
+- **Real-time streams** for partner mood updates
+- **Privacy control**: Each mood entry can be shared or kept private
+
+### 🤖 AI Assistant
+- **Micro-Advice Engine**: Instant, actionable suggestions based on current mood state
+- **Trigger Report**: Weekly relationship analysis, conflict risk score (0.0–1.0), 3 recommendations
+- **Relationship Coach** 💕: Guidance on communication, trust, conflict resolution, and romance
+- **Astrology Assistant** 🔮: Zodiac compatibility, planetary transits, birth chart interpretations
+- **Offline Mode**: All AI features have local fallbacks — works without internet
+
+### 🧘 Breathing Exercises
+- **Box Breathing** 📦: 4-4-4-4 second cycle — for crisis moments
+- **4-7-8 Calming** 🌙: Pre-sleep relaxation
+- **Energizing** ⚡: 2-2 quick breathing cycle
+- **Couple Sync** 💞: 5-3-5-2 breathing together exercise
+- Visual breathing circle animation, haptic feedback, phase transition vibration
+
+### 🎮 Games Hub (10 Couple Games)
+| Game | Type | Access |
+|------|------|--------|
+| 🔢 Count Trap | Number guessing | Free |
+| 🎭 Truth or Dare | Classic party game | Free |
+| ⚖️ Would You Rather | Dilemma discussion | Free |
+| 🧠 Know Me Quiz | Knowledge quiz | PRO |
+| 😤 Trip Meter | Patience challenge | PRO |
+| ✍️ Finish the Sentence | Romantic completion | PRO |
+| 🎯 Emoji Guess | Emotional communication | PRO |
+| 🗺️ Love Map | Relationship memories | PRO |
+| 🔐 Secret Message | Encrypted love letters | PRO |
+| 💞 Compatibility Test | Match percentage | PRO |
+
+### 📊 Dashboard & Analytics
+- **Relationship Score**: Overall relationship health via 0–100 algorithm
+- **Mood Distribution Chart**: Pie chart of signal usage ratios
+- **Energy & Tolerance Trend**: Time-series line charts (PRO)
+- **Mood History**: Detailed list of last 50 entries
+
+### 🏆 Achievement System
+**14 unique achievements** for gamification:
+- 🔥 Streak achievements: 3, 7, 14, 30 consecutive days
+- 📊 Milestones: First mood, 10th mood, 50th mood
+- 🤝 Social: Partner linked
+- 🧠 Analysis: First report, mood variety
+- 🌙 Patterns: Night owl, early bird, weekend warrior, consistent couple
+
+### ❓ Q&A System
+- **Ask**: Write custom questions for your partner (10 suggestions for inspiration)
+- **Answer**: Respond to incoming questions, earn points
+- **History**: View all Q&A conversations
+- Star rating (1–5) with multiplier point system
+
+---
+
+## 🏗️ Architecture & Tech Stack
+
+### Design Pattern: Clean Architecture
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -124,16 +132,16 @@
 └─────────────────────────────────────────────┘
 ```
 
-### State Management Stratejisi
+### State Management Strategy
 
-| Yaklaşım | Kullanım Alanı | Sınıflar |
-|-----------|---------------|----------|
-| **BLoC** | Karmaşık iş mantığı | `AuthBloc`, `SyncEngineBloc` |
-| **CUBIT** | Basit durum yönetimi | `PartnerMoodCubit`, `SubscriptionCubit` |
-| **Provider** | Tema değişiklikleri | `AppThemeProvider` |
+| Approach | Use Case | Classes |
+|----------|----------|---------|
+| **BLoC** | Complex business logic | `AuthBloc`, `SyncEngineBloc` |
+| **CUBIT** | Simple state management | `PartnerMoodCubit`, `SubscriptionCubit` |
+| **Provider** | Theme switching | `AppThemeProvider` |
 | **GetX** | Routing & navigation | `GetMaterialApp`, `GetPages` |
 
-### Veri Akışı
+### Data Flow
 
 ```
 UI (Widget) ──reads/listens──▶ BLoC / CUBIT
@@ -147,319 +155,319 @@ UI (Widget) ──reads/listens──▶ BLoC / CUBIT
                          SharedPreferences (JSON)
 ```
 
-### Bağımlılık Enjeksiyonu (DI)
-- **GetIt** service locator patterni
-- Uygulama başlangıcında tüm servis, repository, BLoC ve CUBIT tek seferde register edilir
-- Stateful nesneler (BLoC) → Factory
-- Singleton servisler (Notification, Logger) → Singleton
+### Dependency Injection (DI)
+- **GetIt** service locator pattern
+- All services, repositories, BLoCs, and CUBITs registered at app startup
+- Stateful objects (BLoCs) → Factory
+- Singleton services (Notification, Logger) → Singleton
 
 ---
 
-## 📁 Uygulama Yapısı
+## 📁 Project Structure
 
 ```
 lib/
-├── main.dart                          # Uygulama giriş noktası
+├── main.dart                          # Application entry point
 ├── core/
 │   ├── constants/
-│   │   └── app_constants.dart         # SharedPreferences key'leri, sabitler
+│   │   └── app_constants.dart         # SharedPreferences keys, constants
 │   ├── di/
-│   │   └── injection.dart             # GetIt dependency injection kurulumu
+│   │   └── injection.dart             # GetIt dependency injection setup
 │   ├── router/
-│   │   └── app_router.dart            # GetX route tanımları (12 sayfa)
+│   │   └── app_router.dart            # GetX route definitions (12 pages)
 │   ├── services/
-│   │   └── native_bridge_service.dart  # Android/iOS native kanal köprüsü
+│   │   └── native_bridge_service.dart  # Android/iOS native channel bridge
 │   ├── theme/
-│   │   ├── app_theme.dart             # 9 tema tanımı & gradient sistemi
-│   │   └── theme_provider.dart        # ChangeNotifier tema yöneticisi
+│   │   ├── app_theme.dart             # 9 theme definitions & gradient system
+│   │   └── theme_provider.dart        # ChangeNotifier theme manager
 │   └── widgets/
-│       └── romantic_background.dart    # Animasyonlu çift silueti & kalpler
+│       └── romantic_background.dart    # Animated couple silhouette & hearts
 ├── data/
 │   ├── models/
-│   │   ├── user_model.dart            # Kullanıcı profili
-│   │   ├── mood_log_model.dart        # Duygu kaydı & MoodSignal enum
-│   │   ├── game_model.dart            # Oyun tipleri, skor, çift puanı
-│   │   ├── achievement_model.dart     # 14 başarım tanımı
-│   │   ├── streak_model.dart          # Seri takibi
-│   │   └── trigger_report_model.dart  # AI tetikleme raporu
+│   │   ├── user_model.dart            # User profile
+│   │   ├── mood_log_model.dart        # Mood entry & MoodSignal enum
+│   │   ├── game_model.dart            # Game types, scores, couple points
+│   │   ├── achievement_model.dart     # 14 achievement definitions
+│   │   ├── streak_model.dart          # Streak tracking
+│   │   └── trigger_report_model.dart  # AI trigger report
 │   ├── repositories/
-│   │   ├── auth_repository.dart       # Kimlik doğrulama & partner bağlama
-│   │   ├── mood_repository.dart       # Duygu CRUD & stream'ler
-│   │   ├── games_repository.dart      # Oyun skoru, soru bankası, puan
-│   │   └── gamification_repository.dart # Başarım & seri yönetimi
+│   │   ├── auth_repository.dart       # Authentication & partner linking
+│   │   ├── mood_repository.dart       # Mood CRUD & streams
+│   │   ├── games_repository.dart      # Game scores, question bank, points
+│   │   └── gamification_repository.dart # Achievement & streak management
 │   └── services/
-│       ├── ai_api_client.dart         # AI mikro tavsiye & tetikleme raporu
-│       ├── ai_assistant_service.dart  # Yerel chatbot (İlişki Koçu & Astroloji)
-│       └── notification_service.dart  # Yerel bildirim yönetimi
+│       ├── ai_api_client.dart         # AI micro-advice & trigger reports
+│       ├── ai_assistant_service.dart  # Local chatbot (Relationship Coach & Astrology)
+│       └── notification_service.dart  # Local notification management
 └── features/
-    ├── auth/                          # Giriş, kayıt, partner bağlama
-    ├── sync_engine/                   # Duygu senkronizasyon motoru
-    ├── home/                          # Ana sayfa — duygu gönderimi
-    ├── dashboard/                     # Analitik & grafikler
-    ├── breathing/                     # 4 nefes egzersizi
-    ├── games/                         # 10 oyun + Soru-Cevap sistemi
-    ├── ai_assistant/                  # Çift AI chatbot
-    ├── achievements/                  # Başarım & seri sayfası
-    ├── settings/                      # Tema, hesap, plan yönetimi
-    ├── subscription/                  # PRO abonelik sistemi
-    └── onboarding/                    # 5 ekranlı tanıtım
+    ├── auth/                          # Login, registration, partner linking
+    ├── sync_engine/                   # Mood synchronization engine
+    ├── home/                          # Home page — mood submission
+    ├── dashboard/                     # Analytics & charts
+    ├── breathing/                     # 4 breathing exercises
+    ├── games/                         # 10 games + Q&A system
+    ├── ai_assistant/                  # Dual AI chatbot
+    ├── achievements/                  # Achievements & streak page
+    ├── settings/                      # Theme, account, plan management
+    ├── subscription/                  # PRO subscription system
+    └── onboarding/                    # 5-screen introduction
 ```
 
 ---
 
-## 🔮 Özellik Detayları
+## 🔮 Feature Details
 
-### 🏠 Ana Sayfa (Home Page)
-Uygulamanın kalbi — duygu gönderimi burada yapılır:
-- **Çift Kaydırıcı**: Enerji ve tolerans seviyelerini ayarla (0–100)
-- **8 Sinyal Seçimi**: Tek dokunuşla duygu durumunu bildir
-- **Paylaşım Kontrolü**: Partner ile paylaş / gizle toggle
-- **İsteğe Bağlı Not**: Ek açıklama alanı
-- **İlişki Skoru**: Geçmiş verilerden hesaplanan gerçek zamanlı yüzde
-- **Günlük Alıntı**: 10 motive edici söz arasından dönen görüntüleme
-- **Seri Göstergesi**: 🔥 + ardışık gün sayısı
-- **AI Mikro Tavsiye**: Duygu gönderimi sonrası anlık öneri
-- **Başarı Animasyonu**: Haptic feedback ile 2 saniyelik onay
-- **Partner Duygu Gösterimi**: Bağlı partner'ın son sinyalini gösterir
-- **Premium Sınırı**: Free kullanıcılar günde 5 duygu ile sınırlı
+### 🏠 Home Page
+The heart of the app — mood submission happens here:
+- **Dual Sliders**: Adjust energy and tolerance levels (0–100)
+- **8-Signal Selector**: One-tap mood broadcasting
+- **Share Toggle**: Share with partner / keep private
+- **Optional Note**: Additional context field
+- **Relationship Score**: Real-time percentage calculated from historical data
+- **Daily Quote**: Rotating display from 10 motivational quotes
+- **Streak Indicator**: 🔥 + consecutive day count
+- **AI Micro-Advice**: Instant suggestion after mood submission
+- **Success Animation**: 2-second confirmation with haptic feedback
+- **Partner Mood Display**: Shows linked partner's latest signal
+- **Premium Limit**: Free users limited to 5 moods per day
 
-### 🔐 Kimlik Doğrulama
-- **E-posta ile kayıt & giriş** (yerel, Firebase yok)
-- **Partner bağlama**: E-posta ile eşleşme, otomatik `coupleId` oluşturma
-- **Oturum yönetimi**: SharedPreferences ile kalıcı oturum
-- **Akıllı yönlendirme**: Onboarding → Login → Partner Link → Home
+### 🔐 Authentication
+- **Email registration & login** (local, no Firebase)
+- **Partner linking**: Email-based matching, automatic `coupleId` generation
+- **Session management**: Persistent sessions via SharedPreferences
+- **Smart routing**: Onboarding → Login → Partner Link → Home
 
-### 📱 Onboarding (5 Ekran)
-1. **Sync Markası** 💕 — Duygusal koordinasyon tanıtımı
-2. **Tek Dokunuş Köprüsü** 🤝 — 8 sinyal sistemi açıklaması
-3. **Mikro Tavsiye** 💡 — AI destekli gerçek zamanlı öneriler
-4. **Nefes & Sakinlik** 🧘 — Stres yönetimi teknikleri
-5. **Tahmin & Önle** 📊 — Örüntü tanıma ve tetikleme uyarıları
+### 📱 Onboarding (5 Screens)
+1. **Sync Brand** 💕 — Emotional coordination introduction
+2. **One-Touch Bridge** 🤝 — 8-signal system explanation
+3. **Micro Advice** 💡 — AI-powered real-time suggestions
+4. **Breathing & Calm** 🧘 — Stress management techniques
+5. **Predict & Prevent** 📊 — Pattern recognition and trigger alerts
 
-Animasyonlu sayfa geçişleri, gradient arka planlar, atlama butonu
+Animated page transitions, gradient backgrounds, skip button
 
-### ⚙️ Ayarlar Sayfası
-- **Hesap & seri özeti** ile karşılama
-- **Hızlı erişim butonları**: Nefes, Başarımlar, PRO
-- **Tema seçici**: 9 tema arasında yatay kaydırma ile seçim
-- **Plan durumu**: Free/PRO karşılaştırma tablosu
-- **Çıkış** butonu
+### ⚙️ Settings Page
+- **Account & streak summary** welcome banner
+- **Quick action buttons**: Breathing, Achievements, PRO
+- **Theme selector**: Horizontal scroll picker across 9 themes
+- **Plan status**: Free/PRO comparison table
+- **Logout** button
 
 ---
 
-## 📦 Veri Modelleri
+## 📦 Data Models
 
 ### UserModel
 ```dart
-uid          : String     // Benzersiz kullanıcı kimliği
-email        : String     // E-posta adresi
-displayName  : String?    // Görünen ad
-photoUrl     : String?    // Profil fotoğrafı URL'si
-partnerUid   : String?    // Bağlı partner kimliği
-coupleId     : String?    // Ortak çift tanımlayıcısı
-isPro        : bool       // PRO abonelik durumu
-fcmToken     : String     // Bildirim token'ı
-createdAt    : DateTime?  // Kayıt tarihi
-lastActiveAt : DateTime?  // Son aktiflik zamanı
+uid          : String     // Unique user identifier
+email        : String     // Email address
+displayName  : String?    // Display name
+photoUrl     : String?    // Profile photo URL
+partnerUid   : String?    // Linked partner identifier
+coupleId     : String?    // Shared couple identifier
+isPro        : bool       // PRO subscription status
+fcmToken     : String     // Notification token
+createdAt    : DateTime?  // Registration date
+lastActiveAt : DateTime?  // Last activity timestamp
 ```
 
 ### MoodLogModel
 ```dart
-signal              : MoodSignal   // 8 duygusal sinyal enum'u
-energyLevel         : int          // 0–100 enerji seviyesi
-toleranceLevel      : int          // 0–100 tolerans seviyesi
-note                : String?      // İsteğe bağlı açıklama
-isSharedWithPartner : bool         // Partner ile paylaşım durumu
-timestamp           : DateTime     // Kayıt zamanı
+signal              : MoodSignal   // 8 emotional signal enum
+energyLevel         : int          // 0–100 energy level
+toleranceLevel      : int          // 0–100 tolerance level
+note                : String?      // Optional description
+isSharedWithPartner : bool         // Partner sharing status
+timestamp           : DateTime     // Entry timestamp
 ```
 
-### TriggerReportModel (AI Raporu)
+### TriggerReportModel (AI Report)
 ```dart
-summaryText       : String             // Genel özet
-patterns          : List<TriggerPattern> // Tespit edilen örüntüler
-recommendations   : List<String>        // 3 ana öneri
-conflictRiskScore : double             // 0.0–1.0 çatışma riski
-periodStart/End   : DateTime            // Analiz dönemi
+summaryText       : String             // Overall summary
+patterns          : List<TriggerPattern> // Detected patterns
+recommendations   : List<String>        // 3 main recommendations
+conflictRiskScore : double             // 0.0–1.0 conflict risk
+periodStart/End   : DateTime            // Analysis period
 ```
 
 ### StreakModel
 ```dart
-currentStreak : int                // Mevcut ardışık gün serisi
-longestStreak : int                // Tüm zamanların en uzun serisi
-totalEntries  : int                // Toplam kayıt sayısı
-weeklyEntries : Map<String, int>   // Haftalık dağılım
-isActiveToday : bool               // Bugün aktif mi (hesaplanan)
+currentStreak : int                // Current consecutive day streak
+longestStreak : int                // All-time longest streak
+totalEntries  : int                // Total entry count
+weeklyEntries : Map<String, int>   // Weekly distribution
+isActiveToday : bool               // Active today (computed)
 ```
 
 ---
 
-## 🎨 Tema Sistemi
+## 🎨 Theme System
 
-**9 özenle tasarlanmış renk paleti**, her biri ilişki ruh haline uygun:
+**9 carefully crafted color palettes**, each tailored to relationship moods:
 
-| Tema | Karakter | Renk Tonu |
-|------|----------|-----------|
-| 🌅 **Calm Sunset** | Varsayılan, sıcak | Turuncu / Pembe gradyan |
-| 🌊 **Ocean Breeze** | Sakinleştirici | Mavi / Turkuaz |
-| 🌙 **Midnight Soft** | Gece modu | Mor / Koyu |
-| 🌿 **Morning Dew** | Taze, enerji veren | Yeşil / Sarı |
-| 🌹 **Rose Petal** | Romantik | Pembe tonları |
-| 💜 **Lavender Dream** | Huzur verici | Lavanta / Mor |
-| 🌸 **Cherry Blossom** | Zarif, narin | Açık pembe |
-| ☀️ **Golden Hour** | Sıcak, nostaljik | Altın / Amber |
-| ❄️ **Arctic Aurora** | Serin, modern | Kuzey ışıkları paleti |
+| Theme | Character | Color Tone |
+|-------|-----------|------------|
+| 🌅 **Calm Sunset** | Default, warm | Orange / Pink gradient |
+| 🌊 **Ocean Breeze** | Calming | Blue / Teal |
+| 🌙 **Midnight Soft** | Night mode | Purple / Dark |
+| 🌿 **Morning Dew** | Fresh, energizing | Green / Yellow |
+| 🌹 **Rose Petal** | Romantic | Pink tones |
+| 💜 **Lavender Dream** | Peaceful | Lavender / Purple |
+| 🌸 **Cherry Blossom** | Elegant, delicate | Light pink |
+| ☀️ **Golden Hour** | Warm, nostalgic | Gold / Amber |
+| ❄️ **Arctic Aurora** | Cool, modern | Northern lights palette |
 
-- **Gradient sistemi** her tema için özel tanımlı
-- **Anlık geçiş** animasyonları ile smooth tema değiştirme
-- **Kalıcı kayıt**: Seçilen tema SharedPreferences'a kaydedilir
+- **Gradient system** custom-defined for each theme
+- **Instant switching** with smooth transition animations
+- **Persistent storage**: Selected theme saved to SharedPreferences
 
 ---
 
 ## 💎 Freemium Model (Free vs PRO)
 
-| Özellik | 🆓 Free | 👑 PRO |
+| Feature | 🆓 Free | 👑 PRO |
 |---------|---------|--------|
-| Duygu gönderimi | 5 / gün | ♾️ Sınırsız |
-| Partner bağlama | ✅ | ✅ |
-| Nefes egzersizi | 1 teknik (Box) | 4 teknik (tümü) |
-| Oyunlar | 3 oyun | 10 oyun |
-| Soru-Cevap | ✅ | ✅ |
-| AI tavsiye | Temel | Gelişmiş |
-| Dashboard | Temel | Tam analitik |
-| Duygu geçmişi | Son 10 | Sınırsız |
-| Başarımlar | 8 temel | 14 (tümü) |
-| Tetikleme raporu | ❌ | ✅ |
-| Çift nefes senkronu | ❌ | ✅ |
-| Tema seçimi | 9 tema | 9 tema |
+| Mood submissions | 5 / day | ♾️ Unlimited |
+| Partner linking | ✅ | ✅ |
+| Breathing exercises | 1 technique (Box) | All 4 techniques |
+| Games | 3 games | 10 games |
+| Q&A System | ✅ | ✅ |
+| AI advice | Basic | Advanced |
+| Dashboard | Basic | Full analytics |
+| Mood history | Last 10 | Unlimited |
+| Achievements | 8 basic | 14 (all) |
+| Trigger reports | ❌ | ✅ |
+| Couple breath sync | ❌ | ✅ |
+| Theme selection | 9 themes | 9 themes |
 
-**Abonelik yönetimi**: `SubscriptionCubit` ile gün bazlı sınır kontrolü, gece yarısı otomatik reset, SharedPreferences persistance.
+**Subscription management**: `SubscriptionCubit` with daily limit tracking, automatic midnight reset, SharedPreferences persistence.
 
 ---
 
-## 📚 Kullanılan Paketler
+## 📚 Packages Used
 
 ### State Management
-| Paket | Versiyon | Amaç |
-|-------|---------|------|
+| Package | Version | Purpose |
+|---------|---------|---------|
 | `flutter_bloc` | ^8.1.6 | BLoC & CUBIT pattern |
 | `get` | ^4.6.6 | Routing, navigation |
-| `provider` | ^6.1.2 | Tema state yönetimi |
-| `equatable` | ^2.0.5 | Değer eşitliği karşılaştırması |
+| `provider` | ^6.1.2 | Theme state management |
+| `equatable` | ^2.0.5 | Value equality comparison |
 
 ### Networking & AI
-| Paket | Versiyon | Amaç |
-|-------|---------|------|
+| Package | Version | Purpose |
+|---------|---------|---------|
 | `dio` | ^5.7.0 | HTTP client (AI API) |
-| `pretty_dio_logger` | ^1.4.0 | API istek/yanıt loglama |
+| `pretty_dio_logger` | ^1.4.0 | API request/response logging |
 
-### Yerel Depolama
-| Paket | Versiyon | Amaç |
-|-------|---------|------|
-| `shared_preferences` | ^2.3.3 | Tüm veri kalıcılığı (JSON) |
+### Local Storage
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `shared_preferences` | ^2.3.3 | All data persistence (JSON) |
 
-### UI & Tema
-| Paket | Versiyon | Amaç |
-|-------|---------|------|
-| `flutter_animate` | ^4.5.0 | Mikro etkileşim animasyonları |
-| `fl_chart` | ^0.69.0 | Pasta & çizgi grafikler |
-| `google_fonts` | ^6.2.1 | Tipografi yönetimi |
-| `gap` | ^3.0.1 | Tutarlı boşluk yönetimi |
+### UI & Theming
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `flutter_animate` | ^4.5.0 | Micro-interaction animations |
+| `fl_chart` | ^0.69.0 | Pie & line charts |
+| `google_fonts` | ^6.2.1 | Typography management |
+| `gap` | ^3.0.1 | Consistent spacing |
 
-### Araçlar & Altyapı
-| Paket | Versiyon | Amaç |
-|-------|---------|------|
+### Utilities & Infrastructure
+| Package | Version | Purpose |
+|---------|---------|---------|
 | `get_it` | ^8.0.2 | Dependency injection (service locator) |
-| `json_annotation` | ^4.9.0 | JSON serileştirme |
-| `intl` | ^0.19.0 | Tarih/saat formatlama |
-| `logger` | ^2.4.0 | Yapılandırılmış loglama |
-| `uuid` | ^4.5.1 | Benzersiz kimlik üretimi |
-| `flutter_local_notifications` | ^18.0.1 | Yerel bildirimler |
+| `json_annotation` | ^4.9.0 | JSON serialization |
+| `intl` | ^0.19.0 | Date/time formatting |
+| `logger` | ^2.4.0 | Structured logging |
+| `uuid` | ^4.5.1 | Unique ID generation |
+| `flutter_local_notifications` | ^18.0.1 | Local notifications |
 
-### Geliştirme & Test
-| Paket | Versiyon | Amaç |
-|-------|---------|------|
-| `mockito` | ^5.4.4 | Mock nesneleri |
-| `bloc_test` | ^9.1.7 | BLoC birim testleri |
-| `build_runner` | ^2.4.13 | Kod üretimi |
-| `flutter_lints` | ^6.0.0 | Statik analiz kuralları |
+### Development & Testing
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `mockito` | ^5.4.4 | Mock objects |
+| `bloc_test` | ^9.1.7 | BLoC unit tests |
+| `build_runner` | ^2.4.13 | Code generation |
+| `flutter_lints` | ^6.0.0 | Static analysis rules |
 
 ---
 
-## 🔌 Yerel Entegrasyonlar
+## 🔌 Native Integrations
 
-### Platform Kanalları (MethodChannel)
+### Platform Channels (MethodChannel)
 ```
 com.example.sync_app/native_bridge
-  ├── updateWidgetSignal(signal, emoji)  → Android home widget güncelleme
-  └── triggerCalmMode()                  → Native meditasyon modu başlatma
+  ├── updateWidgetSignal(signal, emoji)  → Android home widget update
+  └── triggerCalmMode()                  → Launch native meditation mode
 
 com.example.sync_app/home_widget
-  └── Ana ekran widget'ında son duygu sinyalini gösterme
+  └── Display latest mood signal on Android home screen
 ```
 
-### Bildirim Kanalları
-| Kanal | Amaç |
-|-------|------|
-| `partner_mood_channel` | Partner sinyal bildirimleri |
-| `sync_general_channel` | Genel uygulama bildirimleri |
-| `micro_advice_channel` | AI tavsiye bildirimleri (big-text) |
+### Notification Channels
+| Channel | Purpose |
+|---------|---------|
+| `partner_mood_channel` | Partner signal notifications |
+| `sync_general_channel` | General app notifications |
+| `micro_advice_channel` | AI advice notifications (big-text) |
 
 ---
 
-## 💾 Yerel Veri Kalıcılığı
+## 💾 Local Data Persistence
 
-Tüm veriler **SharedPreferences** üzerinde JSON formatında saklanır — backend gerekmez:
+All data is stored as JSON in **SharedPreferences** — no backend required:
 
 ```
-sync_current_user        → Aktif kullanıcı profili
-sync_users_db            → Tüm kayıtlı kullanıcılar
-sync_mood_logs           → Duygu kayıtları listesi
-sync_couple_points       → Çift puanı & bond seviyesi
-sync_game_scores         → Oyun skorları (son 100)
-sync_couple_questions    → Soru-Cevap geçmişi
-sync_streak_data         → Seri takip verisi
-sync_achievements        → Açılan başarımlar
-selected_theme           → Seçili tema
-sync_is_pro              → Abonelik durumu
-sync_daily_mood_count    → Günlük duygu sayacı
-sync_last_reset_date     → Son sıfırlama tarihi
+sync_current_user        → Active user profile
+sync_users_db            → All registered users
+sync_mood_logs           → Mood entry list
+sync_couple_points       → Couple points & bond level
+sync_game_scores         → Game scores (last 100)
+sync_couple_questions    → Q&A history
+sync_streak_data         → Streak tracking data
+sync_achievements        → Unlocked achievements
+selected_theme           → Selected theme
+sync_is_pro              → Subscription status
+sync_daily_mood_count    → Daily mood counter
+sync_last_reset_date     → Last reset date
 ```
 
 ---
 
-## 🛠️ Kurulum & Çalıştırma
+## 🛠️ Setup & Running
 
-### Gereksinimler
+### Requirements
 - Flutter SDK `>=3.3.0`
 - Dart SDK `>=3.3.0`
-- Android Studio veya VS Code
-- Android emülatör / iOS simülatör / fiziksel cihaz
+- Android Studio or VS Code
+- Android emulator / iOS simulator / physical device
 
-### Adımlar
+### Steps
 
 ```bash
-# 1. Repo'yu klonla
+# 1. Clone the repo
 git clone https://github.com/user/SyncApp.git
 cd SyncApp/sync_app
 
-# 2. Bağımlılıkları yükle
+# 2. Install dependencies
 flutter pub get
 
-# 3. Kodu analiz et
+# 3. Analyze code
 flutter analyze
 
-# 4. Uygulamayı çalıştır
+# 4. Run the app
 flutter run
 ```
 
-### Android Studio ile Açma
-1. Android Studio'yu açın → `Open` seçin
-2. `sync_app` kök klasörünü seçin (**android alt klasörünü tek başına açmayın**)
-3. Flutter ve Dart plugin'leri kurulu değilse yükleyin
-4. Gradle senkronizasyonunun tamamlanmasını bekleyin
-5. Emülatör veya fiziksel cihaz seçin → `Run` (Shift+F10)
+### Opening in Android Studio
+1. Open Android Studio → select `Open`
+2. Choose the `sync_app` root folder (**do not open the android subfolder alone**)
+3. Install Flutter and Dart plugins if not already installed
+4. Wait for Gradle synchronization to complete
+5. Select emulator or physical device → `Run` (Shift+F10)
 
-### Windows PowerShell ile Çalıştırma
+### Running via Windows PowerShell
 
 ```powershell
 $env:PATH = 'C:\Users\user\flutter_sdk\bin;' + $env:PATH
@@ -470,39 +478,56 @@ flutter run
 
 ---
 
-## 🧪 Test
+## 🧪 Testing
 
 ```bash
-# Tüm testleri çalıştır
+# Run all tests
 flutter test
 
-# Belirli bir test dosyası
+# Run a specific test file
 flutter test test/sync_engine_bloc_test.dart
 flutter test test/stress_prediction_test.dart
 ```
 
-Mevcut test dosyaları:
-- `sync_engine_bloc_test.dart` — Duygu motoru BLoC testleri
-- `stress_prediction_test.dart` — AI/örüntü tahmin testleri
-- `widget_test.dart` — Widget birim testleri
+Available test files:
+- `sync_engine_bloc_test.dart` — Sync engine BLoC tests
+- `stress_prediction_test.dart` — AI/pattern prediction tests
+- `widget_test.dart` — Widget unit tests
 
 ---
 
-## 🎯 Teknik Öne Çıkanlar
+## 🎯 Technical Highlights
 
-- **🔒 Offline-First**: Tüm özellikler internet olmadan çalışır, backend gerekmez
-- **💾 Kalıcı State**: Tüm veriler uygulama yeniden başlatıldığında korunur
-- **⚡ Gerçek Zamanlı Senkronizasyon**: Duygu stream'leri anlık güncellenir
-- **🤖 Fallback AI**: Tüm AI özellikleri çevrimdışı yerel implementasyonlara sahiptir
-- **🏆 Gamification**: 14 başarımlı sistem + bond seviyesi ilerleme mekanizması
-- **💕 Çift Odaklı**: Tüm içerik ikili düşünme ve etkileşim için tasarlanmıştır
-- **🎨 9 Tema Paleti**: Romantik, sakinleştirici ve modern renk seçenekleri
-- **📱 6 Platform**: Android, iOS, Web, Windows, macOS, Linux desteği
-- **🔗 Native Bridge**: Android home widget ve native meditasyon modu entegrasyonu
-- **🇹🇷 Türkçe UI**: Tamamen Türkçe arayüz ve içerik
+- **🔒 Offline-First**: All features work without internet — no backend required
+- **💾 Persistent State**: All data survives app restart
+- **⚡ Real-Time Sync**: Mood streams update instantly
+- **🤖 Fallback AI**: All AI features have offline local implementations
+- **🏆 Gamification**: 14-achievement system + bond level progression
+- **💕 Couple-Centric**: All content designed for paired thinking and interaction
+- **🎨 9 Theme Palettes**: Romantic, calming, and modern color options
+- **📱 6 Platforms**: Android, iOS, Web, Windows, macOS, Linux support
+- **🔗 Native Bridge**: Android home widget and native meditation mode integration
+- **🇹🇷 Turkish UI**: Fully localized Turkish interface and content
 
 ---
+
+## IN APP: 
 
 <p align="center">
-  <b>Sync</b> — Duyguların senkronize olduğu yer. 💕
+  <img src="https://github.com/user-attachments/assets/588e9a5f-3fba-4b0e-a091-fbbc35051bf7" width="240" height="900" alt="1" />
+  <img src="https://github.com/user-attachments/assets/cebf2ed5-cee2-449a-b584-15b9d51d1509" width="240" height="900" alt="2" />
+  <img src="https://github.com/user-attachments/assets/d66a797f-35a7-4246-9ab2-c4ecbbfe4547" width="240" height="900" alt="3" />
+  <img src="https://github.com/user-attachments/assets/022478da-0b1a-4000-bb78-05f02ed8fc95" width="240" height="900" alt="4" />
+  <img src="https://github.com/user-attachments/assets/888769c6-a466-4152-98f7-b4a46ce56aa5" width="240" height="900" alt="5" />
+  <img src="https://github.com/user-attachments/assets/c2167187-a31c-4e06-9a48-139c1ecf6158" width="240" height="900" alt="6" />
+  <img src="https://github.com/user-attachments/assets/4f9b833a-c729-4a23-ae86-a6418a59fba4" width="240" height="900" alt="7" />
+  <img src="https://github.com/user-attachments/assets/b2fad32a-b447-46a2-86cc-388ecb063957" width="240" height="900" alt="8" />
+  <img src="https://github.com/user-attachments/assets/4a3c8dc6-7c82-4008-8bca-17eee337cb21" width="240" height="900" alt="9" />
+  <img src="https://github.com/user-attachments/assets/95af90a4-0b5d-4cbb-be06-7887b1961205" width="240" height="900" alt="10" />
+  <img src="https://github.com/user-attachments/assets/a9a0061b-5dc2-4ee7-8917-0d7ceb2b4763" width="240" height="900" alt="11" />
+  <img src="https://github.com/user-attachments/assets/48ae4fe7-f965-4dd8-b6d3-f787ce41695c" width="240" height="900" alt="12" />
+</p>
+
+<p align="center">
+  <b>Sync</b> — Where emotions synchronize. 💕
 </p>

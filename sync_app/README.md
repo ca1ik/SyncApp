@@ -41,7 +41,7 @@
 | Not knowing how your partner feels | **Real-time mood streams** — instant synchronization |
 | Recurring relationship problems | **AI trigger reports** — pattern detection |
 | Emotional burnout | **Breathing exercises** — stress management |
-| Monotony in relationship | **10 couple games** — playful bonding |
+| Monotony in relationship | **30+ couple games** — playful bonding |
 
 ---
 
@@ -68,7 +68,9 @@
 - **Couple Sync** 💞: 5-3-5-2 breathing together exercise
 - Visual breathing circle animation, haptic feedback, phase transition vibration
 
-### 🎮 Games Hub (10 Couple Games)
+### 🎮 Games Hub (30+ Couple Games)
+
+#### 💕 Classic Couple Games (10)
 | Game | Type | Access |
 |------|------|--------|
 | 🔢 Count Trap | Number guessing | Free |
@@ -81,6 +83,58 @@
 | 🗺️ Love Map | Relationship memories | PRO |
 | 🔐 Secret Message | Encrypted love letters | PRO |
 | 💞 Compatibility Test | Match percentage | PRO |
+
+#### ⚔️ Arena Games — Physics-Based PvP (5)
+Real-time 2-player physics arena games with `CustomPaint` rendering, normalized coordinate system, and 16ms game loop:
+
+| Game | Type |
+|------|------|
+| 🟠 Sumo Ball | Physics push arena — knock opponent off the ring |
+| 🎱 Mini Pool | Billiards — pocket all your balls first |
+| 🏎️ Car Race | Top-down racing — reach the finish line first |
+| 🔴 Laser Dodge | Dodge randomly spawning lasers — last one standing |
+| 🧊 Ice Platform | Icy survival — push opponent off shrinking platforms |
+
+#### 🎪 Arena Extra — Pummel Party Inspired (15)
+Diverse mini-games inspired by Pummel Party / Mario Party, each with unique mechanics:
+
+| Game | Type |
+|------|------|
+| 🎨 Color Match | Match tiles to the target color sequence |
+| ☄️ Meteor Shower | Dodge falling meteors — survival mode |
+| 🎈 Balloon Pop | Tap-to-pop balloons faster than your partner |
+| 🤿 Treasure Dive | Dive underwater and collect the most treasure |
+| 💣 Bomb Pass | Hot-potato — don't hold the bomb when it explodes |
+| 🏗️ Tower Stack | Precision timing — stack the tallest tower |
+| 🍎 Fruit Catch | Catch falling fruits while dodging rotten ones |
+| 🎯 Target Shot | Aim and shoot — highest score wins |
+| 🌋 Lava Floor | The floor is lava — survive the rising heat |
+| 🖌️ Paint War | Territory battle — paint more area your color |
+| 🐍 Snake Arena | Classic snake PvP — eat, grow, dominate |
+| 🌑 Asteroid Breaker | Destroy asteroids for points — avoid debris |
+| 🎵 Rhythm Tap | Hit the notes in sync — musical challenge |
+| 🏃 Maze Runner | Navigate the maze fastest — random layouts |
+| 🛡️ Shield Block | Block incoming projectiles — last shield standing |
+
+#### 🎬 Cinematic Game Launch Screen
+- **Per-game themed countdown** with custom colors and gradients
+- **60 floating particles** + expanding ring wave animations
+- **ShaderMask title effects** with linear gradient sweep
+- **Player badges** with glow effects
+- **Automatic transition** into gameplay after 3-second countdown
+
+#### 🔊 Game Audio System (`GameAudioService`)
+- **10 SFX effects**: hit, score, explosion, countdown, victory, defeat, pop, whoosh, powerUp, tap
+- **10 BGM themes**: epicBattle, tension, funPlayful, mysteryDeep, speedRush, rhythm, space, nature, horror, celebration
+- **Procedurally generated WAV files** — no external audio assets needed
+- **Per-game background music** matched to game atmosphere
+- **Singleton service** with lazy init and automatic resource management
+
+#### 🎆 Enhanced Game Over Screen
+- **Confetti particle system** with physics-based animation
+- **Radial gradient backgrounds** with per-game theme colors
+- **ShaderMask winner title** with animated gradient
+- **Gradient action buttons** (Play Again / Return)
 
 ### 📊 Dashboard & Analytics
 - **Relationship Score**: Overall relationship health via 0–100 algorithm
@@ -168,7 +222,8 @@ lib/
 │   ├── router/
 │   │   └── app_router.dart            # GetX route definitions (12 pages)
 │   ├── services/
-│   │   └── native_bridge_service.dart  # Android/iOS native channel bridge
+│   │   ├── native_bridge_service.dart  # Android/iOS native channel bridge
+│   │   └── game_audio_service.dart    # Singleton audio engine (10 SFX + 10 BGM)
 │   ├── theme/
 │   │   ├── app_theme.dart             # 9 theme definitions & gradient system
 │   │   └── theme_provider.dart        # ChangeNotifier theme manager
@@ -197,7 +252,12 @@ lib/
     ├── home/                          # Home page — mood submission
     ├── dashboard/                     # Analytics & charts
     ├── breathing/                     # 4 breathing exercises
-    ├── games/                         # 10 games + Q&A system
+    ├── games/                         # 30+ games + Q&A system
+    │   └── presentation/pages/
+    │       ├── games_hub_page.dart     # Main game hub with per-game gradient cards
+    │       ├── arena_games_page.dart   # 5 physics-based PvP arena games
+    │       ├── arena_games_extra_page.dart # 15 Pummel Party inspired mini-games
+    │       └── game_launch_screen.dart # Cinematic countdown launch screen
     ├── ai_assistant/                  # Dual AI chatbot
     ├── achievements/                  # Achievements & streak page
     ├── settings/                      # Theme, account, plan management
@@ -322,7 +382,8 @@ isActiveToday : bool               // Active today (computed)
 | Mood submissions | 5 / day | ♾️ Unlimited |
 | Partner linking | ✅ | ✅ |
 | Breathing exercises | 1 technique (Box) | All 4 techniques |
-| Games | 3 games | 10 games |
+| Classic Games | 3 games | 10 games |
+| Arena Games | 5 games | All 20 games |
 | Q&A System | ✅ | ✅ |
 | AI advice | Basic | Advanced |
 | Dashboard | Basic | Full analytics |
@@ -356,6 +417,11 @@ isActiveToday : bool               // Active today (computed)
 | Package | Version | Purpose |
 |---------|---------|---------|
 | `shared_preferences` | ^2.3.3 | All data persistence (JSON) |
+
+### Audio
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `audioplayers` | ^6.1.0 | Game SFX & background music playback |
 
 ### UI & Theming
 | Package | Version | Purpose |
@@ -416,6 +482,7 @@ sync_users_db            → All registered users
 sync_mood_logs           → Mood entry list
 sync_couple_points       → Couple points & bond level
 sync_game_scores         → Game scores (last 100)
+sync_arena_scores        → Arena game PvP results
 sync_couple_questions    → Q&A history
 sync_streak_data         → Streak tracking data
 sync_achievements        → Unlocked achievements
@@ -498,6 +565,10 @@ Available test files:
 - **💕 Couple-Centric**: All content designed for paired thinking and interaction
 - **🎨 9 Theme Palettes**: Romantic, calming, and modern color options
 - **📱 6 Platforms**: Android, iOS, Web, Windows, macOS, Linux support
+- **⚔️ 20 Arena Games**: Physics-based PvP with CustomPaint rendering & 16ms game loop
+- **🎬 Cinematic Launch**: Per-game themed countdown with particle effects
+- **🔊 Procedural Audio**: 20 WAV files generated at build — zero external audio deps
+- **🎆 Confetti Game Over**: Particle-based celebration with ShaderMask effects
 - **🔗 Native Bridge**: Android home widget and native meditation mode integration
 - **🇹🇷 Turkish UI**: Fully localized Turkish interface and content
 

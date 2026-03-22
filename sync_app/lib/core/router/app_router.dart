@@ -6,6 +6,8 @@ import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/partner_link_page.dart';
 import '../../features/breathing/presentation/pages/breathing_page.dart';
 import '../../features/dashboard/presentation/pages/dashboard_page.dart';
+import '../../features/games/presentation/pages/arena_games_page.dart';
+import '../../features/games/presentation/pages/arena_games_extra_page.dart';
 import '../../features/games/presentation/pages/game_play_page.dart';
 import '../../features/games/presentation/pages/games_hub_page.dart';
 import '../../features/ai_assistant/presentation/pages/ai_assistant_page.dart';
@@ -35,6 +37,8 @@ class AppRoutes {
   static const String aiAssistant = '/ai-assistant';
   static const String tournament = '/tournament';
   static const String ranking = '/ranking';
+  static const String arenaGame = '/arena-game';
+  static const String arenaGameExtra = '/arena-game-extra';
 }
 
 class AppRouter {
@@ -59,5 +63,14 @@ class AppRouter {
     GetPage(name: AppRoutes.aiAssistant, page: AiAssistantPage.new),
     GetPage(name: AppRoutes.tournament, page: TournamentPage.new),
     GetPage(name: AppRoutes.ranking, page: RankingPage.new),
+    GetPage(
+      name: AppRoutes.arenaGame,
+      page: () => ArenaGamesPage(gameType: Get.arguments as CoupleGameType),
+    ),
+    GetPage(
+      name: AppRoutes.arenaGameExtra,
+      page: () =>
+          ArenaGamesExtraPage(gameType: Get.arguments as CoupleGameType),
+    ),
   ];
 }

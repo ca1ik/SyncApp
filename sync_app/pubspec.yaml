@@ -39,6 +39,9 @@ dependencies:
   uuid: ^4.5.1
   flutter_local_notifications: ^18.0.1
 
+  # --- Audio ---
+  audioplayers: ^6.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -50,6 +53,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/audio/
 
 flutter_launcher_icons:
   android: true

@@ -87,6 +87,22 @@ enum CoupleGameType {
   carRace, // Araba Yarışı
   laserDodge, // Lazer Kaçış
   icePlatform, // Buz Platformu
+  // ── Arena Wave 2 (Pummel Party Inspired) ──
+  colorMatch, // Renk Eşleştirme
+  meteorShower, // Meteor Yağmuru
+  balloonPop, // Balon Patlatma
+  treasureDive, // Hazine Dalışı
+  bombPass, // Bomba Pas
+  towerStack, // Kule Yığma
+  fruitCatch, // Meyve Toplama
+  targetShot, // Hedef Vurma
+  lavaFloor, // Lav Zemin
+  paintWar, // Boya Savaşı
+  snakeArena, // Yılan Arenası
+  asteroidBreaker, // Asteroid Kırma
+  rhythmTap, // Ritim Dokun
+  mazeRunner, // Labirent Koşusu
+  shieldBlock, // Kalkan Blok
 }
 
 extension CoupleGameTypeX on CoupleGameType {
@@ -136,6 +152,36 @@ extension CoupleGameTypeX on CoupleGameType {
         return l.tr('Laser Dodge', 'Lazer Kacis');
       case CoupleGameType.icePlatform:
         return l.tr('Ice Platform', 'Buz Platformu');
+      case CoupleGameType.colorMatch:
+        return l.tr('Color Match', 'Renk Eslestirme');
+      case CoupleGameType.meteorShower:
+        return l.tr('Meteor Shower', 'Meteor Yagmuru');
+      case CoupleGameType.balloonPop:
+        return l.tr('Balloon Pop', 'Balon Patlatma');
+      case CoupleGameType.treasureDive:
+        return l.tr('Treasure Dive', 'Hazine Dalisi');
+      case CoupleGameType.bombPass:
+        return l.tr('Bomb Pass', 'Bomba Pas');
+      case CoupleGameType.towerStack:
+        return l.tr('Tower Stack', 'Kule Yigma');
+      case CoupleGameType.fruitCatch:
+        return l.tr('Fruit Catch', 'Meyve Toplama');
+      case CoupleGameType.targetShot:
+        return l.tr('Target Shot', 'Hedef Vurma');
+      case CoupleGameType.lavaFloor:
+        return l.tr('Lava Floor', 'Lav Zemin');
+      case CoupleGameType.paintWar:
+        return l.tr('Paint War', 'Boya Savasi');
+      case CoupleGameType.snakeArena:
+        return l.tr('Snake Arena', 'Yilan Arenasi');
+      case CoupleGameType.asteroidBreaker:
+        return l.tr('Asteroid Breaker', 'Asteroid Kirma');
+      case CoupleGameType.rhythmTap:
+        return l.tr('Rhythm Tap', 'Ritim Dokun');
+      case CoupleGameType.mazeRunner:
+        return l.tr('Maze Runner', 'Labirent Kosusu');
+      case CoupleGameType.shieldBlock:
+        return l.tr('Shield Block', 'Kalkan Blok');
     }
   }
 
@@ -185,6 +231,36 @@ extension CoupleGameTypeX on CoupleGameType {
         return '⚡';
       case CoupleGameType.icePlatform:
         return '🧊';
+      case CoupleGameType.colorMatch:
+        return '🎨';
+      case CoupleGameType.meteorShower:
+        return '☄️';
+      case CoupleGameType.balloonPop:
+        return '🎈';
+      case CoupleGameType.treasureDive:
+        return '💎';
+      case CoupleGameType.bombPass:
+        return '💥';
+      case CoupleGameType.towerStack:
+        return '🏗️';
+      case CoupleGameType.fruitCatch:
+        return '🍎';
+      case CoupleGameType.targetShot:
+        return '🎯';
+      case CoupleGameType.lavaFloor:
+        return '🌋';
+      case CoupleGameType.paintWar:
+        return '🖌️';
+      case CoupleGameType.snakeArena:
+        return '🐍';
+      case CoupleGameType.asteroidBreaker:
+        return '🪨';
+      case CoupleGameType.rhythmTap:
+        return '🎵';
+      case CoupleGameType.mazeRunner:
+        return '🏃';
+      case CoupleGameType.shieldBlock:
+        return '🛡️';
     }
   }
 
@@ -258,6 +334,51 @@ extension CoupleGameTypeX on CoupleGameType {
       case CoupleGameType.icePlatform:
         return l.tr('Stay on the shrinking ice! Push others off!',
             'Kuculen buzda kal! Digerlerini dusur!');
+      case CoupleGameType.colorMatch:
+        return l.tr('Match the falling colors! Fast fingers win!',
+            'Dusen renkleri esle! Hizli parmaklar kazanir!');
+      case CoupleGameType.meteorShower:
+        return l.tr('Dodge the meteors! Survive the rain of fire!',
+            'Meteorlardan kac! Ates yagmurundan kurtul!');
+      case CoupleGameType.balloonPop:
+        return l.tr('Pop balloons as fast as you can! Most pops wins!',
+            'Balonlari hizla patlat! En cok patlatan kazanir!');
+      case CoupleGameType.treasureDive:
+        return l.tr('Dive deep and collect treasures before time runs out!',
+            'Derine dal ve sure bitmeden hazineleri topla!');
+      case CoupleGameType.bombPass:
+        return l.tr('Pass the bomb before it explodes! Last holder loses!',
+            'Bombayi patlamadan pas ver! Son tutan kaybeder!');
+      case CoupleGameType.towerStack:
+        return l.tr('Stack blocks precisely! Tallest tower wins!',
+            'Bloklari duzgun yigin! En yuksek kule kazanir!');
+      case CoupleGameType.fruitCatch:
+        return l.tr('Catch falling fruits! Avoid the rotten ones!',
+            'Dusen meyveleri yakala! Curuklerden kacin!');
+      case CoupleGameType.targetShot:
+        return l.tr('Hit the targets! Accuracy and speed count!',
+            'Hedefleri vur! Dogruluk ve hiz sayilir!');
+      case CoupleGameType.lavaFloor:
+        return l.tr('Jump between platforms! The lava is rising!',
+            'Platformlar arasi zipla! Lav yukseliyor!');
+      case CoupleGameType.paintWar:
+        return l.tr('Paint the arena your color! Most coverage wins!',
+            'Arayi kendi renginle boya! En cok boyayan kazanir!');
+      case CoupleGameType.snakeArena:
+        return l.tr('Grow your snake! Dont crash into walls or yourself!',
+            'Yilanini buyut! Duvarlara ve kendine carpma!');
+      case CoupleGameType.asteroidBreaker:
+        return l.tr('Break asteroids before they hit! Tap fast!',
+            'Asteroidleri carpmadan kir! Hizli dokun!');
+      case CoupleGameType.rhythmTap:
+        return l.tr('Tap on beat! Perfect rhythm scores the most!',
+            'Ritimde dokun! Mukemmel ritim en cok puan kazanir!');
+      case CoupleGameType.mazeRunner:
+        return l.tr('Race through the maze! Find the exit first!',
+            'Labirentte kosun! Cikisi ilk bul!');
+      case CoupleGameType.shieldBlock:
+        return l.tr('Block incoming projectiles with your shield!',
+            'Kalkaninla gelen mermi leri engelle!');
     }
   }
 
@@ -269,6 +390,9 @@ extension CoupleGameTypeX on CoupleGameType {
       case CoupleGameType.quickTapDuel:
       case CoupleGameType.diceDuel:
       case CoupleGameType.sumoBall:
+      case CoupleGameType.balloonPop:
+      case CoupleGameType.bombPass:
+      case CoupleGameType.meteorShower:
         return false;
       default:
         return true;
@@ -301,7 +425,23 @@ extension CoupleGameTypeX on CoupleGameType {
       case CoupleGameType.carRace:
       case CoupleGameType.laserDodge:
       case CoupleGameType.icePlatform:
+      case CoupleGameType.bombPass:
+      case CoupleGameType.paintWar:
+      case CoupleGameType.snakeArena:
         return [PlayerMode.multi];
+      case CoupleGameType.colorMatch:
+      case CoupleGameType.meteorShower:
+      case CoupleGameType.balloonPop:
+      case CoupleGameType.treasureDive:
+      case CoupleGameType.towerStack:
+      case CoupleGameType.fruitCatch:
+      case CoupleGameType.targetShot:
+      case CoupleGameType.lavaFloor:
+      case CoupleGameType.asteroidBreaker:
+      case CoupleGameType.rhythmTap:
+      case CoupleGameType.mazeRunner:
+      case CoupleGameType.shieldBlock:
+        return [PlayerMode.solo, PlayerMode.multi];
     }
   }
 
@@ -334,6 +474,21 @@ extension CoupleGameTypeX on CoupleGameType {
       case CoupleGameType.carRace:
       case CoupleGameType.laserDodge:
       case CoupleGameType.icePlatform:
+      case CoupleGameType.colorMatch:
+      case CoupleGameType.meteorShower:
+      case CoupleGameType.balloonPop:
+      case CoupleGameType.treasureDive:
+      case CoupleGameType.bombPass:
+      case CoupleGameType.towerStack:
+      case CoupleGameType.fruitCatch:
+      case CoupleGameType.targetShot:
+      case CoupleGameType.lavaFloor:
+      case CoupleGameType.paintWar:
+      case CoupleGameType.snakeArena:
+      case CoupleGameType.asteroidBreaker:
+      case CoupleGameType.rhythmTap:
+      case CoupleGameType.mazeRunner:
+      case CoupleGameType.shieldBlock:
         return GameCategory.arena;
     }
   }

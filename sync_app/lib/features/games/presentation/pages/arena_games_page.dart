@@ -6,9 +6,11 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 
 import '../../../../core/di/injection.dart';
+import '../../../../core/services/game_audio_service.dart';
 import '../../../../core/services/locale_service.dart';
 import '../../../../data/models/game_model.dart';
 import '../../../../data/repositories/games_repository.dart';
+import 'game_launch_screen.dart';
 
 class ArenaGamesPage extends StatefulWidget {
   const ArenaGamesPage({super.key, required this.gameType});
@@ -41,104 +43,258 @@ class _ArenaGamesPageState extends State<ArenaGamesPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_gameOver) return _ArenaGameOver(p1: _p1Score, p2: _p2Score);
+    if (_gameOver) {
+      GameAudioService.instance.fadeOutBgMusic();
+      return _ArenaGameOver(p1: _p1Score, p2: _p2Score);
+    }
 
+    Widget game;
     switch (widget.gameType) {
       case CoupleGameType.sumoBall:
-        return _SumoBallGame(onEnd: _endGame);
+        game = _SumoBallGame(onEnd: _endGame);
       case CoupleGameType.miniPool:
-        return _MiniPoolGame(onEnd: _endGame);
+        game = _MiniPoolGame(onEnd: _endGame);
       case CoupleGameType.carRace:
-        return _CarRaceGame(onEnd: _endGame);
+        game = _CarRaceGame(onEnd: _endGame);
       case CoupleGameType.laserDodge:
-        return _LaserDodgeGame(onEnd: _endGame);
+        game = _LaserDodgeGame(onEnd: _endGame);
       case CoupleGameType.icePlatform:
-        return _IcePlatformGame(onEnd: _endGame);
+        game = _IcePlatformGame(onEnd: _endGame);
       default:
         Navigator.of(context).pop();
         return const SizedBox.shrink();
     }
+    return GameLaunchScreen(gameType: widget.gameType, child: game);
   }
 }
 
 // ══════════════════════════════════════════════════
 //  ARENA GAME OVER
 // ══════════════════════════════════════════════════
-class _ArenaGameOver extends StatelessWidget {
+class _ArenaGameOver extends StatefulWidget {
   const _ArenaGameOver({required this.p1, required this.p2});
   final int p1, p2;
 
   @override
+  State<_ArenaGameOver> createState() => _ArenaGameOverState();
+}
+
+class _ArenaGameOverState extends State<_ArenaGameOver>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _confettiCtrl;
+  late List<_ConfettiPiece> _confetti;
+
+  @override
+  void initState() {
+    super.initState();
+    GameAudioService.instance
+        .playSfx(widget.p1 != widget.p2 ? GameSfx.victory : GameSfx.score);
+    _confettiCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 6),
+    )..repeat();
+    final rng = Random();
+    _confetti = List.generate(
+        50,
+        (_) => _ConfettiPiece(
+              x: rng.nextDouble(),
+              y: -rng.nextDouble(),
+              speed: 0.003 + rng.nextDouble() * 0.005,
+              size: 4 + rng.nextDouble() * 8,
+              color: [
+                Colors.pinkAccent,
+                Colors.blueAccent,
+                Colors.amber,
+                Colors.greenAccent,
+                Colors.purpleAccent,
+                Colors.orangeAccent,
+              ][rng.nextInt(6)],
+              rotation: rng.nextDouble() * 6.28,
+              rotSpeed: (rng.nextDouble() - 0.5) * 0.1,
+              drift: (rng.nextDouble() - 0.5) * 0.002,
+            ));
+  }
+
+  @override
+  void dispose() {
+    _confettiCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final winner = p1 > p2
+    final winner = widget.p1 > widget.p2
         ? l.tr('👩 Player 1 Wins!', '👩 Oyuncu 1 Kazandi!')
-        : p2 > p1
+        : widget.p2 > widget.p1
             ? l.tr('👨 Player 2 Wins!', '👨 Oyuncu 2 Kazandi!')
             : l.tr('🤝 Draw!', '🤝 Berabere!');
+    final winColor = widget.p1 > widget.p2
+        ? Colors.pinkAccent
+        : widget.p2 > widget.p1
+            ? Colors.blueAccent
+            : Colors.amber;
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              theme.colorScheme.primary.withValues(alpha: 0.2),
-              theme.colorScheme.surface,
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(32),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('🏆', style: TextStyle(fontSize: 80))
-                      .animate()
-                      .scale(duration: 800.ms, curve: Curves.elasticOut),
-                  const Gap(24),
-                  Text(winner,
-                          style: theme.textTheme.headlineMedium
-                              ?.copyWith(fontWeight: FontWeight.w900))
-                      .animate()
-                      .fadeIn(delay: 300.ms)
-                      .slideY(begin: 0.3),
-                  const Gap(32),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _ScoreBox(
-                          label: l.tr('👩 P1', '👩 O1'),
-                          score: p1,
-                          color: Colors.pink),
-                      const Gap(24),
-                      _ScoreBox(
-                          label: l.tr('👨 P2', '👨 O2'),
-                          score: p2,
-                          color: Colors.blue),
+      backgroundColor: Colors.black,
+      body: AnimatedBuilder(
+        animation: _confettiCtrl,
+        builder: (context, _) => Stack(
+          children: [
+            // Animated dark gradient bg
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    center: Alignment.center,
+                    radius: 1.0,
+                    colors: [
+                      winColor.withValues(alpha: 0.15),
+                      Colors.black,
                     ],
-                  ).animate().fadeIn(delay: 500.ms),
-                  const Gap(40),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(l.tr('Back to Games', 'Oyunlara Don'),
-                          style: const TextStyle(fontSize: 16)),
-                    ),
-                  ).animate().fadeIn(delay: 700.ms),
-                ],
+                  ),
+                ),
               ),
             ),
-          ),
+            // Confetti
+            Positioned.fill(
+              child: CustomPaint(
+                painter: _ConfettiPainter(
+                  confetti: _confetti,
+                  phase: _confettiCtrl.value,
+                ),
+              ),
+            ),
+            // Content
+            SafeArea(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(32),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('🏆', style: TextStyle(fontSize: 100))
+                          .animate()
+                          .scale(duration: 800.ms, curve: Curves.elasticOut)
+                          .then()
+                          .shimmer(
+                              duration: 1500.ms,
+                              color: Colors.amber.withValues(alpha: 0.5)),
+                      const Gap(24),
+                      ShaderMask(
+                        shaderCallback: (bounds) => LinearGradient(
+                          colors: [winColor, Colors.white, winColor],
+                        ).createShader(bounds),
+                        child: Text(winner,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.white,
+                                letterSpacing: 1)),
+                      ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.3),
+                      const Gap(32),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _ScoreBox(
+                              label: l.tr('👩 P1', '👩 O1'),
+                              score: widget.p1,
+                              color: Colors.pinkAccent),
+                          const Gap(24),
+                          _ScoreBox(
+                              label: l.tr('👨 P2', '👨 O2'),
+                              score: widget.p2,
+                              color: Colors.blueAccent),
+                        ],
+                      ).animate().fadeIn(delay: 500.ms),
+                      const Gap(40),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            gradient: LinearGradient(colors: [
+                              winColor,
+                              winColor.withValues(alpha: 0.7)
+                            ]),
+                            boxShadow: [
+                              BoxShadow(
+                                color: winColor.withValues(alpha: 0.4),
+                                blurRadius: 16,
+                                spreadRadius: 2,
+                              ),
+                            ],
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16)),
+                            ),
+                            child: Text(l.tr('Back to Games', 'Oyunlara Don'),
+                                style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700)),
+                          ),
+                        ),
+                      ).animate().fadeIn(delay: 700.ms).slideY(begin: 0.2),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
+}
+
+class _ConfettiPiece {
+  double x, y, speed, size, rotation, rotSpeed, drift;
+  Color color;
+  _ConfettiPiece({
+    required this.x,
+    required this.y,
+    required this.speed,
+    required this.size,
+    required this.color,
+    required this.rotation,
+    required this.rotSpeed,
+    required this.drift,
+  });
+}
+
+class _ConfettiPainter extends CustomPainter {
+  _ConfettiPainter({required this.confetti, required this.phase});
+  final List<_ConfettiPiece> confetti;
+  final double phase;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    for (final c in confetti) {
+      final y = (c.y + phase * c.speed * 60) % 1.2;
+      final x =
+          c.x + sin(phase * 6.28 + c.rotation) * 0.03 + c.drift * phase * 60;
+      final rot = c.rotation + phase * c.rotSpeed * 60;
+      canvas.save();
+      canvas.translate(x * size.width, y * size.height);
+      canvas.rotate(rot);
+      canvas.drawRect(
+        Rect.fromCenter(
+            center: Offset.zero, width: c.size, height: c.size * 0.6),
+        Paint()..color = c.color.withValues(alpha: 0.8),
+      );
+      canvas.restore();
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _ConfettiPainter old) => true;
 }
 
 class _ScoreBox extends StatelessWidget {
@@ -216,7 +372,10 @@ class _SumoBallGameState extends State<_SumoBallGame>
     _countdown = true;
     _countVal = 3;
     Timer.periodic(const Duration(seconds: 1), (t) {
-      if (!mounted) { t.cancel(); return; }
+      if (!mounted) {
+        t.cancel();
+        return;
+      }
       if (_countVal <= 1) {
         t.cancel();
         setState(() => _countdown = false);
@@ -232,11 +391,15 @@ class _SumoBallGameState extends State<_SumoBallGame>
       if (!mounted || _roundOver) return;
       setState(() {
         // Apply friction
-        _p1VX *= 0.96; _p1VY *= 0.96;
-        _p2VX *= 0.96; _p2VY *= 0.96;
+        _p1VX *= 0.96;
+        _p1VY *= 0.96;
+        _p2VX *= 0.96;
+        _p2VY *= 0.96;
         // Move
-        _p1X += _p1VX; _p1Y += _p1VY;
-        _p2X += _p2VX; _p2Y += _p2VY;
+        _p1X += _p1VX;
+        _p1Y += _p1VY;
+        _p2X += _p2VX;
+        _p2Y += _p2VY;
 
         // Collision between balls
         final dx = _p2X - _p1X;
@@ -259,24 +422,29 @@ class _SumoBallGameState extends State<_SumoBallGame>
             _p2VX += relV * nx * 0.8;
             _p2VY += relV * ny * 0.8;
             HapticFeedback.mediumImpact();
+            GameAudioService.instance.playSfx(GameSfx.hit);
           }
         }
 
         // Check out-of-bounds
-        final p1Dist = sqrt((_p1X - _cx) * (_p1X - _cx) + (_p1Y - _cy) * (_p1Y - _cy));
-        final p2Dist = sqrt((_p2X - _cx) * (_p2X - _cx) + (_p2Y - _cy) * (_p2Y - _cy));
+        final p1Dist =
+            sqrt((_p1X - _cx) * (_p1X - _cx) + (_p1Y - _cy) * (_p1Y - _cy));
+        final p2Dist =
+            sqrt((_p2X - _cx) * (_p2X - _cx) + (_p2Y - _cy) * (_p2Y - _cy));
 
         if (p1Dist > _platR) {
           _roundOver = true;
           _p2Wins++;
           _roundText = l.tr('👨 Player 2 scores!', '👨 Oyuncu 2 puan aldi!');
           HapticFeedback.heavyImpact();
+          GameAudioService.instance.playSfx(GameSfx.score);
           _nextRound();
         } else if (p2Dist > _platR) {
           _roundOver = true;
           _p1Wins++;
           _roundText = l.tr('👩 Player 1 scores!', '👩 Oyuncu 1 puan aldi!');
           HapticFeedback.heavyImpact();
+          GameAudioService.instance.playSfx(GameSfx.score);
           _nextRound();
         }
       });
@@ -294,10 +462,14 @@ class _SumoBallGameState extends State<_SumoBallGame>
         _roundNum++;
         _roundOver = false;
         _roundText = '';
-        _p1X = 0.35; _p1Y = 0.5;
-        _p2X = 0.65; _p2Y = 0.5;
-        _p1VX = 0; _p1VY = 0;
-        _p2VX = 0; _p2VY = 0;
+        _p1X = 0.35;
+        _p1Y = 0.5;
+        _p2X = 0.65;
+        _p2Y = 0.5;
+        _p1VX = 0;
+        _p1VY = 0;
+        _p2VX = 0;
+        _p2VY = 0;
       });
       _startCountdown();
     }
@@ -321,9 +493,11 @@ class _SumoBallGameState extends State<_SumoBallGame>
     final dy = d.delta.dy / arenaSize.height * 0.15;
     setState(() {
       if (_draggingPlayer == 1) {
-        _p1VX += dx; _p1VY += dy;
+        _p1VX += dx;
+        _p1VY += dy;
       } else {
-        _p2VX += dx; _p2VY += dy;
+        _p2VX += dx;
+        _p2VY += dy;
       }
     });
   }
@@ -340,7 +514,6 @@ class _SumoBallGameState extends State<_SumoBallGame>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFF0D1B2A),
       appBar: AppBar(
@@ -358,10 +531,12 @@ class _SumoBallGameState extends State<_SumoBallGame>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _SumoScore(label: '👩', wins: _p1Wins, color: Colors.pinkAccent),
+                  _SumoScore(
+                      label: '👩', wins: _p1Wins, color: Colors.pinkAccent),
                   Text(l.tr('Best of 5', '5in En Iyisi'),
                       style: const TextStyle(color: Colors.white54)),
-                  _SumoScore(label: '👨', wins: _p2Wins, color: Colors.blueAccent),
+                  _SumoScore(
+                      label: '👨', wins: _p2Wins, color: Colors.blueAccent),
                 ],
               ),
             ),
@@ -371,8 +546,8 @@ class _SumoBallGameState extends State<_SumoBallGame>
                 padding: const EdgeInsets.all(16),
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    final size = Size(constraints.maxWidth, constraints.maxHeight);
-                    final minDim = min(size.width, size.height);
+                    final size =
+                        Size(constraints.maxWidth, constraints.maxHeight);
                     return GestureDetector(
                       onPanStart: (d) => _onDragStart(d, size),
                       onPanUpdate: (d) => _onDragUpdate(d, size),
@@ -380,20 +555,24 @@ class _SumoBallGameState extends State<_SumoBallGame>
                       child: CustomPaint(
                         size: size,
                         painter: _SumoArenaPainter(
-                          p1X: _p1X, p1Y: _p1Y,
-                          p2X: _p2X, p2Y: _p2Y,
+                          p1X: _p1X,
+                          p1Y: _p1Y,
+                          p2X: _p2X,
+                          p2Y: _p2Y,
                           ballR: _ballR,
                           platR: _platR,
                         ),
                         child: _countdown
                             ? Center(
                                 child: Text('$_countVal',
-                                    style: const TextStyle(
-                                        fontSize: 80,
-                                        fontWeight: FontWeight.w900,
-                                        color: Colors.white))
-                                    .animate(onPlay: (c) => c.repeat(reverse: true))
-                                    .scale(begin: const Offset(0.8, 0.8),
+                                        style: const TextStyle(
+                                            fontSize: 80,
+                                            fontWeight: FontWeight.w900,
+                                            color: Colors.white))
+                                    .animate(
+                                        onPlay: (c) => c.repeat(reverse: true))
+                                    .scale(
+                                        begin: const Offset(0.8, 0.8),
                                         end: const Offset(1.3, 1.3),
                                         duration: 500.ms),
                               )
@@ -426,7 +605,8 @@ class _SumoBallGameState extends State<_SumoBallGame>
             Padding(
               padding: const EdgeInsets.all(16),
               child: Text(
-                l.tr('Swipe on your ball to push! Push opponent off the platform!',
+                l.tr(
+                    'Swipe on your ball to push! Push opponent off the platform!',
                     'Topuna dokun ve suretle! Rakibini platformdan dusur!'),
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: Colors.white54),
@@ -440,7 +620,8 @@ class _SumoBallGameState extends State<_SumoBallGame>
 }
 
 class _SumoScore extends StatelessWidget {
-  const _SumoScore({required this.label, required this.wins, required this.color});
+  const _SumoScore(
+      {required this.label, required this.wins, required this.color});
   final String label;
   final int wins;
   final Color color;
@@ -451,17 +632,24 @@ class _SumoScore extends StatelessWidget {
       children: [
         Text(label, style: const TextStyle(fontSize: 28)),
         const Gap(8),
-        ...List.generate(3, (i) => Container(
-          width: 16, height: 16,
-          margin: const EdgeInsets.symmetric(horizontal: 2),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: i < wins ? color : Colors.white24,
-            boxShadow: i < wins
-                ? [BoxShadow(color: color.withValues(alpha: 0.6), blurRadius: 8)]
-                : null,
-          ),
-        )),
+        ...List.generate(
+            3,
+            (i) => Container(
+                  width: 16,
+                  height: 16,
+                  margin: const EdgeInsets.symmetric(horizontal: 2),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: i < wins ? color : Colors.white24,
+                    boxShadow: i < wins
+                        ? [
+                            BoxShadow(
+                                color: color.withValues(alpha: 0.6),
+                                blurRadius: 8)
+                          ]
+                        : null,
+                  ),
+                )),
       ],
     );
   }
@@ -469,9 +657,12 @@ class _SumoScore extends StatelessWidget {
 
 class _SumoArenaPainter extends CustomPainter {
   _SumoArenaPainter({
-    required this.p1X, required this.p1Y,
-    required this.p2X, required this.p2Y,
-    required this.ballR, required this.platR,
+    required this.p1X,
+    required this.p1Y,
+    required this.p2X,
+    required this.p2Y,
+    required this.ballR,
+    required this.platR,
   });
   final double p1X, p1Y, p2X, p2Y, ballR, platR;
 
@@ -496,7 +687,8 @@ class _SumoArenaPainter extends CustomPainter {
           const Color(0xFF0D47A1),
           const Color(0xFF01579B),
         ],
-      ).createShader(Rect.fromCircle(center: Offset(cx, cy), radius: minDim * platR));
+      ).createShader(
+          Rect.fromCircle(center: Offset(cx, cy), radius: minDim * platR));
     canvas.drawCircle(Offset(cx, cy), minDim * platR, platPaint);
 
     // Platform edge glow
@@ -520,23 +712,24 @@ class _SumoArenaPainter extends CustomPainter {
     );
 
     // Player 1 ball
-    _drawBall(canvas, size, p1X, p1Y, ballR,
-        Colors.pinkAccent, Colors.pink.shade900);
+    _drawBall(
+        canvas, size, p1X, p1Y, ballR, Colors.pinkAccent, Colors.pink.shade900);
 
     // Player 2 ball
-    _drawBall(canvas, size, p2X, p2Y, ballR,
-        Colors.blueAccent, Colors.blue.shade900);
+    _drawBall(
+        canvas, size, p2X, p2Y, ballR, Colors.blueAccent, Colors.blue.shade900);
   }
 
-  void _drawBall(Canvas canvas, Size size, double x, double y,
-      double r, Color main, Color dark) {
+  void _drawBall(Canvas canvas, Size size, double x, double y, double r,
+      Color main, Color dark) {
     final bx = x * size.width;
     final by = y * size.height;
     final br = r * min(size.width, size.height);
 
     // Shadow
     canvas.drawCircle(
-      Offset(bx + 2, by + 3), br,
+      Offset(bx + 2, by + 3),
+      br,
       Paint()..color = Colors.black38,
     );
 
@@ -557,7 +750,8 @@ class _SumoArenaPainter extends CustomPainter {
 
     // Glow
     canvas.drawCircle(
-      Offset(bx, by), br + 4,
+      Offset(bx, by),
+      br + 4,
       Paint()
         ..color = main.withValues(alpha: 0.3)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
@@ -581,7 +775,6 @@ class _MiniPoolGame extends StatefulWidget {
 
 class _MiniPoolGameState extends State<_MiniPoolGame> {
   static const int _totalBalls = 10;
-  final _rng = Random();
 
   late List<_PoolBall> _balls;
   double _cueX = 0.5, _cueY = 0.75;
@@ -596,9 +789,12 @@ class _MiniPoolGameState extends State<_MiniPoolGame> {
 
   // Pockets (corners + side centers) — normalized coords
   static const _pockets = [
-    Offset(0.03, 0.03), Offset(0.97, 0.03),
-    Offset(0.03, 0.97), Offset(0.97, 0.97),
-    Offset(0.50, 0.02), Offset(0.50, 0.98),
+    Offset(0.03, 0.03),
+    Offset(0.97, 0.03),
+    Offset(0.03, 0.97),
+    Offset(0.97, 0.97),
+    Offset(0.50, 0.02),
+    Offset(0.50, 0.98),
   ];
   static const _pocketR = 0.035;
   static const _ballR = 0.022;
@@ -617,9 +813,16 @@ class _MiniPoolGameState extends State<_MiniPoolGame> {
     const startY = 0.35;
     int idx = 0;
     final colors = [
-      Colors.red, Colors.yellow, Colors.green, Colors.brown,
-      Colors.orange, Colors.purple, Colors.teal, Colors.indigo,
-      Colors.amber, Colors.cyan,
+      Colors.red,
+      Colors.yellow,
+      Colors.green,
+      Colors.brown,
+      Colors.orange,
+      Colors.purple,
+      Colors.teal,
+      Colors.indigo,
+      Colors.amber,
+      Colors.cyan,
     ];
     for (int row = 0; row < 4 && idx < _totalBalls; row++) {
       for (int col = 0; col <= row && idx < _totalBalls; col++) {
@@ -651,10 +854,22 @@ class _MiniPoolGameState extends State<_MiniPoolGame> {
         if (_cueVX.abs() > 0.0005 || _cueVY.abs() > 0.0005) _ballsMoving = true;
 
         // Wall bounce for cue
-        if (_cueX < _ballR) { _cueX = _ballR; _cueVX = -_cueVX * 0.7; }
-        if (_cueX > 1 - _ballR) { _cueX = 1 - _ballR; _cueVX = -_cueVX * 0.7; }
-        if (_cueY < _ballR) { _cueY = _ballR; _cueVY = -_cueVY * 0.7; }
-        if (_cueY > 1 - _ballR) { _cueY = 1 - _ballR; _cueVY = -_cueVY * 0.7; }
+        if (_cueX < _ballR) {
+          _cueX = _ballR;
+          _cueVX = -_cueVX * 0.7;
+        }
+        if (_cueX > 1 - _ballR) {
+          _cueX = 1 - _ballR;
+          _cueVX = -_cueVX * 0.7;
+        }
+        if (_cueY < _ballR) {
+          _cueY = _ballR;
+          _cueVY = -_cueVY * 0.7;
+        }
+        if (_cueY > 1 - _ballR) {
+          _cueY = 1 - _ballR;
+          _cueVY = -_cueVY * 0.7;
+        }
 
         // Update balls
         for (final b in _balls) {
@@ -666,10 +881,22 @@ class _MiniPoolGameState extends State<_MiniPoolGame> {
           if (b.vx.abs() > 0.0005 || b.vy.abs() > 0.0005) _ballsMoving = true;
 
           // Wall bounce
-          if (b.x < _ballR) { b.x = _ballR; b.vx = -b.vx * 0.7; }
-          if (b.x > 1 - _ballR) { b.x = 1 - _ballR; b.vx = -b.vx * 0.7; }
-          if (b.y < _ballR) { b.y = _ballR; b.vy = -b.vy * 0.7; }
-          if (b.y > 1 - _ballR) { b.y = 1 - _ballR; b.vy = -b.vy * 0.7; }
+          if (b.x < _ballR) {
+            b.x = _ballR;
+            b.vx = -b.vx * 0.7;
+          }
+          if (b.x > 1 - _ballR) {
+            b.x = 1 - _ballR;
+            b.vx = -b.vx * 0.7;
+          }
+          if (b.y < _ballR) {
+            b.y = _ballR;
+            b.vy = -b.vy * 0.7;
+          }
+          if (b.y > 1 - _ballR) {
+            b.y = 1 - _ballR;
+            b.vy = -b.vy * 0.7;
+          }
 
           // Ball-to-cue collision
           final dx = b.x - _cueX;
@@ -685,6 +912,7 @@ class _MiniPoolGameState extends State<_MiniPoolGame> {
               b.vx += relV * nx * 0.5;
               b.vy += relV * ny * 0.5;
               HapticFeedback.lightImpact();
+              GameAudioService.instance.playSfx(GameSfx.hit);
             }
             final overlap = _ballR * 2 - dist;
             b.x += nx * overlap * 0.5;
@@ -719,16 +947,19 @@ class _MiniPoolGameState extends State<_MiniPoolGame> {
 
           // Pocket check
           for (final p in _pockets) {
-            final pd = sqrt((b.x - p.dx) * (b.x - p.dx) + (b.y - p.dy) * (b.y - p.dy));
+            final pd =
+                sqrt((b.x - p.dx) * (b.x - p.dx) + (b.y - p.dy) * (b.y - p.dy));
             if (pd < _pocketR) {
               b.pocketed = true;
-              b.vx = 0; b.vy = 0;
+              b.vx = 0;
+              b.vy = 0;
               if (_isP1Turn) {
                 _p1Pocketed++;
               } else {
                 _p2Pocketed++;
               }
               HapticFeedback.heavyImpact();
+              GameAudioService.instance.playSfx(GameSfx.score);
               break;
             }
           }
@@ -736,11 +967,14 @@ class _MiniPoolGameState extends State<_MiniPoolGame> {
 
         // Cue pocket check (scratch)
         for (final p in _pockets) {
-          final pd = sqrt((_cueX - p.dx) * (_cueX - p.dx) + (_cueY - p.dy) * (_cueY - p.dy));
+          final pd = sqrt((_cueX - p.dx) * (_cueX - p.dx) +
+              (_cueY - p.dy) * (_cueY - p.dy));
           if (pd < _pocketR) {
             // Reset cue ball
-            _cueX = 0.5; _cueY = 0.75;
-            _cueVX = 0; _cueVY = 0;
+            _cueX = 0.5;
+            _cueY = 0.75;
+            _cueVX = 0;
+            _cueVY = 0;
             _isP1Turn = !_isP1Turn;
             break;
           }
@@ -754,7 +988,8 @@ class _MiniPoolGameState extends State<_MiniPoolGame> {
 
         // Turn switch after balls stop
         if (!_ballsMoving && (_cueVX.abs() < 0.0002 && _cueVY.abs() < 0.0002)) {
-          _cueVX = 0; _cueVY = 0;
+          _cueVX = 0;
+          _cueVY = 0;
         }
       });
     });
@@ -764,7 +999,8 @@ class _MiniPoolGameState extends State<_MiniPoolGame> {
     if (_ballsMoving) return;
     final lx = d.localPosition.dx / size.width;
     final ly = d.localPosition.dy / size.height;
-    final dist = sqrt((lx - _cueX) * (lx - _cueX) + (ly - _cueY) * (ly - _cueY));
+    final dist =
+        sqrt((lx - _cueX) * (lx - _cueX) + (ly - _cueY) * (ly - _cueY));
     if (dist < 0.08) {
       _aiming = true;
       _aimStart = d.localPosition;
@@ -784,10 +1020,12 @@ class _MiniPoolGameState extends State<_MiniPoolGame> {
     // Direction: from aimEnd towards aimStart (pull back to shoot)
     final dx = (_aimStart!.dx - _aimEnd!.dx) / size.width;
     final dy = (_aimStart!.dy - _aimEnd!.dy) / size.height;
-    final power = sqrt(dx * dx + dy * dy).clamp(0.0, 0.05);
+    final power = sqrt(dx * dx + dy * dy).clamp(0.005, 0.05);
+    // power controls max shot force
+    final scale = power / 0.05;
     setState(() {
-      _cueVX = dx * 0.4;
-      _cueVY = dy * 0.4;
+      _cueVX = dx * 0.4 * scale;
+      _cueVY = dy * 0.4 * scale;
       _aiming = false;
       _aimStart = null;
       _aimEnd = null;
@@ -809,7 +1047,6 @@ class _MiniPoolGameState extends State<_MiniPoolGame> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFF1B3A26),
       appBar: AppBar(
@@ -827,8 +1064,10 @@ class _MiniPoolGameState extends State<_MiniPoolGame> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _PoolPlayerInfo(
-                    label: '👩', pocketed: _p1Pocketed,
-                    isActive: _isP1Turn, color: Colors.pinkAccent,
+                    label: '👩',
+                    pocketed: _p1Pocketed,
+                    isActive: _isP1Turn,
+                    color: Colors.pinkAccent,
                   ),
                   Text(
                     _isP1Turn
@@ -838,8 +1077,10 @@ class _MiniPoolGameState extends State<_MiniPoolGame> {
                         color: Colors.white70, fontWeight: FontWeight.w600),
                   ),
                   _PoolPlayerInfo(
-                    label: '👨', pocketed: _p2Pocketed,
-                    isActive: !_isP1Turn, color: Colors.blueAccent,
+                    label: '👨',
+                    pocketed: _p2Pocketed,
+                    isActive: !_isP1Turn,
+                    color: Colors.blueAccent,
                   ),
                 ],
               ),
@@ -850,7 +1091,8 @@ class _MiniPoolGameState extends State<_MiniPoolGame> {
                 padding: const EdgeInsets.all(12),
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    final size = Size(constraints.maxWidth, constraints.maxHeight);
+                    final size =
+                        Size(constraints.maxWidth, constraints.maxHeight);
                     return GestureDetector(
                       onPanStart: (d) => _onPanStart(d, size),
                       onPanUpdate: _onPanUpdate,
@@ -859,8 +1101,10 @@ class _MiniPoolGameState extends State<_MiniPoolGame> {
                         size: size,
                         painter: _PoolTablePainter(
                           balls: _balls,
-                          cueX: _cueX, cueY: _cueY,
-                          ballR: _ballR, pocketR: _pocketR,
+                          cueX: _cueX,
+                          cueY: _cueY,
+                          ballR: _ballR,
+                          pocketR: _pocketR,
                           pockets: _pockets,
                           aimStart: _aiming ? _aimStart : null,
                           aimEnd: _aiming ? _aimEnd : null,
@@ -898,8 +1142,10 @@ class _PoolBall {
 
 class _PoolPlayerInfo extends StatelessWidget {
   const _PoolPlayerInfo({
-    required this.label, required this.pocketed,
-    required this.isActive, required this.color,
+    required this.label,
+    required this.pocketed,
+    required this.isActive,
+    required this.color,
   });
   final String label;
   final int pocketed;
@@ -914,15 +1160,19 @@ class _PoolPlayerInfo extends StatelessWidget {
       decoration: BoxDecoration(
         color: isActive ? color.withValues(alpha: 0.2) : Colors.transparent,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: isActive ? color : Colors.transparent, width: 2),
+        border:
+            Border.all(color: isActive ? color : Colors.transparent, width: 2),
       ),
       child: Row(
         children: [
           Text(label, style: const TextStyle(fontSize: 24)),
           const Gap(8),
-          Text('$pocketed', style: TextStyle(
-            color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800,
-          )),
+          Text('$pocketed',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+              )),
         ],
       ),
     );
@@ -931,9 +1181,15 @@ class _PoolPlayerInfo extends StatelessWidget {
 
 class _PoolTablePainter extends CustomPainter {
   _PoolTablePainter({
-    required this.balls, required this.cueX, required this.cueY,
-    required this.ballR, required this.pocketR, required this.pockets,
-    this.aimStart, this.aimEnd, required this.tableSize,
+    required this.balls,
+    required this.cueX,
+    required this.cueY,
+    required this.ballR,
+    required this.pocketR,
+    required this.pockets,
+    this.aimStart,
+    this.aimEnd,
+    required this.tableSize,
   });
   final List<_PoolBall> balls;
   final double cueX, cueY, ballR, pocketR;
@@ -974,7 +1230,8 @@ class _PoolTablePainter extends CustomPainter {
       final by = b.y * size.height;
       final br = ballR * min(size.width, size.height);
       // Shadow
-      canvas.drawCircle(Offset(bx + 1, by + 2), br, Paint()..color = Colors.black26);
+      canvas.drawCircle(
+          Offset(bx + 1, by + 2), br, Paint()..color = Colors.black26);
       // Ball
       canvas.drawCircle(Offset(bx, by), br, Paint()..color = b.color);
       // Highlight
@@ -986,10 +1243,16 @@ class _PoolTablePainter extends CustomPainter {
     final cx = cueX * size.width;
     final cy = cueY * size.height;
     final cr = ballR * min(size.width, size.height);
-    canvas.drawCircle(Offset(cx + 1, cy + 2), cr, Paint()..color = Colors.black26);
+    canvas.drawCircle(
+        Offset(cx + 1, cy + 2), cr, Paint()..color = Colors.black26);
     canvas.drawCircle(Offset(cx, cy), cr, Paint()..color = Colors.white);
-    canvas.drawCircle(Offset(cx, cy), cr,
-        Paint()..color = Colors.white24..style = PaintingStyle.stroke..strokeWidth = 1);
+    canvas.drawCircle(
+        Offset(cx, cy),
+        cr,
+        Paint()
+          ..color = Colors.white24
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1);
 
     // Aim line
     if (aimStart != null && aimEnd != null) {
@@ -1011,9 +1274,11 @@ class _PoolTablePainter extends CustomPainter {
         // Power indicator
         final power = (len / 200).clamp(0.0, 1.0);
         canvas.drawCircle(
-          Offset(cx, cy), cr + 4,
+          Offset(cx, cy),
+          cr + 4,
           Paint()
-            ..color = Color.lerp(Colors.green, Colors.red, power)!.withValues(alpha: 0.5)
+            ..color = Color.lerp(Colors.green, Colors.red, power)!
+                .withValues(alpha: 0.5)
             ..style = PaintingStyle.stroke
             ..strokeWidth = 3,
         );
@@ -1052,13 +1317,17 @@ class _CarRaceGameState extends State<_CarRaceGame> {
   @override
   void initState() {
     super.initState();
-    _obstacles = List.generate(5, (i) => 0.15 + i * 0.18 + _rng.nextDouble() * 0.05);
+    _obstacles =
+        List.generate(5, (i) => 0.15 + i * 0.18 + _rng.nextDouble() * 0.05);
     _startCountdown();
   }
 
   void _startCountdown() {
     Timer.periodic(const Duration(seconds: 1), (t) {
-      if (!mounted) { t.cancel(); return; }
+      if (!mounted) {
+        t.cancel();
+        return;
+      }
       if (_countVal <= 1) {
         t.cancel();
         setState(() {
@@ -1098,12 +1367,14 @@ class _CarRaceGameState extends State<_CarRaceGame> {
   void _tapP1() {
     if (!_racing || _finished) return;
     HapticFeedback.lightImpact();
+    GameAudioService.instance.playSfx(GameSfx.tap);
     setState(() => _p1Speed += 0.003 + _rng.nextDouble() * 0.001);
   }
 
   void _tapP2() {
     if (!_racing || _finished) return;
     HapticFeedback.lightImpact();
+    GameAudioService.instance.playSfx(GameSfx.tap);
     setState(() => _p2Speed += 0.003 + _rng.nextDouble() * 0.001);
   }
 
@@ -1115,7 +1386,6 @@ class _CarRaceGameState extends State<_CarRaceGame> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFF263238),
       appBar: AppBar(
@@ -1167,7 +1437,10 @@ class _CarRaceGameState extends State<_CarRaceGame> {
                           margin: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [Colors.pink.shade400, Colors.pink.shade800],
+                              colors: [
+                                Colors.pink.shade400,
+                                Colors.pink.shade800
+                              ],
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                             ),
@@ -1205,7 +1478,10 @@ class _CarRaceGameState extends State<_CarRaceGame> {
                           margin: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [Colors.blue.shade400, Colors.blue.shade800],
+                              colors: [
+                                Colors.blue.shade400,
+                                Colors.blue.shade800
+                              ],
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                             ),
@@ -1248,7 +1524,9 @@ class _CarRaceGameState extends State<_CarRaceGame> {
 
 class _RaceTrackPainter extends CustomPainter {
   _RaceTrackPainter({
-    required this.p1Pos, required this.p2Pos, required this.obstacles,
+    required this.p1Pos,
+    required this.p2Pos,
+    required this.obstacles,
   });
   final double p1Pos, p2Pos;
   final List<double> obstacles;
@@ -1258,7 +1536,7 @@ class _RaceTrackPainter extends CustomPainter {
     final laneH = size.height;
     final laneW = size.width;
     final lane1Y = laneH * 0.35;
-    final lane2Y = laneH * 0.65;and 
+    final lane2Y = laneH * 0.65;
 
     // Road
     canvas.drawRRect(
@@ -1284,15 +1562,17 @@ class _RaceTrackPainter extends CustomPainter {
     );
     for (int i = 0; i < 8; i++) {
       canvas.drawRect(
-        Rect.fromLTWH(laneW - 10, laneH * 0.15 + i * laneH * 0.7 / 8,
-            5, laneH * 0.7 / 16),
+        Rect.fromLTWH(laneW - 10, laneH * 0.15 + i * laneH * 0.7 / 8, 5,
+            laneH * 0.7 / 16),
         Paint()..color = Colors.black,
       );
     }
 
     // Cars
-    _drawCar(canvas, p1Pos * (laneW - 50) + 10, lane1Y, Colors.pinkAccent, size);
-    _drawCar(canvas, p2Pos * (laneW - 50) + 10, lane2Y, Colors.blueAccent, size);
+    _drawCar(
+        canvas, p1Pos * (laneW - 50) + 10, lane1Y, Colors.pinkAccent, size);
+    _drawCar(
+        canvas, p2Pos * (laneW - 50) + 10, lane2Y, Colors.blueAccent, size);
   }
 
   void _drawCar(Canvas canvas, double x, double y, Color color, Size size) {
@@ -1312,7 +1592,8 @@ class _RaceTrackPainter extends CustomPainter {
     );
     // Glow
     canvas.drawCircle(
-      Offset(x, y), 25,
+      Offset(x, y),
+      25,
       Paint()
         ..color = color.withValues(alpha: 0.2)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10),
@@ -1358,7 +1639,10 @@ class _LaserDodgeGameState extends State<_LaserDodgeGame> {
 
   void _startCountdown() {
     Timer.periodic(const Duration(seconds: 1), (t) {
-      if (!mounted) { t.cancel(); return; }
+      if (!mounted) {
+        t.cancel();
+        return;
+      }
       if (_countVal <= 1) {
         t.cancel();
         setState(() => _countdown = false);
@@ -1397,10 +1681,12 @@ class _LaserDodgeGameState extends State<_LaserDodgeGame> {
           if (_p1Alive && _laserHitsPlayer(laser, _p1X, _p1Y)) {
             _p1Alive = false;
             HapticFeedback.heavyImpact();
+            GameAudioService.instance.playSfx(GameSfx.explosion);
           }
           if (_p2Alive && _laserHitsPlayer(laser, _p2X, _p2Y)) {
             _p2Alive = false;
             HapticFeedback.heavyImpact();
+            GameAudioService.instance.playSfx(GameSfx.explosion);
           }
         }
 
@@ -1408,14 +1694,14 @@ class _LaserDodgeGameState extends State<_LaserDodgeGame> {
           _gameTimer?.cancel();
           _laserTimer?.cancel();
           widget.onEnd(_p1Alive ? _survivalTime * 3 : _survivalTime,
-              _p2Alive ? _survivalTime * 3 : _survivalTime, bonus: _survivalTime);
+              _p2Alive ? _survivalTime * 3 : _survivalTime,
+              bonus: _survivalTime);
         } else if (!_p1Alive || !_p2Alive) {
           // One player dead — other survives for bonus
           if (_survivalTime > 30) {
             _gameTimer?.cancel();
             _laserTimer?.cancel();
-            widget.onEnd(
-                _p1Alive ? _survivalTime * 3 : 5,
+            widget.onEnd(_p1Alive ? _survivalTime * 3 : 5,
                 _p2Alive ? _survivalTime * 3 : 5,
                 bonus: 15);
           }
@@ -1455,10 +1741,18 @@ class _LaserDodgeGameState extends State<_LaserDodgeGame> {
         toX = -0.05;
         toY = fromY + (_rng.nextDouble() - 0.5) * 0.3;
     }
-    final colors = [Colors.red, Colors.cyanAccent, Colors.greenAccent, Colors.amber];
+    final colors = [
+      Colors.red,
+      Colors.cyanAccent,
+      Colors.greenAccent,
+      Colors.amber
+    ];
     setState(() {
       _lasers.add(_Laser(
-          fromX: fromX, fromY: fromY, toX: toX, toY: toY,
+          fromX: fromX,
+          fromY: fromY,
+          toX: toX,
+          toY: toY,
           speed: 0.008 + _rng.nextDouble() * 0.004,
           color: colors[_rng.nextInt(colors.length)]));
     });
@@ -1480,7 +1774,8 @@ class _LaserDodgeGameState extends State<_LaserDodgeGame> {
     final ly = d.localPosition.dy / size.height;
     final d1 = sqrt((lx - _p1X) * (lx - _p1X) + (ly - _p1Y) * (ly - _p1Y));
     final d2 = sqrt((lx - _p2X) * (lx - _p2X) + (ly - _p2Y) * (ly - _p2Y));
-    if (d1 < 0.08 && _p1Alive) _dragging = 1;
+    if (d1 < 0.08 && _p1Alive)
+      _dragging = 1;
     else if (d2 < 0.08 && _p2Alive) _dragging = 2;
   }
 
@@ -1554,7 +1849,8 @@ class _LaserDodgeGameState extends State<_LaserDodgeGame> {
                 padding: const EdgeInsets.all(8),
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    final size = Size(constraints.maxWidth, constraints.maxHeight);
+                    final size =
+                        Size(constraints.maxWidth, constraints.maxHeight);
                     return GestureDetector(
                       onPanStart: (d) => _onDragStart(d, size),
                       onPanUpdate: (d) => _onDragUpdate(d, size),
@@ -1562,9 +1858,14 @@ class _LaserDodgeGameState extends State<_LaserDodgeGame> {
                       child: CustomPaint(
                         size: size,
                         painter: _LaserArenaPainter(
-                          p1X: _p1X, p1Y: _p1Y, p1Alive: _p1Alive,
-                          p2X: _p2X, p2Y: _p2Y, p2Alive: _p2Alive,
-                          lasers: _lasers, playerR: _playerR,
+                          p1X: _p1X,
+                          p1Y: _p1Y,
+                          p1Alive: _p1Alive,
+                          p2X: _p2X,
+                          p2Y: _p2Y,
+                          p2Alive: _p2Alive,
+                          lasers: _lasers,
+                          playerR: _playerR,
                         ),
                         child: _countdown
                             ? Center(
@@ -1573,7 +1874,8 @@ class _LaserDodgeGameState extends State<_LaserDodgeGame> {
                                             fontSize: 80,
                                             fontWeight: FontWeight.w900,
                                             color: Colors.cyanAccent))
-                                    .animate(onPlay: (c) => c.repeat(reverse: true))
+                                    .animate(
+                                        onPlay: (c) => c.repeat(reverse: true))
                                     .scale(duration: 500.ms),
                               )
                             : null,
@@ -1600,9 +1902,12 @@ class _LaserDodgeGameState extends State<_LaserDodgeGame> {
 
 class _Laser {
   _Laser({
-    required this.fromX, required this.fromY,
-    required this.toX, required this.toY,
-    required this.speed, required this.color,
+    required this.fromX,
+    required this.fromY,
+    required this.toX,
+    required this.toY,
+    required this.speed,
+    required this.color,
   });
   final double fromX, fromY, toX, toY, speed;
   final Color color;
@@ -1611,9 +1916,14 @@ class _Laser {
 
 class _LaserArenaPainter extends CustomPainter {
   _LaserArenaPainter({
-    required this.p1X, required this.p1Y, required this.p1Alive,
-    required this.p2X, required this.p2Y, required this.p2Alive,
-    required this.lasers, required this.playerR,
+    required this.p1X,
+    required this.p1Y,
+    required this.p1Alive,
+    required this.p2X,
+    required this.p2Y,
+    required this.p2Alive,
+    required this.lasers,
+    required this.playerR,
   });
   final double p1X, p1Y, p2X, p2Y, playerR;
   final bool p1Alive, p2Alive;
@@ -1641,7 +1951,8 @@ class _LaserArenaPainter extends CustomPainter {
 
       // Beam glow
       canvas.drawCircle(
-        Offset(x, y), 15,
+        Offset(x, y),
+        15,
         Paint()
           ..color = laser.color.withValues(alpha: 0.3)
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12),
@@ -1651,8 +1962,10 @@ class _LaserArenaPainter extends CustomPainter {
       canvas.drawCircle(Offset(x, y), 3, Paint()..color = Colors.white);
 
       // Trail
-      final tx = laser.fromX + (laser.toX - laser.fromX) * (laser.progress - 0.05);
-      final ty = laser.fromY + (laser.toY - laser.fromY) * (laser.progress - 0.05);
+      final tx =
+          laser.fromX + (laser.toX - laser.fromX) * (laser.progress - 0.05);
+      final ty =
+          laser.fromY + (laser.toY - laser.fromY) * (laser.progress - 0.05);
       canvas.drawLine(
         Offset(tx * size.width, ty * size.height),
         Offset(x, y),
@@ -1674,14 +1987,16 @@ class _LaserArenaPainter extends CustomPainter {
 
     // Outer glow
     canvas.drawCircle(
-      Offset(px, py), pr + 8,
+      Offset(px, py),
+      pr + 8,
       Paint()
         ..color = color.withValues(alpha: 0.2)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10),
     );
     // Ring
     canvas.drawCircle(
-      Offset(px, py), pr,
+      Offset(px, py),
+      pr,
       Paint()
         ..color = color
         ..style = PaintingStyle.stroke
@@ -1689,7 +2004,8 @@ class _LaserArenaPainter extends CustomPainter {
     );
     // Core
     canvas.drawCircle(
-      Offset(px, py), pr * 0.5,
+      Offset(px, py),
+      pr * 0.5,
       Paint()..color = color,
     );
   }
@@ -1738,7 +2054,10 @@ class _IcePlatformGameState extends State<_IcePlatformGame> {
     _countdown = true;
     _countVal = 3;
     Timer.periodic(const Duration(seconds: 1), (t) {
-      if (!mounted) { t.cancel(); return; }
+      if (!mounted) {
+        t.cancel();
+        return;
+      }
       if (_countVal <= 1) {
         t.cancel();
         setState(() => _countdown = false);
@@ -1765,10 +2084,14 @@ class _IcePlatformGameState extends State<_IcePlatformGame> {
       if (!mounted || _roundOver) return;
       setState(() {
         // Ice friction (very slippery!)
-        _p1VX *= 0.99; _p1VY *= 0.99;
-        _p2VX *= 0.99; _p2VY *= 0.99;
-        _p1X += _p1VX; _p1Y += _p1VY;
-        _p2X += _p2VX; _p2Y += _p2VY;
+        _p1VX *= 0.99;
+        _p1VY *= 0.99;
+        _p2VX *= 0.99;
+        _p2VY *= 0.99;
+        _p1X += _p1VX;
+        _p1Y += _p1VY;
+        _p2X += _p2VX;
+        _p2Y += _p2VY;
 
         // Ball collision
         final dx = _p2X - _p1X;
@@ -1789,24 +2112,29 @@ class _IcePlatformGameState extends State<_IcePlatformGame> {
             _p2VX += relV * nx * 0.9;
             _p2VY += relV * ny * 0.9;
             HapticFeedback.mediumImpact();
+            GameAudioService.instance.playSfx(GameSfx.hit);
           }
         }
 
         // Out-of-bounds
-        final p1D = sqrt((_p1X - _cx) * (_p1X - _cx) + (_p1Y - _cy) * (_p1Y - _cy));
-        final p2D = sqrt((_p2X - _cx) * (_p2X - _cx) + (_p2Y - _cy) * (_p2Y - _cy));
+        final p1D =
+            sqrt((_p1X - _cx) * (_p1X - _cx) + (_p1Y - _cy) * (_p1Y - _cy));
+        final p2D =
+            sqrt((_p2X - _cx) * (_p2X - _cx) + (_p2Y - _cy) * (_p2Y - _cy));
 
         if (p1D > _platformR) {
           _roundOver = true;
           _p2Wins++;
           _roundText = l.tr('👨 P2 survives!', '👨 O2 hayatta kaldi!');
           HapticFeedback.heavyImpact();
+          GameAudioService.instance.playSfx(GameSfx.score);
           _nextRound();
         } else if (p2D > _platformR) {
           _roundOver = true;
           _p1Wins++;
           _roundText = l.tr('👩 P1 survives!', '👩 O1 hayatta kaldi!');
           HapticFeedback.heavyImpact();
+          GameAudioService.instance.playSfx(GameSfx.score);
           _nextRound();
         }
       });
@@ -1826,10 +2154,14 @@ class _IcePlatformGameState extends State<_IcePlatformGame> {
         _roundOver = false;
         _roundText = '';
         _platformR = 0.42;
-        _p1X = 0.35; _p1Y = 0.45;
-        _p2X = 0.65; _p2Y = 0.55;
-        _p1VX = 0; _p1VY = 0;
-        _p2VX = 0; _p2VY = 0;
+        _p1X = 0.35;
+        _p1Y = 0.45;
+        _p2X = 0.65;
+        _p2Y = 0.55;
+        _p1VX = 0;
+        _p1VY = 0;
+        _p2VX = 0;
+        _p2VY = 0;
       });
       _startCountdown();
     }
@@ -1841,7 +2173,8 @@ class _IcePlatformGameState extends State<_IcePlatformGame> {
     final ly = d.localPosition.dy / size.height;
     final d1 = sqrt((lx - _p1X) * (lx - _p1X) + (ly - _p1Y) * (ly - _p1Y));
     final d2 = sqrt((lx - _p2X) * (lx - _p2X) + (ly - _p2Y) * (ly - _p2Y));
-    if (d1 < _ballR * 3) _dragging = 1;
+    if (d1 < _ballR * 3)
+      _dragging = 1;
     else if (d2 < _ballR * 3) _dragging = 2;
   }
 
@@ -1851,9 +2184,11 @@ class _IcePlatformGameState extends State<_IcePlatformGame> {
     final dy = d.delta.dy / size.height * 0.12;
     setState(() {
       if (_dragging == 1) {
-        _p1VX += dx; _p1VY += dy;
+        _p1VX += dx;
+        _p1VY += dy;
       } else {
-        _p2VX += dx; _p2VY += dy;
+        _p2VX += dx;
+        _p2VY += dy;
       }
     });
   }
@@ -1885,10 +2220,12 @@ class _IcePlatformGameState extends State<_IcePlatformGame> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _SumoScore(label: '👩', wins: _p1Wins, color: Colors.pinkAccent),
+                  _SumoScore(
+                      label: '👩', wins: _p1Wins, color: Colors.pinkAccent),
                   Text(l.tr('Best of 5', '5in En Iyisi'),
                       style: const TextStyle(color: Colors.white54)),
-                  _SumoScore(label: '👨', wins: _p2Wins, color: Colors.blueAccent),
+                  _SumoScore(
+                      label: '👨', wins: _p2Wins, color: Colors.blueAccent),
                 ],
               ),
             ),
@@ -1897,7 +2234,8 @@ class _IcePlatformGameState extends State<_IcePlatformGame> {
                 padding: const EdgeInsets.all(16),
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    final size = Size(constraints.maxWidth, constraints.maxHeight);
+                    final size =
+                        Size(constraints.maxWidth, constraints.maxHeight);
                     return GestureDetector(
                       onPanStart: (d) => _onDragStart(d, size),
                       onPanUpdate: (d) => _onDragUpdate(d, size),
@@ -1905,9 +2243,12 @@ class _IcePlatformGameState extends State<_IcePlatformGame> {
                       child: CustomPaint(
                         size: size,
                         painter: _IcePlatformPainter(
-                          p1X: _p1X, p1Y: _p1Y,
-                          p2X: _p2X, p2Y: _p2Y,
-                          ballR: _ballR, platformR: _platformR,
+                          p1X: _p1X,
+                          p1Y: _p1Y,
+                          p2X: _p2X,
+                          p2Y: _p2Y,
+                          ballR: _ballR,
+                          platformR: _platformR,
                         ),
                         child: _countdown
                             ? Center(
@@ -1916,7 +2257,8 @@ class _IcePlatformGameState extends State<_IcePlatformGame> {
                                             fontSize: 80,
                                             fontWeight: FontWeight.w900,
                                             color: Colors.cyanAccent))
-                                    .animate(onPlay: (c) => c.repeat(reverse: true))
+                                    .animate(
+                                        onPlay: (c) => c.repeat(reverse: true))
                                     .scale(duration: 500.ms),
                               )
                             : _roundOver
@@ -1953,7 +2295,8 @@ class _IcePlatformGameState extends State<_IcePlatformGame> {
                     value: _platformR / 0.42,
                     backgroundColor: Colors.white12,
                     valueColor: AlwaysStoppedAnimation(
-                      Color.lerp(Colors.red, Colors.cyanAccent, _platformR / 0.42)!,
+                      Color.lerp(
+                          Colors.red, Colors.cyanAccent, _platformR / 0.42)!,
                     ),
                   ),
                   const Gap(4),
@@ -1974,9 +2317,12 @@ class _IcePlatformGameState extends State<_IcePlatformGame> {
 
 class _IcePlatformPainter extends CustomPainter {
   _IcePlatformPainter({
-    required this.p1X, required this.p1Y,
-    required this.p2X, required this.p2Y,
-    required this.ballR, required this.platformR,
+    required this.p1X,
+    required this.p1Y,
+    required this.p2X,
+    required this.p2Y,
+    required this.ballR,
+    required this.platformR,
   });
   final double p1X, p1Y, p2X, p2Y, ballR, platformR;
 
@@ -2007,7 +2353,8 @@ class _IcePlatformPainter extends CustomPainter {
           const Color(0xFF80DEEA),
           const Color(0xFF26C6DA),
         ],
-      ).createShader(Rect.fromCircle(center: Offset(cx, cy), radius: minDim * platformR));
+      ).createShader(
+          Rect.fromCircle(center: Offset(cx, cy), radius: minDim * platformR));
     canvas.drawCircle(Offset(cx, cy), minDim * platformR, icePaint);
 
     // Ice cracks
@@ -2031,7 +2378,8 @@ class _IcePlatformPainter extends CustomPainter {
       Offset(cx, cy),
       minDim * platformR,
       Paint()
-        ..color = Color.lerp(Colors.cyanAccent, Colors.red, danger)!.withValues(alpha: 0.4)
+        ..color = Color.lerp(Colors.cyanAccent, Colors.red, danger)!
+            .withValues(alpha: 0.4)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 3,
     );
@@ -2042,7 +2390,8 @@ class _IcePlatformPainter extends CustomPainter {
       final sx = rng.nextDouble() * size.width;
       final sy = rng.nextDouble() * size.height;
       canvas.drawCircle(
-        Offset(sx, sy), 1.5,
+        Offset(sx, sy),
+        1.5,
         Paint()..color = Colors.white.withValues(alpha: 0.2),
       );
     }
@@ -2052,15 +2401,16 @@ class _IcePlatformPainter extends CustomPainter {
     _drawIceBall(canvas, size, p2X, p2Y, ballR, Colors.blueAccent);
   }
 
-  void _drawIceBall(Canvas canvas, Size size, double x, double y,
-      double r, Color color) {
+  void _drawIceBall(
+      Canvas canvas, Size size, double x, double y, double r, Color color) {
     final bx = x * size.width;
     final by = y * size.height;
     final br = r * min(size.width, size.height);
 
     // Shadow on ice
     canvas.drawOval(
-      Rect.fromCenter(center: Offset(bx, by + br * 0.5), width: br * 2, height: br * 0.6),
+      Rect.fromCenter(
+          center: Offset(bx, by + br * 0.5), width: br * 2, height: br * 0.6),
       Paint()..color = Colors.black.withValues(alpha: 0.2),
     );
 
@@ -2074,13 +2424,15 @@ class _IcePlatformPainter extends CustomPainter {
 
     // Highlight
     canvas.drawCircle(
-      Offset(bx - br * 0.3, by - br * 0.3), br * 0.25,
+      Offset(bx - br * 0.3, by - br * 0.3),
+      br * 0.25,
       Paint()..color = Colors.white.withValues(alpha: 0.5),
     );
 
     // Ring
     canvas.drawCircle(
-      Offset(bx, by), br + 2,
+      Offset(bx, by),
+      br + 2,
       Paint()
         ..color = color
         ..style = PaintingStyle.stroke

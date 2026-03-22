@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'core/constants/app_constants.dart';
 import 'core/di/injection.dart';
 import 'core/router/app_router.dart';
+import 'core/services/game_audio_service.dart';
 import 'core/services/locale_service.dart';
 import 'core/theme/theme_provider.dart';
 import 'data/repositories/auth_repository.dart';
@@ -21,6 +22,7 @@ Future<void> main() async {
   await configureDependencies();
   await getIt<NotificationService>().initialize();
   await LocaleService.instance.load();
+  await GameAudioService.instance.init();
 
   final themeProvider = AppThemeProvider();
   await themeProvider.loadSavedTheme();

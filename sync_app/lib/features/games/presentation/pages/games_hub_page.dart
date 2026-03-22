@@ -174,29 +174,67 @@ class _GamesHubPageState extends State<GamesHubPage> {
                 ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1),
               ),
             ),
-            // Game cards
-            SliverPadding(
-              padding: const EdgeInsets.all(16),
-              sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: 0.85,
-                ),
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final game = CoupleGameType.values[index];
-                    return _GameCard(
-                      game: game,
-                      index: index,
-                      onRefresh: _loadPoints,
-                    );
-                  },
-                  childCount: CoupleGameType.values.length,
-                ),
-              ),
-            ),
+            // Game categories
+            ...GameCategory.values.map((cat) {
+              final games = CoupleGameType.values
+                  .where((g) => g.category == cat)
+                  .toList();
+              if (games.isEmpty) return const SliverGap(0);
+              return SliverMainAxisGroup(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
+                      child: Row(
+                        children: [
+                          Text(
+                            cat.emoji,
+                            style: const TextStyle(fontSize: 22),
+                          ),
+                          const Gap(8),
+                          Text(
+                            cat.title,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            '${games.length} ${l.tr('games', 'oyun')}',
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: theme.colorScheme.onSurface
+                                  .withValues(alpha: 0.5),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    sliver: SliverGrid(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 12,
+                        crossAxisSpacing: 12,
+                        childAspectRatio: 0.85,
+                      ),
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          return _GameCard(
+                            game: games[index],
+                            index: index,
+                            onRefresh: _loadPoints,
+                          );
+                        },
+                        childCount: games.length,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }),
             // Q&A Section
             SliverToBoxAdapter(
               child: Padding(
@@ -316,10 +354,16 @@ class _GameCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () async {
-          await Get.toNamed(
-            AppRoutes.gamePlay,
-            arguments: game,
-          );
+          if (game == CoupleGameType.bracketTournament) {
+            await Get.toNamed(AppRoutes.tournament);
+          } else if (game == CoupleGameType.rateAndRank) {
+            await Get.toNamed(AppRoutes.ranking);
+          } else {
+            await Get.toNamed(
+              AppRoutes.gamePlay,
+              arguments: game,
+            );
+          }
           onRefresh();
         },
         child: Padding(

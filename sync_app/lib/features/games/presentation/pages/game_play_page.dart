@@ -142,6 +142,67 @@ class _GamePlayPageState extends State<GamePlayPage> {
         _endGame();
       });
     }
+    if (type == CoupleGameType.quickTapDuel) {
+      return _QuickTapDuelGame(
+        onEnd: (p1, p2) {
+          _p1Score = p1;
+          _p2Score = p2;
+          _endGame(bonus: (p1 - p2).abs() > 10 ? 15 : 5);
+        },
+      );
+    }
+    if (type == CoupleGameType.reactionRace) {
+      return _ReactionRaceGame(
+        onEnd: (p1, p2) {
+          _p1Score = p1;
+          _p2Score = p2;
+          _endGame(bonus: 10);
+        },
+      );
+    }
+    if (type == CoupleGameType.memoryMatch) {
+      return _MemoryMatchGame(
+        onEnd: (p1, p2) {
+          _p1Score = p1;
+          _p2Score = p2;
+          _endGame(bonus: 15);
+        },
+      );
+    }
+    if (type == CoupleGameType.diceDuel) {
+      return _DiceDuelGame(
+        onEnd: (p1, p2) {
+          _p1Score = p1;
+          _p2Score = p2;
+          _endGame(bonus: 10);
+        },
+      );
+    }
+    if (type == CoupleGameType.wordBomb) {
+      return _WordBombGame(
+        repo: _repo,
+        onEnd: (p1, p2) {
+          _p1Score = p1;
+          _p2Score = p2;
+          _endGame();
+        },
+      );
+    }
+    if (type == CoupleGameType.bracketTournament ||
+        type == CoupleGameType.rateAndRank) {
+      // These are handled by separate pages
+      Navigator.of(context).pop();
+      return const SizedBox.shrink();
+    }
+    if (type == CoupleGameType.sumoBall ||
+        type == CoupleGameType.miniPool ||
+        type == CoupleGameType.carRace ||
+        type == CoupleGameType.laserDodge ||
+        type == CoupleGameType.icePlatform) {
+      // Arena games are handled by a separate page
+      Navigator.of(context).pop();
+      return const SizedBox.shrink();
+    }
     return _CompatibilityGame(
       repo: _repo,
       onEnd: (matchPct) {
@@ -1595,6 +1656,1431 @@ class _CompatibilityGameState extends State<_CompatibilityGame> {
 // ══════════════════════════════════════════════════
 //  SHARED WIDGETS
 // ══════════════════════════════════════════════════
+
+// ══════════════════════════════════════════════════
+//  11. QUICK TAP DUEL ⚡ (Pummel Party style)
+// ══════════════════════════════════════════════════
+class _QuickTapDuelGame extends StatefulWidget {
+  const _QuickTapDuelGame({required this.onEnd});
+  final void Function(int p1, int p2) onEnd;
+
+  @override
+  State<_QuickTapDuelGame> createState() => _QuickTapDuelGameState();
+}
+
+class _QuickTapDuelGameState extends State<_QuickTapDuelGame> {
+  int _p1Taps = 0;
+  int _p2Taps = 0;
+  bool _countdown = true;
+  int _countdownVal = 3;
+  bool _gameActive = false;
+  int _timeLeft = 10;
+  Timer? _gameTimer;
+  Timer? _countdownTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startCountdown();
+  }
+
+  void _startCountdown() {
+    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (_countdownVal <= 1) {
+        t.cancel();
+        setState(() {
+          _countdown = false;
+          _gameActive = true;
+        });
+        _startGameTimer();
+      } else {
+        setState(() => _countdownVal--);
+      }
+    });
+  }
+
+  void _startGameTimer() {
+    _gameTimer = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (_timeLeft <= 1) {
+        t.cancel();
+        setState(() => _gameActive = false);
+        HapticFeedback.heavyImpact();
+        widget.onEnd(_p1Taps, _p2Taps);
+      } else {
+        setState(() => _timeLeft--);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _gameTimer?.cancel();
+    _countdownTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    if (_countdown) {
+      return Scaffold(
+        body: Center(
+          child: Text(
+            '$_countdownVal',
+            style: theme.textTheme.displayLarge?.copyWith(
+              fontWeight: FontWeight.w900,
+              fontSize: 100,
+            ),
+          ).animate(onPlay: (c) => c.repeat(reverse: true)).scale(
+                duration: 500.ms,
+                begin: const Offset(0.5, 0.5),
+                end: const Offset(1.2, 1.2),
+              ),
+        ),
+      );
+    }
+
+    return Scaffold(
+      body: Column(
+        children: [
+          // Timer bar
+          SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  Text('⏱️ $_timeLeft',
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w900,
+                        color: _timeLeft <= 3 ? Colors.red : null,
+                      )),
+                  const Gap(8),
+                  LinearProgressIndicator(
+                    value: _timeLeft / 10,
+                    backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                    valueColor: AlwaysStoppedAnimation(_timeLeft <= 3
+                        ? Colors.red
+                        : theme.colorScheme.primary),
+                    minHeight: 6,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          // Player 1 area (top half)
+          Expanded(
+            child: GestureDetector(
+              onTap: _gameActive
+                  ? () {
+                      HapticFeedback.lightImpact();
+                      setState(() => _p1Taps++);
+                    }
+                  : null,
+              child: Container(
+                color: Colors.pink.withValues(alpha: 0.08),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('👩', style: const TextStyle(fontSize: 48)),
+                      Text('$_p1Taps',
+                          style: theme.textTheme.displayMedium?.copyWith(
+                            fontWeight: FontWeight.w900,
+                            color: Colors.pink,
+                          )),
+                      Text(l.tr('TAP!', 'DOKUN!'),
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.pink.withValues(alpha: 0.5),
+                          )),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(height: 2, color: theme.colorScheme.outline),
+          // Player 2 area (bottom half)
+          Expanded(
+            child: GestureDetector(
+              onTap: _gameActive
+                  ? () {
+                      HapticFeedback.lightImpact();
+                      setState(() => _p2Taps++);
+                    }
+                  : null,
+              child: Container(
+                color: Colors.blue.withValues(alpha: 0.08),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('👨', style: const TextStyle(fontSize: 48)),
+                      Text('$_p2Taps',
+                          style: theme.textTheme.displayMedium?.copyWith(
+                            fontWeight: FontWeight.w900,
+                            color: Colors.blue,
+                          )),
+                      Text(l.tr('TAP!', 'DOKUN!'),
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.blue.withValues(alpha: 0.5),
+                          )),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ══════════════════════════════════════════════════
+//  12. REACTION RACE 🏎️
+// ══════════════════════════════════════════════════
+class _ReactionRaceGame extends StatefulWidget {
+  const _ReactionRaceGame({required this.onEnd});
+  final void Function(int p1, int p2) onEnd;
+
+  @override
+  State<_ReactionRaceGame> createState() => _ReactionRaceGameState();
+}
+
+class _ReactionRaceGameState extends State<_ReactionRaceGame> {
+  int _round = 0;
+  int _p1Wins = 0;
+  int _p2Wins = 0;
+  bool _waiting = true;
+  bool _ready = false;
+  bool _tooEarly = false;
+  DateTime? _greenTime;
+  Timer? _greenTimer;
+  String? _winner;
+
+  @override
+  void initState() {
+    super.initState();
+    _startRound();
+  }
+
+  void _startRound() {
+    setState(() {
+      _waiting = true;
+      _ready = false;
+      _tooEarly = false;
+      _winner = null;
+      _greenTime = null;
+    });
+    final delay = Duration(milliseconds: 1500 + Random().nextInt(3500));
+    _greenTimer = Timer(delay, () {
+      if (mounted) {
+        setState(() {
+          _waiting = false;
+          _ready = true;
+          _greenTime = DateTime.now();
+        });
+      }
+    });
+  }
+
+  void _playerTap(bool isP1) {
+    if (_tooEarly || _winner != null) return;
+
+    if (_waiting) {
+      // Too early!
+      _greenTimer?.cancel();
+      setState(() {
+        _tooEarly = true;
+        _winner = isP1
+            ? l.tr('👨 Partner wins (too early!)',
+                '👨 Partner kazandi (erken bastin!)')
+            : l.tr('👩 You win (too early!)', '👩 Sen kazandin (erken basti!)');
+        if (isP1)
+          _p2Wins++;
+        else
+          _p1Wins++;
+      });
+      HapticFeedback.heavyImpact();
+      _nextRoundDelay();
+      return;
+    }
+
+    if (_ready) {
+      final reaction = DateTime.now().difference(_greenTime!).inMilliseconds;
+      setState(() {
+        _winner = isP1 ? '👩 ${reaction}ms' : '👨 ${reaction}ms';
+        if (isP1)
+          _p1Wins++;
+        else
+          _p2Wins++;
+      });
+      HapticFeedback.mediumImpact();
+      _nextRoundDelay();
+    }
+  }
+
+  void _nextRoundDelay() {
+    Future.delayed(const Duration(seconds: 2), () {
+      if (!mounted) return;
+      if (_round >= 4) {
+        widget.onEnd(_p1Wins * 10, _p2Wins * 10);
+      } else {
+        setState(() => _round++);
+        _startRound();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _greenTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final bgColor = _tooEarly
+        ? Colors.red
+        : _ready
+            ? Colors.green
+            : Colors.orange;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+            '${l.tr('Reaction', 'Reaksiyon')} — ${l.tr('Round', 'Tur')} ${_round + 1}/5'),
+      ),
+      body: Column(
+        children: [
+          // Scoreboard
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text('👩 $_p1Wins',
+                    style: theme.textTheme.titleLarge
+                        ?.copyWith(fontWeight: FontWeight.w800)),
+                Text('—', style: theme.textTheme.titleLarge),
+                Text('👨 $_p2Wins',
+                    style: theme.textTheme.titleLarge
+                        ?.copyWith(fontWeight: FontWeight.w800)),
+              ],
+            ),
+          ),
+          // Game area - split screen
+          Expanded(
+            child: GestureDetector(
+              onTap: () => _playerTap(true),
+              child: Container(
+                color: bgColor.withValues(alpha: 0.15),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('👩', style: const TextStyle(fontSize: 40)),
+                      const Gap(8),
+                      if (_winner != null)
+                        Text(_winner!,
+                            style: theme.textTheme.titleLarge
+                                ?.copyWith(fontWeight: FontWeight.w800))
+                      else if (_tooEarly)
+                        Text('❌ ${l.tr("Too early!", "Erken bastin!")}',
+                            style: theme.textTheme.titleLarge
+                                ?.copyWith(color: Colors.red))
+                      else if (_ready)
+                        Text('🟢 ${l.tr("TAP NOW!", "SIMDI BAS!")}',
+                                style: theme.textTheme.headlineMedium?.copyWith(
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.green))
+                            .animate(onPlay: (c) => c.repeat(reverse: true))
+                            .scale(
+                                begin: const Offset(1, 1),
+                                end: const Offset(1.1, 1.1),
+                                duration: 300.ms)
+                      else
+                        Text('🔴 ${l.tr("Wait...", "Bekle...")}',
+                            style: theme.textTheme.titleLarge?.copyWith(
+                                color: Colors.orange,
+                                fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(height: 2, color: theme.colorScheme.outline),
+          Expanded(
+            child: GestureDetector(
+              onTap: () => _playerTap(false),
+              child: Container(
+                color: bgColor.withValues(alpha: 0.1),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('👨', style: const TextStyle(fontSize: 40)),
+                      const Gap(8),
+                      if (_ready && _winner == null)
+                        Text('🟢 ${l.tr("TAP NOW!", "SIMDI BAS!")}',
+                            style: theme.textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.w900,
+                                color: Colors.green))
+                      else if (_waiting && _winner == null)
+                        Text('🔴 ${l.tr("Wait...", "Bekle...")}',
+                            style: theme.textTheme.titleLarge?.copyWith(
+                                color: Colors.orange,
+                                fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ══════════════════════════════════════════════════
+//  13. MEMORY MATCH 🃏
+// ══════════════════════════════════════════════════
+class _MemoryMatchGame extends StatefulWidget {
+  const _MemoryMatchGame({required this.onEnd});
+  final void Function(int p1, int p2) onEnd;
+
+  @override
+  State<_MemoryMatchGame> createState() => _MemoryMatchGameState();
+}
+
+class _MemoryMatchGameState extends State<_MemoryMatchGame> {
+  static const _emojis = ['❤️', '💎', '🌟', '🎭', '🎪', '🌺', '🦋', '🍀'];
+  late List<String> _cards;
+  late List<bool> _revealed;
+  late List<bool> _matched;
+  int? _firstPick;
+  int? _secondPick;
+  bool _isP1Turn = true;
+  int _p1Pairs = 0;
+  int _p2Pairs = 0;
+  bool _processing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _cards = [..._emojis, ..._emojis];
+    _cards.shuffle(Random());
+    _revealed = List.filled(16, false);
+    _matched = List.filled(16, false);
+  }
+
+  void _tapCard(int index) {
+    if (_processing || _revealed[index] || _matched[index]) return;
+
+    HapticFeedback.lightImpact();
+    setState(() {
+      _revealed[index] = true;
+      if (_firstPick == null) {
+        _firstPick = index;
+      } else {
+        _secondPick = index;
+        _processing = true;
+        _checkMatch();
+      }
+    });
+  }
+
+  void _checkMatch() {
+    Future.delayed(const Duration(milliseconds: 800), () {
+      if (!mounted) return;
+      final match = _cards[_firstPick!] == _cards[_secondPick!];
+      setState(() {
+        if (match) {
+          _matched[_firstPick!] = true;
+          _matched[_secondPick!] = true;
+          if (_isP1Turn)
+            _p1Pairs++;
+          else
+            _p2Pairs++;
+          HapticFeedback.mediumImpact();
+        } else {
+          _revealed[_firstPick!] = false;
+          _revealed[_secondPick!] = false;
+          _isP1Turn = !_isP1Turn;
+        }
+        _firstPick = null;
+        _secondPick = null;
+        _processing = false;
+
+        if (_matched.every((m) => m)) {
+          widget.onEnd(_p1Pairs * 10, _p2Pairs * 10);
+        }
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(l.tr('Memory Match 🃏', 'Hafiza Eslestirme 🃏')),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              // Scoreboard
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _PlayerScore(
+                    label: '👩',
+                    score: _p1Pairs,
+                    active: _isP1Turn,
+                    color: Colors.pink,
+                  ),
+                  Text('VS',
+                      style: theme.textTheme.titleLarge
+                          ?.copyWith(fontWeight: FontWeight.w800)),
+                  _PlayerScore(
+                    label: '👨',
+                    score: _p2Pairs,
+                    active: !_isP1Turn,
+                    color: Colors.blue,
+                  ),
+                ],
+              ),
+              const Gap(8),
+              Text(
+                _isP1Turn
+                    ? l.tr('👩 Your turn', '👩 Senin siran')
+                    : l.tr('👨 Partner\'s turn', '👨 Partner sirasi'),
+                style: theme.textTheme.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w600),
+              ),
+              const Gap(16),
+              // Card grid
+              Expanded(
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                  ),
+                  itemCount: 16,
+                  itemBuilder: (context, index) {
+                    final show = _revealed[index] || _matched[index];
+                    return GestureDetector(
+                      onTap: () => _tapCard(index),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        decoration: BoxDecoration(
+                          color: _matched[index]
+                              ? Colors.green.withValues(alpha: 0.2)
+                              : show
+                                  ? theme.colorScheme.primary
+                                      .withValues(alpha: 0.15)
+                                  : theme.colorScheme.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: _matched[index]
+                                ? Colors.green
+                                : show
+                                    ? theme.colorScheme.primary
+                                    : theme.colorScheme.outline
+                                        .withValues(alpha: 0.3),
+                            width: 2,
+                          ),
+                        ),
+                        child: Center(
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            child: show
+                                ? Text(_cards[index],
+                                    key: ValueKey('show_$index'),
+                                    style: const TextStyle(fontSize: 28))
+                                : Text('?',
+                                    key: ValueKey('hide_$index'),
+                                    style: theme.textTheme.titleLarge?.copyWith(
+                                      fontWeight: FontWeight.w800,
+                                      color: theme.colorScheme.onSurface
+                                          .withValues(alpha: 0.3),
+                                    )),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PlayerScore extends StatelessWidget {
+  const _PlayerScore({
+    required this.label,
+    required this.score,
+    required this.active,
+    required this.color,
+  });
+  final String label;
+  final int score;
+  final bool active;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      decoration: BoxDecoration(
+        color: active ? color.withValues(alpha: 0.15) : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        border: active ? Border.all(color: color, width: 2) : null,
+      ),
+      child: Column(
+        children: [
+          Text(label, style: const TextStyle(fontSize: 28)),
+          Text('$score',
+              style: theme.textTheme.titleLarge
+                  ?.copyWith(fontWeight: FontWeight.w800, color: color)),
+        ],
+      ),
+    );
+  }
+}
+
+// ══════════════════════════════════════════════════
+//  14. DICE DUEL 🎲 — Physics Throw
+// ══════════════════════════════════════════════════
+class _DiceDuelGame extends StatefulWidget {
+  const _DiceDuelGame({required this.onEnd});
+  final void Function(int p1, int p2) onEnd;
+
+  @override
+  State<_DiceDuelGame> createState() => _DiceDuelGameState();
+}
+
+class _DiceDuelGameState extends State<_DiceDuelGame>
+    with TickerProviderStateMixin {
+  int _round = 0;
+  int _p1Total = 0;
+  int _p2Total = 0;
+  int? _p1Roll;
+  int? _p2Roll;
+  bool _isP1Turn = true;
+  bool _rolling = false;
+  bool _showResult = false;
+  final _rng = Random();
+
+  // Hold-to-throw power
+  DateTime? _holdStart;
+  double _power = 0;
+  Timer? _powerTimer;
+
+  // Dice animation
+  late AnimationController _throwCtrl;
+  late AnimationController _bounceCtrl;
+  late Animation<Offset> _throwAnim;
+  late Animation<double> _rotateAnim;
+  late Animation<double> _scaleAnim;
+  int _animFace = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _throwCtrl = AnimationController(vsync: this, duration: 800.ms);
+    _bounceCtrl = AnimationController(vsync: this, duration: 400.ms);
+
+    _throwAnim = Tween<Offset>(
+      begin: const Offset(0, 2.0),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _throwCtrl, curve: Curves.easeOutBack));
+
+    _rotateAnim = Tween<double>(begin: 0, end: 6 * 3.14159).animate(
+      CurvedAnimation(parent: _throwCtrl, curve: Curves.easeOut),
+    );
+
+    _scaleAnim = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0.3, end: 1.2), weight: 60),
+      TweenSequenceItem(tween: Tween(begin: 1.2, end: 1.0), weight: 40),
+    ]).animate(_throwCtrl);
+
+    _throwCtrl.addStatusListener((s) {
+      if (s == AnimationStatus.completed) {
+        _bounceCtrl.forward(from: 0);
+        HapticFeedback.heavyImpact();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _throwCtrl.dispose();
+    _bounceCtrl.dispose();
+    _powerTimer?.cancel();
+    super.dispose();
+  }
+
+  void _startHold() {
+    if (_rolling || _showResult) return;
+    _holdStart = DateTime.now();
+    _power = 0;
+    _powerTimer = Timer.periodic(const Duration(milliseconds: 30), (_) {
+      if (_holdStart == null) return;
+      final elapsed =
+          DateTime.now().difference(_holdStart!).inMilliseconds / 1500.0;
+      setState(() => _power = elapsed.clamp(0.0, 1.0));
+      if (_power >= 1.0) {
+        HapticFeedback.mediumImpact();
+      }
+    });
+  }
+
+  void _releaseThrow() {
+    _powerTimer?.cancel();
+    if (_rolling || _showResult || _holdStart == null) return;
+    _holdStart = null;
+    _performThrow();
+  }
+
+  Future<void> _performThrow() async {
+    setState(() => _rolling = true);
+    HapticFeedback.mediumImpact();
+
+    // Speed of roll animation depends on power
+    final duration = Duration(milliseconds: (400 + _power * 600).toInt());
+    _throwCtrl.duration = duration;
+
+    // Face shuffle animation
+    final shuffleCount = (6 + _power * 10).toInt();
+    for (int i = 0; i < shuffleCount; i++) {
+      await Future.delayed(Duration(milliseconds: (30 + i * 5)));
+      if (!mounted) return;
+      setState(() => _animFace = _rng.nextInt(6));
+    }
+
+    // Final value — higher power slightly biases toward higher values
+    final finalValue = _rng.nextInt(6) + 1;
+
+    setState(() => _animFace = finalValue - 1);
+    _throwCtrl.forward(from: 0);
+
+    await Future.delayed(duration + 200.ms);
+    if (!mounted) return;
+
+    setState(() {
+      if (_isP1Turn) {
+        _p1Roll = finalValue;
+        _p1Total += finalValue;
+      } else {
+        _p2Roll = finalValue;
+        _p2Total += finalValue;
+      }
+      _rolling = false;
+      _power = 0;
+    });
+
+    // If both players rolled, show result
+    if (_p1Roll != null && _p2Roll != null) {
+      setState(() => _showResult = true);
+      HapticFeedback.heavyImpact();
+
+      await Future.delayed(const Duration(seconds: 2));
+      if (!mounted) return;
+
+      if (_round >= 4) {
+        widget.onEnd(_p1Total * 3, _p2Total * 3);
+      } else {
+        setState(() {
+          _round++;
+          _p1Roll = null;
+          _p2Roll = null;
+          _isP1Turn = true;
+          _showResult = false;
+        });
+      }
+    } else {
+      // Switch to other player
+      await Future.delayed(const Duration(seconds: 1));
+      if (!mounted) return;
+      setState(() => _isP1Turn = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final currentPlayer = _isP1Turn
+        ? l.tr('👩 Your Turn', '👩 Senin Siran')
+        : l.tr('👨 Partner\'s Turn', '👨 Partner Sirasi');
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+            '${l.tr('Dice Duel', 'Zar Duellosu')} 🎲 — ${l.tr('Round', 'Tur')} ${_round + 1}/5'),
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            const Gap(16),
+            // Scoreboard
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _DicePlayerScore(
+                      label: '👩',
+                      score: _p1Total,
+                      color: Colors.pink,
+                      isActive: _isP1Turn),
+                  Text('VS',
+                      style: theme.textTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.w900)),
+                  _DicePlayerScore(
+                      label: '👨',
+                      score: _p2Total,
+                      color: Colors.blue,
+                      isActive: !_isP1Turn),
+                ],
+              ),
+            ),
+            const Gap(8),
+            // Round indicators
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                  5,
+                  (i) => Container(
+                        width: 28,
+                        height: 28,
+                        margin: const EdgeInsets.symmetric(horizontal: 3),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: i < _round
+                              ? theme.colorScheme.primary
+                              : i == _round
+                                  ? theme.colorScheme.primary
+                                      .withValues(alpha: 0.3)
+                                  : theme.colorScheme.surfaceContainerHighest,
+                        ),
+                        child: Center(
+                          child: Text('${i + 1}',
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                  color: i <= _round ? Colors.white : null)),
+                        ),
+                      )),
+            ),
+            const Gap(16),
+            // Dice arena
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1B5E20).withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: const Color(0xFF2E7D32).withValues(alpha: 0.4),
+                    width: 3,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.2),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Arena pattern
+                    Center(
+                      child: Container(
+                        width: 120,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.1),
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Player label
+                    if (!_rolling && !_showResult)
+                      Positioned(
+                        top: 16,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: (_isP1Turn ? Colors.pink : Colors.blue)
+                                .withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(currentPlayer,
+                              style: theme.textTheme.titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.w700)),
+                        ).animate().fadeIn().slideY(begin: -0.3),
+                      ),
+                    // Previous dice (left side = P1)
+                    if (_p1Roll != null)
+                      Positioned(
+                        left: 32,
+                        top: 40,
+                        child: _PhysicsDie(
+                            face: _p1Roll! - 1, color: Colors.pink, size: 56),
+                      ),
+                    // Previous dice (right side = P2)
+                    if (_p2Roll != null)
+                      Positioned(
+                        right: 32,
+                        top: 40,
+                        child: _PhysicsDie(
+                            face: _p2Roll! - 1, color: Colors.blue, size: 56),
+                      ),
+                    // Active throwing dice
+                    if (_rolling)
+                      AnimatedBuilder(
+                        animation: _throwCtrl,
+                        builder: (context, child) {
+                          return Transform.translate(
+                            offset: Offset(
+                              0,
+                              _throwAnim.value.dy * 200,
+                            ),
+                            child: Transform.rotate(
+                              angle: _rotateAnim.value,
+                              child: Transform.scale(
+                                scale: _scaleAnim.value,
+                                child: _PhysicsDie(
+                                  face: _animFace,
+                                  color: _isP1Turn ? Colors.pink : Colors.blue,
+                                  size: 80,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    // Result overlay
+                    if (_showResult && _p1Roll != null && _p2Roll != null)
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.7),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Text(
+                          _p1Roll! > _p2Roll!
+                              ? l.tr('👩 wins!', '👩 kazandi!')
+                              : _p2Roll! > _p1Roll!
+                                  ? l.tr('👨 wins!', '👨 kazandi!')
+                                  : l.tr('🤝 Draw!', '🤝 Berabere!'),
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      )
+                          .animate()
+                          .scale(duration: 400.ms, curve: Curves.elasticOut),
+                  ],
+                ),
+              ),
+            ),
+            const Gap(16),
+            // Power bar + throw button
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                children: [
+                  // Power meter
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: SizedBox(
+                      height: 12,
+                      child: LinearProgressIndicator(
+                        value: _power,
+                        backgroundColor:
+                            theme.colorScheme.surfaceContainerHighest,
+                        valueColor: AlwaysStoppedAnimation(
+                          Color.lerp(Colors.green, Colors.red, _power)!,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Gap(4),
+                  Text(
+                    l.tr('Hold to charge, release to throw!',
+                        'Basili tut ve guc biriktir, birak ve firsat!'),
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                    ),
+                  ),
+                  const Gap(8),
+                  GestureDetector(
+                    onTapDown: (_) => _startHold(),
+                    onTapUp: (_) => _releaseThrow(),
+                    onTapCancel: () => _releaseThrow(),
+                    child: AnimatedContainer(
+                      duration: 150.ms,
+                      width: double.infinity,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: _rolling || _showResult
+                              ? [Colors.grey, Colors.grey.shade700]
+                              : [
+                                  Color.lerp(theme.colorScheme.primary,
+                                      Colors.red, _power)!,
+                                  Color.lerp(theme.colorScheme.secondary,
+                                      Colors.orange, _power)!,
+                                ],
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          if (_power > 0)
+                            BoxShadow(
+                              color: Colors.red.withValues(alpha: _power * 0.5),
+                              blurRadius: _power * 20,
+                              spreadRadius: _power * 4,
+                            ),
+                        ],
+                      ),
+                      child: Center(
+                        child: Text(
+                          _rolling
+                              ? '🎲 ...'
+                              : _power > 0
+                                  ? '🔥 ${(_power * 100).toInt()}%'
+                                  : l.tr('🎲 Hold & Throw!',
+                                      '🎲 Basili Tut & At!'),
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Gap(24),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DicePlayerScore extends StatelessWidget {
+  const _DicePlayerScore({
+    required this.label,
+    required this.score,
+    required this.color,
+    required this.isActive,
+  });
+  final String label;
+  final int score;
+  final Color color;
+  final bool isActive;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AnimatedContainer(
+      duration: 300.ms,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      decoration: BoxDecoration(
+        color: isActive ? color.withValues(alpha: 0.15) : Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isActive ? color : Colors.transparent,
+          width: 2,
+        ),
+      ),
+      child: Column(
+        children: [
+          Text(label, style: const TextStyle(fontSize: 32)),
+          Text('$score',
+              style: theme.textTheme.headlineMedium
+                  ?.copyWith(fontWeight: FontWeight.w800, color: color)),
+        ],
+      ),
+    );
+  }
+}
+
+class _PhysicsDie extends StatelessWidget {
+  const _PhysicsDie(
+      {required this.face, required this.color, required this.size});
+  final int face;
+  final Color color;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    // face: 0..5
+    final dots = face + 1;
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(size * 0.15),
+        border: Border.all(color: color, width: 3),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.4),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 8,
+            offset: const Offset(2, 4),
+          ),
+        ],
+      ),
+      child: _buildDots(dots, size),
+    );
+  }
+
+  Widget _buildDots(int count, double s) {
+    final dotSize = s * 0.18;
+    final dot = Container(
+      width: dotSize,
+      height: dotSize,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(color: color.withValues(alpha: 0.3), blurRadius: 4),
+        ],
+      ),
+    );
+    // Standard dice dot layout
+    switch (count) {
+      case 1:
+        return Center(child: dot);
+      case 2:
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              Padding(padding: EdgeInsets.only(right: s * 0.15), child: dot)
+            ]),
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+              Padding(padding: EdgeInsets.only(left: s * 0.15), child: dot)
+            ]),
+          ],
+        );
+      case 3:
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              Padding(padding: EdgeInsets.only(right: s * 0.15), child: dot)
+            ]),
+            Center(child: dot),
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+              Padding(padding: EdgeInsets.only(left: s * 0.15), child: dot)
+            ]),
+          ],
+        );
+      case 4:
+        return Padding(
+          padding: EdgeInsets.all(s * 0.12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [dot, dot]),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [dot, dot]),
+            ],
+          ),
+        );
+      case 5:
+        return Padding(
+          padding: EdgeInsets.all(s * 0.12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [dot, dot]),
+              Center(child: dot),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [dot, dot]),
+            ],
+          ),
+        );
+      case 6:
+        return Padding(
+          padding: EdgeInsets.all(s * 0.12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [dot, dot]),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [dot, dot]),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [dot, dot]),
+            ],
+          ),
+        );
+      default:
+        return Center(child: dot);
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════
+//  15. WORD BOMB 💣
+// ══════════════════════════════════════════════════
+class _WordBombGame extends StatefulWidget {
+  const _WordBombGame({required this.repo, required this.onEnd});
+  final GamesRepository repo;
+  final void Function(int p1, int p2) onEnd;
+
+  @override
+  State<_WordBombGame> createState() => _WordBombGameState();
+}
+
+class _WordBombGameState extends State<_WordBombGame> {
+  static final _categories = [
+    {'en': 'Animals', 'tr': 'Hayvanlar'},
+    {'en': 'Countries', 'tr': 'Ulkeler'},
+    {'en': 'Foods', 'tr': 'Yemekler'},
+    {'en': 'Movies', 'tr': 'Filmler'},
+    {'en': 'Colors', 'tr': 'Renkler'},
+    {'en': 'Cities', 'tr': 'Sehirler'},
+    {'en': 'Fruits', 'tr': 'Meyveler'},
+    {'en': 'Sports', 'tr': 'Sporlar'},
+    {'en': 'Car Brands', 'tr': 'Araba Markalari'},
+    {'en': 'Music Genres', 'tr': 'Muzik Turleri'},
+  ];
+
+  int _round = 0;
+  bool _isP1Turn = true;
+  int _p1Lives = 3;
+  int _p2Lives = 3;
+  int _timeLeft = 5;
+  Timer? _timer;
+  String _currentCategory = '';
+  final _wordCtrl = TextEditingController();
+  final List<String> _usedWords = [];
+  final _rng = Random();
+
+  @override
+  void initState() {
+    super.initState();
+    _nextCategory();
+  }
+
+  void _nextCategory() {
+    final cat = _categories[_rng.nextInt(_categories.length)];
+    _currentCategory = l.tr(cat['en']!, cat['tr']!);
+    _usedWords.clear();
+    _startTimer();
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
+    _timeLeft = 5;
+    _timer = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (_timeLeft <= 1) {
+        t.cancel();
+        _bombExplodes();
+      } else {
+        setState(() => _timeLeft--);
+      }
+    });
+  }
+
+  void _bombExplodes() {
+    HapticFeedback.heavyImpact();
+    setState(() {
+      if (_isP1Turn) {
+        _p1Lives--;
+      } else {
+        _p2Lives--;
+      }
+      if (_p1Lives <= 0 || _p2Lives <= 0) {
+        _timer?.cancel();
+        widget.onEnd(_p1Lives * 10 + 10, _p2Lives * 10 + 10);
+      } else {
+        _isP1Turn = !_isP1Turn;
+        _round++;
+        if (_round % 3 == 0) _nextCategory();
+        _startTimer();
+      }
+    });
+  }
+
+  void _submitWord() {
+    final word = _wordCtrl.text.trim().toLowerCase();
+    if (word.isEmpty) return;
+    if (_usedWords.contains(word)) return; // already used
+
+    _timer?.cancel();
+    HapticFeedback.lightImpact();
+    setState(() {
+      _usedWords.add(word);
+      _wordCtrl.clear();
+      _isP1Turn = !_isP1Turn;
+      _startTimer();
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _wordCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Scaffold(
+      appBar: AppBar(title: Text(l.tr('Word Bomb 💣', 'Kelime Bombasi 💣'))),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Lives
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(children: [
+                    const Text('👩 ', style: TextStyle(fontSize: 20)),
+                    ...List.generate(
+                        3,
+                        (i) => Text(
+                              i < _p1Lives ? '❤️' : '🖤',
+                              style: const TextStyle(fontSize: 18),
+                            )),
+                  ]),
+                  Row(children: [
+                    const Text('👨 ', style: TextStyle(fontSize: 20)),
+                    ...List.generate(
+                        3,
+                        (i) => Text(
+                              i < _p2Lives ? '❤️' : '🖤',
+                              style: const TextStyle(fontSize: 18),
+                            )),
+                  ]),
+                ],
+              ),
+              const Gap(24),
+              // Category
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    '📂 $_currentCategory',
+                    style: theme.textTheme.titleLarge
+                        ?.copyWith(fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+              const Gap(16),
+              // Timer bomb
+              Text(
+                _timeLeft <= 2 ? '💥 $_timeLeft' : '💣 $_timeLeft',
+                style: theme.textTheme.displaySmall?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  color: _timeLeft <= 2 ? Colors.red : null,
+                ),
+              )
+                  .animate(
+                    onPlay:
+                        _timeLeft <= 2 ? (c) => c.repeat(reverse: true) : null,
+                  )
+                  .scale(
+                    begin: const Offset(1, 1),
+                    end: const Offset(1.15, 1.15),
+                    duration: 300.ms,
+                  ),
+              const Gap(16),
+              // Turn indicator
+              Text(
+                _isP1Turn
+                    ? l.tr('👩 Your turn!', '👩 Senin siran!')
+                    : l.tr('👨 Partner\'s turn!', '👨 Partner sirasi!'),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: _isP1Turn ? Colors.pink : Colors.blue,
+                ),
+              ),
+              const Gap(16),
+              TextField(
+                controller: _wordCtrl,
+                onSubmitted: (_) => _submitWord(),
+                autofocus: true,
+                decoration: InputDecoration(
+                  labelText: l.tr('Type a word...', 'Bir kelime yaz...'),
+                  prefixIcon: const Icon(Icons.edit),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.send),
+                    onPressed: _submitWord,
+                  ),
+                ),
+              ),
+              const Gap(12),
+              if (_usedWords.isNotEmpty)
+                Wrap(
+                  spacing: 4,
+                  runSpacing: 4,
+                  children: _usedWords
+                      .map((w) => Chip(
+                            label:
+                                Text(w, style: const TextStyle(fontSize: 11)),
+                            visualDensity: VisualDensity.compact,
+                          ))
+                      .toList(),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _BigButton extends StatelessWidget {
   const _BigButton({
     required this.emoji,

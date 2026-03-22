@@ -77,6 +77,7 @@ class MyApp extends StatelessWidget {
           child: Consumer<AppThemeProvider>(
             builder: (context, theme, _) {
               return GetMaterialApp(
+                key: ValueKey('locale_${l.locale}'),
                 title: 'Sync',
                 debugShowCheckedModeBanner: false,
                 theme: theme.themeData,

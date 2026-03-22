@@ -4,8 +4,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sync_app/core/constants/app_constants.dart';
-import 'package:sync_app/core/theme/app_theme.dart';
+import '../constants/app_constants.dart';
+import 'app_theme.dart';
 
 class AppThemeProvider extends ChangeNotifier {
   SyncThemeVariant _variant = SyncThemeVariant.calmSunset;

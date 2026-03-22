@@ -10,6 +10,8 @@ import '../../features/games/presentation/pages/game_play_page.dart';
 import '../../features/games/presentation/pages/games_hub_page.dart';
 import '../../features/ai_assistant/presentation/pages/ai_assistant_page.dart';
 import '../../features/games/presentation/pages/qa_system_page.dart';
+import '../../features/games/presentation/pages/tournament_page.dart';
+import '../../features/games/presentation/pages/ranking_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
@@ -31,6 +33,8 @@ class AppRoutes {
   static const String gamePlay = '/game-play';
   static const String qaSystem = '/qa-system';
   static const String aiAssistant = '/ai-assistant';
+  static const String tournament = '/tournament';
+  static const String ranking = '/ranking';
 }
 
 class AppRouter {
@@ -53,5 +57,7 @@ class AppRouter {
     ),
     GetPage(name: AppRoutes.qaSystem, page: QASystemPage.new),
     GetPage(name: AppRoutes.aiAssistant, page: AiAssistantPage.new),
+    GetPage(name: AppRoutes.tournament, page: TournamentPage.new),
+    GetPage(name: AppRoutes.ranking, page: RankingPage.new),
   ];
 }

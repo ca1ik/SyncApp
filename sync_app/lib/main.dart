@@ -38,6 +38,13 @@ Future<String> _resolveInitialRoute() async {
     return AppRoutes.onboarding;
   }
 
+  // Check if user selected a relationship mode
+  final modeSelected =
+      prefs.getString(AppConstants.prefRelationshipModeKey) != null;
+  if (!modeSelected) {
+    return AppRoutes.modeSelection;
+  }
+
   final user = await getIt<AuthRepository>().getCurrentUserProfile();
   if (user == null) {
     return AppRoutes.login;

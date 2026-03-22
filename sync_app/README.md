@@ -375,25 +375,26 @@ isActiveToday : bool               // Active today (computed)
 
 ---
 
-## 💎 Freemium Model (Free vs PRO)
+## 💎 Freemium Model (Free vs No Ads vs PRO)
 
-| Feature | 🆓 Free | 👑 PRO |
-|---------|---------|--------|
-| Mood submissions | 5 / day | ♾️ Unlimited |
-| Partner linking | ✅ | ✅ |
-| Breathing exercises | 1 technique (Box) | All 4 techniques |
-| Classic Games | 3 games | 10 games |
-| Arena Games | 5 games | All 20 games |
-| Q&A System | ✅ | ✅ |
-| AI advice | Basic | Advanced |
-| Dashboard | Basic | Full analytics |
-| Mood history | Last 10 | Unlimited |
-| Achievements | 8 basic | 14 (all) |
-| Trigger reports | ❌ | ✅ |
-| Couple breath sync | ❌ | ✅ |
-| Theme selection | 9 themes | 9 themes |
+| Feature | 🆓 Free | 🚫 No Ads (₺50/ay) | 👑 PRO |
+|---------|---------|---------------------|--------|
+| Mood submissions | 5 / day | 5 / day | ♾️ Unlimited |
+| Partner linking | ✅ | ✅ | ✅ |
+| Breathing exercises | 1 technique (Box) | 1 technique (Box) | All 4 techniques |
+| Classic Games | 3 games | 3 games | 10 games |
+| Arena Games | 5 games | 5 games | All 20 games |
+| Q&A System | ✅ | ✅ | ✅ |
+| AI advice | Basic | Basic | Advanced |
+| Dashboard | Basic | Basic | Full analytics |
+| Mood history | Last 10 | Last 10 | Unlimited |
+| Achievements | 8 basic | 8 basic | 14 (all) |
+| Trigger reports | ❌ | ❌ | ✅ |
+| Couple breath sync | ❌ | ❌ | ✅ |
+| Advertisements | ✅ Banner ads | ❌ No ads | ❌ No ads |
+| Theme selection | 9 themes | 9 themes | 9 themes |
 
-**Subscription management**: `SubscriptionCubit` with daily limit tracking, automatic midnight reset, SharedPreferences persistence.
+**Subscription tiers**:\n- **Free**: Banner ads visible, daily limits, basic features\n- **No Advertisement** (₺50/month): Ad-free experience, same feature limits as Free\n- **PRO**: All features unlocked + automatic ad-free experience\n\n**Subscription management**: `SubscriptionCubit` with daily limit tracking, automatic midnight reset, SharedPreferences persistence.
 
 ---
 

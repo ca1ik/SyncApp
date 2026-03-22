@@ -136,11 +136,13 @@ class SubscriptionPage extends StatelessWidget {
                               ),
                               const Gap(4),
                               Text(
-                                l.tr('You are enjoying all features.',
-                                    'Tum ozelliklerden yararlaniyorsunuz.'),
+                                l.tr(
+                                    'You are enjoying all features including ad-free experience.',
+                                    'Reklamsiz deneyim dahil tum ozelliklerden yararlaniyorsunuz.'),
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: Colors.white.withValues(alpha: 0.9),
                                 ),
+                                textAlign: TextAlign.center,
                               ),
                             ],
                           ),
@@ -151,6 +153,16 @@ class SubscriptionPage extends StatelessWidget {
                       }
                       return Column(
                         children: [
+                          // --- No Advertisement Plan ---
+                          _NoAdsPlanCard(
+                            theme: theme,
+                            isActive: state.isNoAds,
+                            onToggle: () {
+                              context.read<SubscriptionCubit>().toggleNoAds();
+                            },
+                          ).animate().fadeIn(delay: 550.ms).slideX(begin: -0.1),
+                          const Gap(16),
+                          // --- PRO Upgrade Button ---
                           SizedBox(
                             width: double.infinity,
                             height: 56,
@@ -240,6 +252,9 @@ class _ComparisonTable extends StatelessWidget {
             const Divider(height: 16),
             _row(l.tr('Relationship score', 'Iliski skoru'),
                 l.tr('Basic', 'Temel'), l.tr('Detailed', 'Detayli')),
+            const Divider(height: 16),
+            _row(l.tr('Advertisements', 'Reklamlar'), l.tr('Yes', 'Var'),
+                l.tr('No ads', 'Reklamsiz')),
           ],
         ),
       ),
@@ -320,6 +335,144 @@ class _ProFeatureCard extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _NoAdsPlanCard extends StatelessWidget {
+  const _NoAdsPlanCard({
+    required this.theme,
+    required this.isActive,
+    required this.onToggle,
+  });
+
+  final ThemeData theme;
+  final bool isActive;
+  final VoidCallback onToggle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(
+          color: isActive
+              ? const Color(0xFF42A5F5)
+              : theme.colorScheme.outline.withValues(alpha: 0.3),
+          width: isActive ? 2 : 1,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF42A5F5), Color(0xFF7E57C2)],
+                    ),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: const Center(
+                    child: Text('🚫', style: TextStyle(fontSize: 24)),
+                  ),
+                ),
+                const Gap(16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l.tr('No Advertisement', 'Reklamsiz'),
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const Gap(2),
+                      Text(
+                        l.tr('Remove all ads from the app',
+                            'Uygulamadaki tum reklamlari kaldir'),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.6),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const Gap(16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '₺50',
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w900,
+                          color: const Color(0xFF42A5F5),
+                        ),
+                      ),
+                      TextSpan(
+                        text: l.tr(' / month', ' / ay'),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.5),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 40,
+                  child: isActive
+                      ? OutlinedButton.icon(
+                          onPressed: onToggle,
+                          icon: const Icon(Icons.check_circle,
+                              size: 18, color: Color(0xFF42A5F5)),
+                          label: Text(
+                            l.tr('Active', 'Aktif'),
+                            style: const TextStyle(
+                              color: Color(0xFF42A5F5),
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Color(0xFF42A5F5)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                        )
+                      : ElevatedButton(
+                          onPressed: onToggle,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF42A5F5),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          child: Text(
+                            l.tr('Subscribe', 'Abone Ol'),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                ),
+              ],
             ),
           ],
         ),

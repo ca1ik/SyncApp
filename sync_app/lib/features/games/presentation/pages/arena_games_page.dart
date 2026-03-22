@@ -8,6 +8,7 @@ import 'package:gap/gap.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/services/game_audio_service.dart';
 import '../../../../core/services/locale_service.dart';
+import '../../../../core/widgets/game_tutorial_overlay.dart';
 import '../../../../data/models/game_model.dart';
 import '../../../../data/repositories/games_repository.dart';
 import 'game_launch_screen.dart';
@@ -24,6 +25,18 @@ class _ArenaGamesPageState extends State<ArenaGamesPage> {
   bool _gameOver = false;
   int _p1Score = 0;
   int _p2Score = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      GameTutorialOverlay.showIfNeeded(
+        context: context,
+        gameType: widget.gameType,
+        onComplete: () {},
+      );
+    });
+  }
 
   Future<void> _endGame(int p1, int p2, {int bonus = 0}) async {
     setState(() {

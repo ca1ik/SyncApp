@@ -11,6 +11,7 @@ import '../../../../core/di/injection.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/services/native_bridge_service.dart';
 import '../../../../core/theme/theme_provider.dart';
+import '../../../../core/widgets/banner_ad_widget.dart';
 import '../../../../data/models/achievement_model.dart';
 import '../../../../data/models/mood_log_model.dart';
 import '../../../../data/repositories/gamification_repository.dart';
@@ -955,6 +956,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ],
         ),
       ),
+      bottomSheet: const BannerAdWidget(),
       bottomNavigationBar: NavigationBar(
         selectedIndex: 0,
         onDestinationSelected: (index) {

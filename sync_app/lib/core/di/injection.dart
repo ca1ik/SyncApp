@@ -16,6 +16,7 @@ import '../../features/sync_engine/bloc/sync_engine_bloc.dart';
 import '../../features/sync_engine/cubit/partner_mood_cubit.dart';
 import '../constants/app_constants.dart';
 import '../services/native_bridge_service.dart';
+import '../services/game_room_service.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -59,6 +60,9 @@ Future<void> configureDependencies() async {
   );
   getIt.registerLazySingleton<GamesRepository>(
     () => GamesRepository(prefs: getIt()),
+  );
+  getIt.registerLazySingleton<GameRoomService>(
+    () => GameRoomService(prefs: getIt()),
   );
 
   getIt.registerFactory<AuthBloc>(

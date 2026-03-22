@@ -5,7 +5,8 @@ import 'package:get/get.dart';
 
 import '../../../../core/di/injection.dart';
 import '../../../../core/router/app_router.dart';
-import '../../../../core/widgets/romantic_background.dart';
+import '../../../../core/widgets/banner_ad_widget.dart';
+import '../../../../core/widgets/themed_background.dart';
 import '../../../../data/models/game_model.dart';
 import '../../../../data/repositories/games_repository.dart';
 import '../../../../core/services/locale_service.dart';
@@ -36,7 +37,8 @@ class _GamesHubPageState extends State<GamesHubPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: RomanticBackground(
+      bottomSheet: const BannerAdWidget(),
+      body: ThemedBackground(
         child: CustomScrollView(
           slivers: [
             SliverAppBar(

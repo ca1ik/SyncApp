@@ -10,11 +10,13 @@ import '../../features/games/presentation/pages/arena_games_page.dart';
 import '../../features/games/presentation/pages/arena_games_extra_page.dart';
 import '../../features/games/presentation/pages/game_play_page.dart';
 import '../../features/games/presentation/pages/games_hub_page.dart';
+import '../../features/games/presentation/pages/game_room_page.dart';
 import '../../features/ai_assistant/presentation/pages/ai_assistant_page.dart';
 import '../../features/games/presentation/pages/qa_system_page.dart';
 import '../../features/games/presentation/pages/tournament_page.dart';
 import '../../features/games/presentation/pages/ranking_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/onboarding/presentation/pages/mode_selection_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
 import '../../features/subscription/presentation/pages/subscription_page.dart';
@@ -39,6 +41,8 @@ class AppRoutes {
   static const String ranking = '/ranking';
   static const String arenaGame = '/arena-game';
   static const String arenaGameExtra = '/arena-game-extra';
+  static const String modeSelection = '/mode-selection';
+  static const String gameRoom = '/game-room';
 }
 
 class AppRouter {
@@ -71,6 +75,11 @@ class AppRouter {
       name: AppRoutes.arenaGameExtra,
       page: () =>
           ArenaGamesExtraPage(gameType: Get.arguments as CoupleGameType),
+    ),
+    GetPage(name: AppRoutes.modeSelection, page: ModeSelectionPage.new),
+    GetPage(
+      name: AppRoutes.gameRoom,
+      page: () => GameRoomPage(gameType: Get.arguments as CoupleGameType),
     ),
   ];
 }

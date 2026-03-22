@@ -6,6 +6,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 
 import '../../../../core/di/injection.dart';
+import '../../../../core/widgets/game_tutorial_overlay.dart';
 import '../../../../data/models/game_model.dart';
 import '../../../../data/repositories/games_repository.dart';
 import '../../../../core/services/locale_service.dart';
@@ -29,6 +30,13 @@ class _GamePlayPageState extends State<GamePlayPage> {
   void initState() {
     super.initState();
     _repo = getIt<GamesRepository>();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      GameTutorialOverlay.showIfNeeded(
+        context: context,
+        gameType: widget.gameType,
+        onComplete: () {},
+      );
+    });
   }
 
   Future<void> _endGame({int bonus = 0}) async {

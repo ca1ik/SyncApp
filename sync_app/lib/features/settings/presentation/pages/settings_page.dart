@@ -10,6 +10,7 @@ import '../../../../core/router/app_router.dart';
 import '../../../../core/services/locale_service.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/theme/theme_provider.dart';
+import '../../../../core/widgets/banner_ad_widget.dart';
 import '../../../../data/repositories/gamification_repository.dart';
 import '../../../auth/bloc/auth_bloc.dart';
 import '../../../subscription/cubit/subscription_cubit.dart';
@@ -24,6 +25,7 @@ class SettingsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(l.tr('Settings', 'Ayarlar'))),
+      bottomSheet: const BannerAdWidget(),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -273,6 +275,45 @@ class SettingsPage extends StatelessWidget {
                             child:
                                 Text(l.tr('Upgrade to PRO', 'PRO\'ya Yukselt')),
                           ),
+                        ),
+                      ],
+                      if (!state.isPro && !state.isNoAds) ...[
+                        const Gap(8),
+                        SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton.icon(
+                            onPressed: () =>
+                                Get.toNamed(AppRoutes.subscription),
+                            icon: const Text('🚫',
+                                style: TextStyle(fontSize: 16)),
+                            label: Text(l.tr('Remove Ads — ₺50/mo',
+                                'Reklamlari Kaldir — ₺50/ay')),
+                          ),
+                        ),
+                      ],
+                      if (!state.isPro && state.isNoAds) ...[
+                        const Gap(8),
+                        Row(
+                          children: [
+                            const Text('🚫', style: TextStyle(fontSize: 16)),
+                            const Gap(8),
+                            Expanded(
+                              child: Text(
+                                l.tr('No Ads Active', 'Reklamsiz Aktif'),
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: const Color(0xFF42A5F5),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            Switch.adaptive(
+                              value: state.isNoAds,
+                              activeColor: const Color(0xFF42A5F5),
+                              onChanged: (_) => context
+                                  .read<SubscriptionCubit>()
+                                  .toggleNoAds(),
+                            ),
+                          ],
                         ),
                       ],
                     ],

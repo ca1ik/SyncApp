@@ -37,4 +37,6 @@ class AppConstants {
   static const String prefOnboardingKey = 'onboarding_done';
   static const String prefPartnerLinkedKey = 'partner_linked';
   static const String prefFcmTokenKey = 'fcm_token';
+  static const String prefRelationshipModeKey = 'sync_relationship_mode';
+  static const String prefTutorialSeenPrefix = 'sync_tutorial_seen_';
 }

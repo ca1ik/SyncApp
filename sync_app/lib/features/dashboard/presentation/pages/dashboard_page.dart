@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/theme_provider.dart';
+import '../../../../core/widgets/banner_ad_widget.dart';
 import '../../../../data/models/mood_log_model.dart';
 import '../../../../data/repositories/gamification_repository.dart';
 import '../../../auth/bloc/auth_bloc.dart';
@@ -30,6 +31,7 @@ class DashboardPage extends StatelessWidget {
         title: Text(l.tr('Analysis', 'Analiz')),
         centerTitle: true,
       ),
+      bottomSheet: const BannerAdWidget(),
       body: BlocBuilder<SyncEngineBloc, SyncEngineState>(
         builder: (context, syncState) {
           return ListView(

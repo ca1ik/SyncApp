@@ -15,6 +15,9 @@ enum GameCategory {
 /// Player mode: solo or multiplayer
 enum PlayerMode { solo, multi }
 
+/// Difficulty level for tutorial system
+enum GameDifficulty { easy, medium, hard }
+
 extension GameCategoryX on GameCategory {
   String get title {
     switch (this) {
@@ -492,6 +495,511 @@ extension CoupleGameTypeX on CoupleGameType {
         return GameCategory.arena;
     }
   }
+
+  /// Difficulty level — hard games get blur-guided tutorial
+  GameDifficulty get difficulty {
+    switch (this) {
+      case CoupleGameType.truthOrDare:
+      case CoupleGameType.wouldYouRather:
+      case CoupleGameType.diceDuel:
+      case CoupleGameType.balloonPop:
+      case CoupleGameType.bombPass:
+      case CoupleGameType.secretMessage:
+        return GameDifficulty.easy;
+      case CoupleGameType.countTrap:
+      case CoupleGameType.knowMeQuiz:
+      case CoupleGameType.tripMeter:
+      case CoupleGameType.finishSentence:
+      case CoupleGameType.emojiGuess:
+      case CoupleGameType.quickTapDuel:
+      case CoupleGameType.reactionRace:
+      case CoupleGameType.memoryMatch:
+      case CoupleGameType.wordBomb:
+      case CoupleGameType.compatibilityTest:
+      case CoupleGameType.meteorShower:
+      case CoupleGameType.colorMatch:
+      case CoupleGameType.towerStack:
+      case CoupleGameType.fruitCatch:
+      case CoupleGameType.targetShot:
+      case CoupleGameType.rhythmTap:
+      case CoupleGameType.rateAndRank:
+        return GameDifficulty.medium;
+      case CoupleGameType.sumoBall:
+      case CoupleGameType.miniPool:
+      case CoupleGameType.carRace:
+      case CoupleGameType.laserDodge:
+      case CoupleGameType.icePlatform:
+      case CoupleGameType.loveMap:
+      case CoupleGameType.bracketTournament:
+      case CoupleGameType.treasureDive:
+      case CoupleGameType.lavaFloor:
+      case CoupleGameType.paintWar:
+      case CoupleGameType.snakeArena:
+      case CoupleGameType.asteroidBreaker:
+      case CoupleGameType.mazeRunner:
+      case CoupleGameType.shieldBlock:
+        return GameDifficulty.hard;
+    }
+  }
+
+  /// Tutorial steps (Turkish | English) — shown before first play
+  List<TutorialStep> get tutorialSteps {
+    switch (this) {
+      // ── EASY GAMES ──
+      case CoupleGameType.truthOrDare:
+        return [
+          TutorialStep(
+            icon: '🎯',
+            titleEn: 'Choose: Truth or Dare',
+            titleTr: 'Seç: Doğruluk mu Cesaret mi',
+            descEn: 'Tap one of the two options on screen.',
+            descTr: 'Ekrandaki iki seçenekten birine dokun.',
+          ),
+          TutorialStep(
+            icon: '💬',
+            titleEn: 'Answer or Complete',
+            titleTr: 'Cevapla veya Tamamla',
+            descEn: 'Answer the question honestly or complete the dare!',
+            descTr: 'Soruyu dürüstçe cevapla veya cesareti tamamla!',
+          ),
+        ];
+      case CoupleGameType.wouldYouRather:
+        return [
+          TutorialStep(
+            icon: '🤔',
+            titleEn: 'Pick One Side',
+            titleTr: 'Bir Tarafı Seç',
+            descEn: 'You\'ll see two options — choose which you prefer.',
+            descTr: 'İki seçenek göreceksin — hangisini tercih ettiğini seç.',
+          ),
+        ];
+      case CoupleGameType.diceDuel:
+        return [
+          TutorialStep(
+            icon: '🎲',
+            titleEn: 'Tap to Roll',
+            titleTr: 'Zar Atmak İçin Dokun',
+            descEn: 'Tap the dice to roll. Highest number wins the round!',
+            descTr: 'Zar atmak için dokun. En yüksek sayı turu kazanır!',
+          ),
+        ];
+      case CoupleGameType.balloonPop:
+        return [
+          TutorialStep(
+            icon: '🎈',
+            titleEn: 'Pop the Balloons',
+            titleTr: 'Balonları Patlat',
+            descEn: 'Tap balloons as they float up. Don\'t miss any!',
+            descTr: 'Yükselen balonlara dokun. Hiçbirini kaçırma!',
+          ),
+        ];
+      case CoupleGameType.bombPass:
+        return [
+          TutorialStep(
+            icon: '💣',
+            titleEn: 'Pass the Bomb',
+            titleTr: 'Bombayı Pas Ver',
+            descEn: 'Answer quickly and pass before time runs out!',
+            descTr: 'Hızlıca cevapla ve süre dolmadan pas ver!',
+          ),
+        ];
+      case CoupleGameType.secretMessage:
+        return [
+          TutorialStep(
+            icon: '✉️',
+            titleEn: 'Write a Secret',
+            titleTr: 'Gizli Mesaj Yaz',
+            descEn: 'Write a secret message for your partner to reveal later.',
+            descTr: 'Partnerine sonra açılacak gizli bir mesaj yaz.',
+          ),
+        ];
+
+      // ── MEDIUM GAMES ──
+      case CoupleGameType.countTrap:
+        return [
+          TutorialStep(
+            icon: '🔢',
+            titleEn: 'Count Together',
+            titleTr: 'Birlikte Say',
+            descEn: 'Take turns counting. Don\'t say the trap number!',
+            descTr: 'Sırayla say. Tuzak sayıyı söyleme!',
+          ),
+          TutorialStep(
+            icon: '⚠️',
+            titleEn: 'Avoid the Trap',
+            titleTr: 'Tuzaktan Kaçın',
+            descEn: 'If you say the trap number, you lose the round.',
+            descTr: 'Tuzak sayıyı söylersen turu kaybedersin.',
+          ),
+        ];
+      case CoupleGameType.knowMeQuiz:
+        return [
+          TutorialStep(
+            icon: '❓',
+            titleEn: 'Answer Questions',
+            titleTr: 'Soruları Cevapla',
+            descEn: 'Answer questions about your partner. +15 per correct!',
+            descTr: 'Partnerin hakkında soruları cevapla. Doğru başına +15!',
+          ),
+        ];
+      case CoupleGameType.quickTapDuel:
+        return [
+          TutorialStep(
+            icon: '👆',
+            titleEn: 'Tap Fast!',
+            titleTr: 'Hızlı Dokun!',
+            descEn: 'When the signal appears, tap as fast as you can!',
+            descTr: 'Sinyal belirdiğinde olabildiğince hızlı dokun!',
+          ),
+          TutorialStep(
+            icon: '⏱️',
+            titleEn: 'Reaction Matters',
+            titleTr: 'Reaksiyon Önemli',
+            descEn: 'Fastest tap wins the round. Best of 5!',
+            descTr: 'En hızlı dokunuş turu kazanır. 5 turun en iyisi!',
+          ),
+        ];
+      case CoupleGameType.reactionRace:
+        return [
+          TutorialStep(
+            icon: '🏁',
+            titleEn: 'Wait for Green',
+            titleTr: 'Yeşili Bekle',
+            descEn: 'Wait for the green signal, then tap immediately!',
+            descTr: 'Yeşil sinyali bekle, sonra hemen dokun!',
+          ),
+        ];
+      case CoupleGameType.memoryMatch:
+        return [
+          TutorialStep(
+            icon: '🧠',
+            titleEn: 'Find Pairs',
+            titleTr: 'Çiftleri Bul',
+            descEn: 'Flip cards and match pairs. Remember positions!',
+            descTr: 'Kartları çevir ve eşleştir. Pozisyonları hatırla!',
+          ),
+          TutorialStep(
+            icon: '⚡',
+            titleEn: 'Be Quick',
+            titleTr: 'Hızlı Ol',
+            descEn: 'Fewer moves = more points. +15 bonus for perfection!',
+            descTr: 'Daha az hamle = daha fazla puan. Mükemmellik bonusu +15!',
+          ),
+        ];
+      case CoupleGameType.wordBomb:
+        return [
+          TutorialStep(
+            icon: '💥',
+            titleEn: 'Type Fast',
+            titleTr: 'Hızlı Yaz',
+            descEn:
+                'Type a word with the given letters before the bomb explodes!',
+            descTr: 'Bomba patlamadan verilen harflerle kelime yaz!',
+          ),
+        ];
+      case CoupleGameType.meteorShower:
+        return [
+          TutorialStep(
+            icon: '☄️',
+            titleEn: 'Dodge Meteors',
+            titleTr: 'Meteorlardan Kaç',
+            descEn: 'Move your character to avoid falling meteors.',
+            descTr: 'Düşen meteorlardan kaçmak için karakterini hareket ettir.',
+          ),
+        ];
+      case CoupleGameType.colorMatch:
+        return [
+          TutorialStep(
+            icon: '🎨',
+            titleEn: 'Match the Color',
+            titleTr: 'Rengi Eşleştir',
+            descEn: 'Tap the matching color before time runs out!',
+            descTr: 'Süre dolmadan eşleşen renge dokun!',
+          ),
+        ];
+      case CoupleGameType.towerStack:
+        return [
+          TutorialStep(
+            icon: '🏗️',
+            titleEn: 'Stack Blocks',
+            titleTr: 'Blok Yığ',
+            descEn:
+                'Tap at the right moment to stack. Perfect alignment = bonus!',
+            descTr: 'Doğru anda dokunarak yığ. Mükemmel hizalama = bonus!',
+          ),
+        ];
+      case CoupleGameType.fruitCatch:
+        return [
+          TutorialStep(
+            icon: '🍎',
+            titleEn: 'Catch Fruits',
+            titleTr: 'Meyveleri Topla',
+            descEn: 'Swipe to move the basket. Catch fruits, avoid bombs!',
+            descTr:
+                'Sepeti kaydırarak hareket ettir. Meyveleri topla, bombalardan kaçın!',
+          ),
+        ];
+      case CoupleGameType.targetShot:
+        return [
+          TutorialStep(
+            icon: '🎯',
+            titleEn: 'Hit the Target',
+            titleTr: 'Hedefe Vur',
+            descEn: 'Tap targets as they appear. Center hits = more points!',
+            descTr:
+                'Hedefler belirdiğinde dokun. Merkez vuruşları = daha fazla puan!',
+          ),
+        ];
+      case CoupleGameType.rhythmTap:
+        return [
+          TutorialStep(
+            icon: '🎵',
+            titleEn: 'Follow the Rhythm',
+            titleTr: 'Ritmi Takip Et',
+            descEn: 'Tap in sync with the beat. Perfect timing = combo!',
+            descTr: 'Ritimle senkron dokun. Mükemmel zamanlama = kombo!',
+          ),
+        ];
+      case CoupleGameType.tripMeter:
+      case CoupleGameType.finishSentence:
+      case CoupleGameType.emojiGuess:
+      case CoupleGameType.compatibilityTest:
+      case CoupleGameType.rateAndRank:
+        return [
+          TutorialStep(
+            icon: '📝',
+            titleEn: 'Follow On-Screen Instructions',
+            titleTr: 'Ekrandaki Talimatları Takip Et',
+            descEn:
+                'Read and respond to each prompt. Points are earned per round.',
+            descTr:
+                'Her bir yönergeyi oku ve cevapla. Her turda puan kazanılır.',
+          ),
+        ];
+
+      // ── HARD GAMES (get blur overlay) ──
+      case CoupleGameType.sumoBall:
+        return [
+          TutorialStep(
+            icon: '🏋️',
+            titleEn: 'Push Opponent Out',
+            titleTr: 'Rakibi Dışarı İt',
+            descEn: 'Drag your sumo ball toward the opponent to push them.',
+            descTr: 'Sumo topunu rakibe doğru sürükleyerek it.',
+            highlightZone: HighlightZone.center,
+          ),
+          TutorialStep(
+            icon: '⭕',
+            titleEn: 'Stay Inside the Ring',
+            titleTr: 'Ringin İçinde Kal',
+            descEn: 'If you fall outside the ring, you lose!',
+            descTr: 'Ringin dışına düşersen kaybedersin!',
+            highlightZone: HighlightZone.center,
+          ),
+        ];
+      case CoupleGameType.miniPool:
+        return [
+          TutorialStep(
+            icon: '🎱',
+            titleEn: 'Aim and Shoot',
+            titleTr: 'Nişan Al ve Vur',
+            descEn: 'Drag from the cue ball to set direction and power.',
+            descTr: 'İsabet topundan sürükleyerek yön ve güç ayarla.',
+            highlightZone: HighlightZone.center,
+          ),
+          TutorialStep(
+            icon: '🕳️',
+            titleEn: 'Pot the Balls',
+            titleTr: 'Topları Cebe At',
+            descEn: 'Sink all your balls into the pockets to win!',
+            descTr: 'Tüm toplarını ceplere atarak kazan!',
+            highlightZone: HighlightZone.center,
+          ),
+        ];
+      case CoupleGameType.carRace:
+        return [
+          TutorialStep(
+            icon: '🏎️',
+            titleEn: 'Tilt to Steer',
+            titleTr: 'Yönlendirmek İçin Eğ',
+            descEn: 'Tilt your device or use touch controls to steer.',
+            descTr:
+                'Yönlendirmek için cihazını eğ veya dokunmatik kontrol kullan.',
+            highlightZone: HighlightZone.bottom,
+          ),
+          TutorialStep(
+            icon: '🏆',
+            titleEn: 'Reach the Finish Line',
+            titleTr: 'Bitiş Çizgisine Ulaş',
+            descEn: 'Avoid obstacles and finish first to win!',
+            descTr: 'Engellerden kaçın ve birinci bitirip kazan!',
+          ),
+        ];
+      case CoupleGameType.laserDodge:
+        return [
+          TutorialStep(
+            icon: '🔴',
+            titleEn: 'Dodge the Lasers',
+            titleTr: 'Lazerlerden Kaç',
+            descEn: 'Move your character to avoid laser beams.',
+            descTr: 'Lazer ışınlarından kaçmak için karakterini hareket ettir.',
+            highlightZone: HighlightZone.center,
+          ),
+          TutorialStep(
+            icon: '⏱️',
+            titleEn: 'Survive Longer',
+            titleTr: 'Daha Uzun Hayatta Kal',
+            descEn: 'The longer you survive, the more points you earn!',
+            descTr:
+                'Ne kadar uzun hayatta kalırsan, o kadar çok puan kazanırsın!',
+          ),
+        ];
+      case CoupleGameType.icePlatform:
+        return [
+          TutorialStep(
+            icon: '🧊',
+            titleEn: 'Jump Between Platforms',
+            titleTr: 'Platformlar Arası Zıpla',
+            descEn: 'Tap to jump. Ice platforms are slippery!',
+            descTr: 'Zıplamak için dokun. Buz platformlar kaygan!',
+            highlightZone: HighlightZone.bottom,
+          ),
+        ];
+      case CoupleGameType.loveMap:
+        return [
+          TutorialStep(
+            icon: '💕',
+            titleEn: 'Build Your Love Map',
+            titleTr: 'Aşk Haritanı Oluştur',
+            descEn: 'Mark meaningful places and memories on the map.',
+            descTr: 'Haritada anlamlı yerleri ve anıları işaretle.',
+          ),
+        ];
+      case CoupleGameType.bracketTournament:
+        return [
+          TutorialStep(
+            icon: '🏅',
+            titleEn: 'Tournament Bracket',
+            titleTr: 'Turnuva Elemesi',
+            descEn: 'Compete in elimination rounds. Win to advance!',
+            descTr: 'Eleme turlarında yarış. Kazanarak ilerle!',
+          ),
+        ];
+      case CoupleGameType.treasureDive:
+        return [
+          TutorialStep(
+            icon: '🤿',
+            titleEn: 'Dive for Treasure',
+            titleTr: 'Hazine İçin Dal',
+            descEn: 'Control your diver to collect treasures. Avoid obstacles!',
+            descTr:
+                'Dalgıcını kontrol ederek hazineleri topla. Engellerden kaçın!',
+            highlightZone: HighlightZone.center,
+          ),
+        ];
+      case CoupleGameType.lavaFloor:
+        return [
+          TutorialStep(
+            icon: '🌋',
+            titleEn: 'The Floor is Lava!',
+            titleTr: 'Zemin Lav!',
+            descEn: 'Jump between safe platforms. Don\'t touch the lava!',
+            descTr: 'Güvenli platformlar arasında zıpla. Lava dokunma!',
+            highlightZone: HighlightZone.bottom,
+          ),
+        ];
+      case CoupleGameType.paintWar:
+        return [
+          TutorialStep(
+            icon: '🖌️',
+            titleEn: 'Paint Your Territory',
+            titleTr: 'Bölgeni Boya',
+            descEn: 'Swipe to paint. Cover more area than your opponent!',
+            descTr: 'Kaydırarak boya. Rakibinden daha fazla alan kapla!',
+            highlightZone: HighlightZone.center,
+          ),
+        ];
+      case CoupleGameType.snakeArena:
+        return [
+          TutorialStep(
+            icon: '🐍',
+            titleEn: 'Grow Your Snake',
+            titleTr: 'Yılanını Büyüt',
+            descEn: 'Eat food to grow. Don\'t crash into walls or yourself!',
+            descTr: 'Yiyecek ye ve büyü. Duvarlara veya kendine çarpma!',
+            highlightZone: HighlightZone.center,
+          ),
+        ];
+      case CoupleGameType.asteroidBreaker:
+        return [
+          TutorialStep(
+            icon: '💫',
+            titleEn: 'Break Asteroids',
+            titleTr: 'Asteroidleri Kır',
+            descEn:
+                'Shoot at asteroids to break them. Smaller pieces = more points!',
+            descTr:
+                'Asteroidlere ateş ederek kır. Küçük parçalar = daha fazla puan!',
+            highlightZone: HighlightZone.center,
+          ),
+        ];
+      case CoupleGameType.mazeRunner:
+        return [
+          TutorialStep(
+            icon: '🏃',
+            titleEn: 'Navigate the Maze',
+            titleTr: 'Labirentte İlerle',
+            descEn: 'Swipe to move. Find the exit before your opponent!',
+            descTr: 'Kaydırarak hareket et. Rakibinden önce çıkışı bul!',
+            highlightZone: HighlightZone.center,
+          ),
+        ];
+      case CoupleGameType.shieldBlock:
+        return [
+          TutorialStep(
+            icon: '🛡️',
+            titleEn: 'Block with Your Shield',
+            titleTr: 'Kalkanınla Engelle',
+            descEn: 'Move your shield to block incoming projectiles.',
+            descTr: 'Gelen mermileri engellemek için kalkanını hareket ettir.',
+            highlightZone: HighlightZone.center,
+          ),
+          TutorialStep(
+            icon: '💥',
+            titleEn: 'Don\'t Get Hit',
+            titleTr: 'Vurulma',
+            descEn: 'Each hit costs health. Survive as long as possible!',
+            descTr:
+                'Her vuruş can kaybettirir. Mümkün olduğunca uzun hayatta kal!',
+          ),
+        ];
+    }
+  }
+}
+
+/// Zone to highlight (keep un-blurred) during hard-mode tutorials
+enum HighlightZone { center, top, bottom }
+
+/// A single step in a game tutorial
+class TutorialStep {
+  const TutorialStep({
+    required this.icon,
+    required this.titleEn,
+    required this.titleTr,
+    required this.descEn,
+    required this.descTr,
+    this.highlightZone,
+  });
+
+  final String icon;
+  final String titleEn;
+  final String titleTr;
+  final String descEn;
+  final String descTr;
+  final HighlightZone? highlightZone;
+
+  String get title => l.tr(titleEn, titleTr);
+  String get description => l.tr(descEn, descTr);
 }
 
 class GameScore extends Equatable {

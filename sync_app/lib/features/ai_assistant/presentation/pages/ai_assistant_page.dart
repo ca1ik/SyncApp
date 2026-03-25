@@ -207,7 +207,8 @@ class _AiAssistantPageState extends State<AiAssistantPage>
     final theme = Theme.of(context);
     final isCoach = _activeType == AiAssistantType.relationshipCoach;
     final subState = context.watch<SubscriptionCubit>().state;
-    final remaining = isCoach ? subState.remainingCoachAi : subState.remainingAstroAi;
+    final remaining =
+        isCoach ? subState.remainingCoachAi : subState.remainingAstroAi;
 
     return Scaffold(
       appBar: AppBar(

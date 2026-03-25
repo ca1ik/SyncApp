@@ -57,6 +57,20 @@ class _AiAssistantPageState extends State<AiAssistantPage>
     final text = _inputCtrl.text.trim();
     if (text.isEmpty || _isTyping) return;
 
+    // ── AI daily limit check for free users ──
+    final subCubit = context.read<SubscriptionCubit>();
+    final subState = subCubit.state;
+    final isCoach = _activeType == AiAssistantType.relationshipCoach;
+
+    if (isCoach && !subState.canUseCoachAi) {
+      _showAiLimitReached();
+      return;
+    }
+    if (!isCoach && !subState.canUseAstroAi) {
+      _showAiLimitReached();
+      return;
+    }
+
     _inputCtrl.clear();
     HapticFeedback.lightImpact();
 
@@ -77,6 +91,13 @@ class _AiAssistantPageState extends State<AiAssistantPage>
     final response = LocalAiEngine.generateResponse(_activeType, text);
 
     if (mounted) {
+      // Increment usage counter for free users
+      if (isCoach) {
+        subCubit.incrementCoachAi();
+      } else {
+        subCubit.incrementAstroAi();
+      }
+
       setState(() {
         _messages.add(AiChatMessage(
           text: response,
@@ -87,6 +108,79 @@ class _AiAssistantPageState extends State<AiAssistantPage>
       });
       _scrollToBottom();
     }
+  }
+
+  void _showAiLimitReached() {
+    HapticFeedback.heavyImpact();
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        final theme = Theme.of(ctx);
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const Gap(20),
+              const Text('🔒', style: TextStyle(fontSize: 48)),
+              const Gap(12),
+              Text(
+                l.tr('Daily AI Limit Reached', 'Günlük AI Limiti Doldu'),
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const Gap(8),
+              Text(
+                l.tr(
+                  'Free users can use each AI assistant once per day. Upgrade to PRO for unlimited access!',
+                  'Ücretsiz kullanıcılar her AI asistanını günde 1 kez kullanabilir. Sınırsız erişim için PRO\'ya yükseltin!',
+                ),
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
+              ),
+              const Gap(20),
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    Navigator.pushNamed(context, '/subscription');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.colorScheme.primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                  ),
+                  child: Text(
+                    l.tr('Upgrade to PRO 👑', 'PRO\'ya Yükselt 👑'),
+                    style: TextStyle(
+                      color: theme.colorScheme.onPrimary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   void _scrollToBottom() {

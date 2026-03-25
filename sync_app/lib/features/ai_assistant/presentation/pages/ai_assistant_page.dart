@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
 import '../../../../data/services/ai_assistant_service.dart';
 import '../../../../core/services/locale_service.dart';
+import '../../../subscription/cubit/subscription_cubit.dart';
 
 class AiAssistantPage extends StatefulWidget {
   const AiAssistantPage({super.key});

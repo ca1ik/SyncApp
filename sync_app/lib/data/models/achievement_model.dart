@@ -134,9 +134,7 @@ extension AchievementTypeX on AchievementType {
 
   bool get isProOnly {
     switch (this) {
-      case AchievementType.streak14:
       case AchievementType.streak30:
-      case AchievementType.first50Moods:
       case AchievementType.consistentCouple:
         return true;
       default:

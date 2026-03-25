@@ -64,9 +64,9 @@ extension BreathingTechniqueX on BreathingTechnique {
   bool get isProOnly {
     switch (this) {
       case BreathingTechnique.box:
-        return false;
       case BreathingTechnique.calm478:
       case BreathingTechnique.energize:
+        return false;
       case BreathingTechnique.coupleSync:
         return true;
     }

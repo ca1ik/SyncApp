@@ -387,6 +387,7 @@ extension CoupleGameTypeX on CoupleGameType {
 
   bool get isProOnly {
     switch (this) {
+      // ── Free games (18) ──
       case CoupleGameType.countTrap:
       case CoupleGameType.truthOrDare:
       case CoupleGameType.wouldYouRather:
@@ -396,7 +397,17 @@ extension CoupleGameTypeX on CoupleGameType {
       case CoupleGameType.balloonPop:
       case CoupleGameType.bombPass:
       case CoupleGameType.meteorShower:
+      case CoupleGameType.knowMeQuiz:
+      case CoupleGameType.finishSentence:
+      case CoupleGameType.emojiGuess:
+      case CoupleGameType.colorMatch:
+      case CoupleGameType.memoryMatch:
+      case CoupleGameType.reactionRace:
+      case CoupleGameType.fruitCatch:
+      case CoupleGameType.targetShot:
+      case CoupleGameType.towerStack:
         return false;
+      // ── PRO-only games (remaining) ──
       default:
         return true;
     }

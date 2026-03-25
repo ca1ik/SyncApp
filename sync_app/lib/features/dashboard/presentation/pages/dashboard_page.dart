@@ -173,7 +173,7 @@ class DashboardPage extends StatelessWidget {
                 )
               else ...[
                 ...syncState.history
-                    .take(isPro ? 50 : SubscriptionState.freeHistoryLimit)
+                    .take(isPro ? syncState.history.length : SubscriptionState.freeHistoryLimit)
                     .toList()
                     .asMap()
                     .entries

@@ -206,6 +206,8 @@ class _AiAssistantPageState extends State<AiAssistantPage>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isCoach = _activeType == AiAssistantType.relationshipCoach;
+    final subState = context.watch<SubscriptionCubit>().state;
+    final remaining = isCoach ? subState.remainingCoachAi : subState.remainingAstroAi;
 
     return Scaffold(
       appBar: AppBar(
@@ -218,6 +220,43 @@ class _AiAssistantPageState extends State<AiAssistantPage>
           ],
         ),
         centerTitle: true,
+        actions: [
+          if (!subState.isPro)
+            Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: Chip(
+                avatar: const Icon(Icons.auto_awesome, size: 16),
+                label: Text(
+                  '$remaining/${SubscriptionState.freeAiDailyLimit}',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                backgroundColor: remaining > 0
+                    ? theme.colorScheme.primaryContainer
+                    : theme.colorScheme.errorContainer,
+                side: BorderSide.none,
+                visualDensity: VisualDensity.compact,
+              ),
+            )
+          else
+            Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: Chip(
+                avatar: const Text('👑', style: TextStyle(fontSize: 14)),
+                label: Text(
+                  'PRO',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+                backgroundColor: theme.colorScheme.primaryContainer,
+                side: BorderSide.none,
+                visualDensity: VisualDensity.compact,
+              ),
+            ),
+        ],
       ),
       body: Column(
         children: [

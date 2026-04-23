@@ -164,35 +164,41 @@ class SettingsPage extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  const Text('🌐', style: TextStyle(fontSize: 24)),
-                  const Gap(12),
-                  Expanded(
-                    child: Text(
-                      l.tr('App Language', 'Uygulama Dili'),
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(16),
+              onTap: () => _showLanguagePicker(context),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    const Text('🌐', style: TextStyle(fontSize: 24)),
+                    const Gap(12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l.tr('App Language', 'Uygulama Dili'),
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const Gap(2),
+                          Text(
+                            '${l.current.flag}  ${l.current.name}',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurface
+                                  .withValues(alpha: 0.7),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  SegmentedButton<String>(
-                    segments: const [
-                      ButtonSegment(value: 'en', label: Text('EN')),
-                      ButtonSegment(value: 'tr', label: Text('TR')),
-                    ],
-                    selected: {l.locale},
-                    onSelectionChanged: (selected) {
-                      l.setLocale(selected.first);
-                    },
-                    style: SegmentedButton.styleFrom(
-                      selectedBackgroundColor:
-                          theme.colorScheme.primary.withValues(alpha: 0.15),
-                    ),
-                  ),
-                ],
+                    Icon(Icons.chevron_right,
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                  ],
+                ),
               ),
             ),
           ).animate().fadeIn(delay: 250.ms, duration: 400.ms),
@@ -357,6 +363,76 @@ class SettingsPage extends StatelessWidget {
           const Gap(32),
         ],
       ),
+    );
+  }
+
+  void _showLanguagePicker(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        final theme = Theme.of(ctx);
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 12),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    l.tr('App Language', 'Uygulama Dili'),
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+                const Gap(8),
+                Flexible(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: AppLocale.supported.length,
+                    separatorBuilder: (_, __) => const Divider(height: 1),
+                    itemBuilder: (_, i) {
+                      final loc = AppLocale.supported[i];
+                      final selected = loc.code == l.locale;
+                      return ListTile(
+                        leading: Text(loc.flag,
+                            style: const TextStyle(fontSize: 24)),
+                        title: Text(loc.name,
+                            style: TextStyle(
+                              fontWeight:
+                                  selected ? FontWeight.w800 : FontWeight.w500,
+                            )),
+                        trailing: selected
+                            ? Icon(Icons.check_circle,
+                                color: theme.colorScheme.primary)
+                            : null,
+                        onTap: () async {
+                          await l.setLocale(loc.code);
+                          if (ctx.mounted) Navigator.of(ctx).pop();
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

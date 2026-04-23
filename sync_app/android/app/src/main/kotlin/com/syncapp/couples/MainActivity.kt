@@ -1,4 +1,4 @@
-package com.example.sync_app
+package com.syncapp.couples
 
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
@@ -16,8 +16,8 @@ import io.flutter.plugin.common.MethodChannel
  */
 class MainActivity : FlutterActivity() {
 
-    private val nativeChannel = "com.example.sync_app/native_bridge"
-    private val widgetChannel  = "com.example.sync_app/home_widget"
+    private val nativeChannel = "com.syncapp.couples/native_bridge"
+    private val widgetChannel  = "com.syncapp.couples/home_widget"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)

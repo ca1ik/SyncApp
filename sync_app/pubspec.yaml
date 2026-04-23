@@ -42,6 +42,11 @@ dependencies:
   # --- Audio ---
   audioplayers: ^6.1.0
 
+  # --- Monetization ---
+  in_app_purchase: ^3.2.0          # Google Play Billing (Subscriptions)
+  google_mobile_ads: ^5.2.0        # AdMob (banner + interstitial + rewarded)
+  package_info_plus: ^8.1.1        # Versiyon/build bilgisi (Play Store info için)
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

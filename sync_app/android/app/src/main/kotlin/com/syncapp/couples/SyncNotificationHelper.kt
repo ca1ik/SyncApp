@@ -1,4 +1,4 @@
-package com.example.sync_app
+package com.syncapp.couples
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -20,8 +20,8 @@ object SyncNotificationHelper {
     private const val CHANNEL_DESCRIPTION = "Partnerinden gelen duygusal durum bildirimleri"
     private const val NOTIFICATION_ID = 1001
 
-    private const val ACTION_REPLY = "com.example.sync_app.ACTION_NOTIFY_REPLY"
-    private const val ACTION_SILENCE = "com.example.sync_app.ACTION_NOTIFY_SILENCE"
+    private const val ACTION_REPLY = "com.syncapp.couples.ACTION_NOTIFY_REPLY"
+    private const val ACTION_SILENCE = "com.syncapp.couples.ACTION_NOTIFY_SILENCE"
 
     fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

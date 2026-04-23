@@ -1,4 +1,4 @@
-package com.example.sync_app
+package com.syncapp.couples
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -8,7 +8,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
-import com.example.sync_app.R
+import com.syncapp.couples.R
 
 /**
  * SyncAppWidget — Android Ana Ekran Widget'ı.
@@ -23,7 +23,7 @@ import com.example.sync_app.R
 class SyncAppWidget : AppWidgetProvider() {
 
     companion object {
-        const val ACTION_SIGNAL_TAP = "com.example.sync_app.WIDGET_SIGNAL_TAP"
+        const val ACTION_SIGNAL_TAP = "com.syncapp.couples.WIDGET_SIGNAL_TAP"
         const val EXTRA_SIGNAL       = "extra_signal"
 
         // Varsayılan sinyal düğmeleri widget'ta gösterilir

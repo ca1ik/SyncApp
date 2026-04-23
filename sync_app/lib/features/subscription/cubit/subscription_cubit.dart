@@ -1,6 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../data/services/billing_service.dart';
 
 class SubscriptionState extends Equatable {
   const SubscriptionState({
@@ -81,11 +84,15 @@ class SubscriptionState extends Equatable {
 }
 
 class SubscriptionCubit extends Cubit<SubscriptionState> {
-  SubscriptionCubit({required SharedPreferences prefs})
-      : _prefs = prefs,
+  SubscriptionCubit({
+    required SharedPreferences prefs,
+    required BillingService billing,
+  })  : _prefs = prefs,
+        _billing = billing,
         super(const SubscriptionState());
 
   final SharedPreferences _prefs;
+  final BillingService _billing;
   static const String _proKey = 'sync_is_pro';
   static const String _noAdsKey = 'sync_is_no_ads';
   static const String _dailyCountKey = 'sync_daily_mood_count';
@@ -107,8 +114,34 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
         lastResetDate: _prefs.getString(_lastResetKey),
       ),
     );
+
+    // Billing servisini başlat ve satın alma akışını dinle
+    await _billing.init(onPurchaseUpdated: _handlePurchase);
   }
 
+  /// Play Store'dan gelen satın alımı işle.
+  void _handlePurchase(PurchaseDetails purchase) {
+    switch (purchase.productID) {
+      case BillingService.kProMonthlyId:
+      case BillingService.kProYearlyId:
+        _prefs.setBool(_proKey, true);
+        emit(state.copyWith(isPro: true));
+        break;
+      case BillingService.kNoAdsMonthlyId:
+        _prefs.setBool(_noAdsKey, true);
+        emit(state.copyWith(isNoAds: true));
+        break;
+    }
+  }
+
+  /// Belirli bir ürünü satın al (ekrandan tetiklenir).
+  Future<void> purchase(String productId) =>
+      _billing.buy(productId).then((_) {});
+
+  /// Önceki abonelikleri geri yükle.
+  Future<void> restore() => _billing.restore();
+
+  /// Geliştirme amaçlı: PRO durumunu manuel değiştir.
   Future<void> togglePro() async {
     final next = !state.isPro;
     await _prefs.setBool(_proKey, next);

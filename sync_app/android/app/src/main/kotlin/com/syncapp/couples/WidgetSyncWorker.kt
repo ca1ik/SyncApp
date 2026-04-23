@@ -1,4 +1,4 @@
-package com.example.sync_app
+package com.syncapp.couples
 
 import android.content.Context
 import androidx.work.OneTimeWorkRequestBuilder

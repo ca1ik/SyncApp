@@ -11,8 +11,8 @@ class AppConstants {
   static const String triggerReportsCollection = 'trigger_reports';
 
   // --- Platform Channel ---
-  static const String nativeChannelName = 'com.example.sync_app/native_bridge';
-  static const String widgetChannelName = 'com.example.sync_app/home_widget';
+  static const String nativeChannelName = 'com.syncapp.couples/native_bridge';
+  static const String widgetChannelName = 'com.syncapp.couples/home_widget';
 
   // --- RevenueCat ---
   static const String revenueCatAndroidApiKey =

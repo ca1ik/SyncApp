@@ -9,6 +9,8 @@ import '../../data/repositories/gamification_repository.dart';
 import '../../data/repositories/games_repository.dart';
 import '../../data/repositories/mood_repository.dart';
 import '../../data/services/ai_api_client.dart';
+import '../../data/services/ads_service.dart';
+import '../../data/services/billing_service.dart';
 import '../../data/services/notification_service.dart';
 import '../../features/auth/bloc/auth_bloc.dart';
 import '../../features/subscription/cubit/subscription_cubit.dart';
@@ -64,11 +66,17 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<GameRoomService>(
     () => GameRoomService(prefs: getIt()),
   );
+  getIt.registerLazySingleton<BillingService>(
+    () => BillingService(getIt()),
+  );
+  getIt.registerLazySingleton<AdsService>(
+    () => AdsService(getIt()),
+  );
 
   getIt.registerFactory<AuthBloc>(
       () => AuthBloc(getIt())..add(const AuthStarted()));
   getIt.registerFactory<SubscriptionCubit>(
-    () => SubscriptionCubit(prefs: getIt())..load(),
+    () => SubscriptionCubit(prefs: getIt(), billing: getIt())..load(),
   );
   getIt.registerFactory<PartnerMoodCubit>(
     () => PartnerMoodCubit(authRepository: getIt(), moodRepository: getIt()),

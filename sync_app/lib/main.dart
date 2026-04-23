@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:async' show unawaited;
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +12,7 @@ import 'core/services/game_audio_service.dart';
 import 'core/services/locale_service.dart';
 import 'core/theme/theme_provider.dart';
 import 'data/repositories/auth_repository.dart';
+import 'data/services/ads_service.dart';
 import 'data/services/notification_service.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'features/subscription/cubit/subscription_cubit.dart';
@@ -23,6 +25,8 @@ Future<void> main() async {
   await getIt<NotificationService>().initialize();
   await LocaleService.instance.load();
   await GameAudioService.instance.init();
+  // AdMob başlatma — hata olursa uygulamayı bloke etmesin
+  unawaited(getIt<AdsService>().init());
 
   final themeProvider = AppThemeProvider();
   await themeProvider.loadSavedTheme();
@@ -90,6 +94,9 @@ class MyApp extends StatelessWidget {
                 title: 'Sync',
                 debugShowCheckedModeBanner: false,
                 theme: theme.themeData,
+                locale: l.materialLocale,
+                supportedLocales:
+                    AppLocale.supported.map((e) => Locale(e.code)).toList(),
                 initialRoute: initialRoute,
                 getPages: AppRouter.pages,
               );

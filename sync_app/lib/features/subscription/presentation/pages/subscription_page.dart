@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/theme/theme_provider.dart';
+import '../../../../data/services/billing_service.dart';
 import '../../cubit/subscription_cubit.dart';
 import '../../../../core/services/locale_service.dart';
 
@@ -177,7 +178,9 @@ class SubscriptionPage extends StatelessWidget {
                             theme: theme,
                             isActive: state.isNoAds,
                             onToggle: () {
-                              context.read<SubscriptionCubit>().toggleNoAds();
+                              context
+                                  .read<SubscriptionCubit>()
+                                  .purchase(BillingService.kNoAdsMonthlyId);
                             },
                           ).animate().fadeIn(delay: 550.ms).slideX(begin: -0.1),
                           const Gap(16),
@@ -187,7 +190,9 @@ class SubscriptionPage extends StatelessWidget {
                             height: 56,
                             child: ElevatedButton(
                               onPressed: () {
-                                context.read<SubscriptionCubit>().togglePro();
+                                context
+                                    .read<SubscriptionCubit>()
+                                    .purchase(BillingService.kProMonthlyId);
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: theme.colorScheme.primary,
@@ -207,6 +212,24 @@ class SubscriptionPage extends StatelessWidget {
                               delay: 600.ms,
                               duration: 400.ms,
                               curve: Curves.elasticOut),
+                          const Gap(8),
+                          // --- Restore Purchases (Play Store zorunluluğu) ---
+                          TextButton(
+                            onPressed: () {
+                              context.read<SubscriptionCubit>().restore();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(l.tr('Restoring purchases...',
+                                      'Satın alımlar geri yükleniyor...')),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              l.tr('Restore Purchases',
+                                  'Satın Alımları Geri Yükle'),
+                            ),
+                          ),
+                          const Gap(4),
                           const Gap(12),
                           Text(
                             l.tr('You can cancel anytime',

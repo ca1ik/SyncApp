@@ -1,0 +1,11 @@
+# Bu dosyayı kopyalayıp `key.properties` adıyla kaydedin.
+# `key.properties` dosyası `.gitignore`'a eklenmiştir.
+#
+# Anahtar oluşturmak için (PowerShell):
+#   keytool -genkey -v -keystore $env:USERPROFILE\sync-release-key.jks `
+#     -keyalg RSA -keysize 2048 -validity 10000 -alias sync-release
+
+storePassword=DEGISTIR_keystoreParolasi
+keyPassword=DEGISTIR_keyParolasi
+keyAlias=sync-release
+storeFile=C:/Users/user/sync-release-key.jks
